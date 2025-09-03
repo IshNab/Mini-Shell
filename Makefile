@@ -9,6 +9,7 @@ REMOVE = rm -f
 
 SRCS = \
 ./srcs/main.c \
+./srcs/utils.c \
 
 OBJS = $(SRCS:.c=.o)
 
@@ -23,9 +24,9 @@ all: $(NAME)
 
 
 $(NAME): $(OBJS)
-	@echo "$(CYAN)Linking philo...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-	@echo "$(GREEN)Philosophers executable created successfully!$(RESET)"
+	@echo "$(CYAN)Linking minishell...$(RESET)"
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lreadline
+	@echo "$(GREEN)Minishell executable created successfully!$(RESET)"
 
 %.o: %.c
 	@echo "$(CYAN)Compiling $<...$(RESET)"
