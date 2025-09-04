@@ -6,21 +6,34 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/03 14:21:25 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/03 16:43:02 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	main(int ac, char **av)
-{
-	int	status;
+//REPL
+// READ -> EVALUATE->PRINT->EXECUTE->LOOP
 
-	(void)ac;
-	if (fork() == 0) //init child proccess
+int	main(void)
+{
+	char	*line;
+	char	cwd[BUFSIZ];
+	char	*last_dir;
+
+	line = NULL;
+	print_banner();
+	using_history();
+	getcwd(cwd, sizeof(cwd));
+	last_dir = strrchr(cwd, '/');
+	while (1)
 	{
-		execvp(av[1], av + 1);
+		printf("%s", last_dir);
+		line = readline("$");
+		printf("%s\n", line);
+		if (!line)
+			break ;
+		add_history(line);
+		free(line);
 	}
-	wait(&status);
-	return (EXIT_SUCCESS); //check if EXIT_SUCCESS can be used in this  project
 }
