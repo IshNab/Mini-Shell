@@ -15,6 +15,26 @@
 //REPL
 // READ -> EVALUATE->PRINT->EXECUTE->LOOP
 
+char	*cell_read_line(void)
+{
+	char *buf;
+	size_t	buf_size;
+
+	buf = NULL;
+
+	if (getline(&buf, &buf_size, stdin) == -1)
+	{
+		buf = NULL;
+		if (feof(stdin))
+			printf(RED"[EOF]"RST);
+		else
+			printf(RED"Getline failed"RST);
+		p("%s\n", buf);
+	}
+
+	return buf;
+}
+
 int	main(void)
 {
 	char	*line;
@@ -28,12 +48,15 @@ int	main(void)
 	last_dir = strrchr(cwd, '/');
 	while (1)
 	{
-		printf("%s", last_dir);
-		line = readline("$");
-		printf("%s\n", line);
-		if (!line)
-			break ;
-		add_history(line);
-		free(line);
+		//printf("%s", last_dir);
+		//line = readline("$");
+		//printf("%s\n", line);
+		//if (!line)
+			//break ;
+		//add_history(line);
+		//free(line);
+		line = cell_read_line();
+		p("%s\n", line);
+		pause();
 	}
 }
