@@ -14,7 +14,7 @@
 
 //REPL
 // READ -> EVALUATE->PRINT->EXECUTE->LOOP
-
+/*
 char	*cell_read_line(void)
 {
 	char *buf;
@@ -33,7 +33,7 @@ char	*cell_read_line(void)
 	}
 
 	return buf;
-}
+}*/
 
 int	main(void)
 {
@@ -48,15 +48,12 @@ int	main(void)
 	last_dir = strrchr(cwd, '/');
 	while (1)
 	{
-		//printf("%s", last_dir);
-		//line = readline("$");
-		//printf("%s\n", line);
-		//if (!line)
-			//break ;
-		//add_history(line);
-		//free(line);
-		line = cell_read_line();
-		p("%s\n", line);
-		pause();
+		printf("%s", last_dir);
+		line = readline("$");
+		printf("%s\n", line);
+		if (!line)
+			break ;
+		add_history(line);
+		free(line);
 	}
 }
