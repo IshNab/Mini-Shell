@@ -26,9 +26,9 @@ char	*cell_read_line(void)
 	{
 		buf = NULL;
 		if (feof(stdin))
-			printf(RED"[EOF]"RST);
+			p(RED"[EOF]"RST);
 		else
-			printf(RED"Getline failed"RST);
+			p(RED"Getline failed"RST);
 		p("%s\n", buf);
 	}
 
