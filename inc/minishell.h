@@ -28,8 +28,6 @@
 # define RED "\033[1;31m"
 # define RESET "\033[0m"
 
-# define p(...) printf(__VA_ARGS__)
-
 //UTILS
 
 void	print_banner(void);
