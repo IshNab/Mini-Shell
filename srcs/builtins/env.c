@@ -1,9 +1,14 @@
 #include "../parser.h"
 #include <stdio.h>
 
-int env(char **args) 
+extern char **environ;
+
+int env(char **args)
 {
-    // TODO: Implement env logic
-    printf("env called\n");
+    int i = 0;
+    while (environ[i]) {
+        printf("%s\n", environ[i]);
+        i++;
+    }
     return 0;
 }

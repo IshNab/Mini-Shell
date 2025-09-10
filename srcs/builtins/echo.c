@@ -1,9 +1,15 @@
 #include "../parser.h"
 #include <stdio.h>
 
-int echo(char **args) 
+int echo(char **args)
 {
-    // TODO: Implement echo logic
-    printf("echo called\n");
+    int i = 1;
+    while (args[i]) {
+        printf("%s", args[i]);
+        if (args[i + 1])
+            printf(" ");
+        i++;
+    }
+    printf("\n");
     return 0;
 }

@@ -1,9 +1,13 @@
 #include "../parser.h"
 #include <stdio.h>
+#include <unistd.h>
 
-int pwd(char **args) 
+int pwd(char **args)
 {
-    // TODO: Implement pwd logic
-    printf("pwd called\n");
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        printf("%s\n", cwd);
+    else
+        perror("pwd");
     return 0;
 }
