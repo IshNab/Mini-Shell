@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include "../inc/parser.h"
 
 //REPL
 // READ -> EVALUATE->PRINT->EXECUTE->LOOP
@@ -43,17 +44,26 @@ int	main(void)
 
 	line = NULL;
 	print_banner();
+	setup_signals();
 	using_history();
 	getcwd(cwd, sizeof(cwd));
 	last_dir = strrchr(cwd, '/');
 	while (1)
 	{
-		printf("%s", last_dir);
+		ft_printf("%s", last_dir);
 		line = readline("$");
-		printf("%s\n", line);
 		if (!line)
+		{
+			ft_printf("exit\n");
 			break ;
-		add_history(line);
+		}
+		if (ft_strlen(line) > 0)
+		{
+			add_history(line);
+			parse_command(line);
+		}
+		else
+			continue;
 		free(line);
 	}
 }

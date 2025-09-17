@@ -2,6 +2,7 @@
 #define PARSER_H
 
 int parse_command(char *input);
+int execute_command(char **args);
 
 int builtin_cd(char **args);
 int builtin_echo(char **args);

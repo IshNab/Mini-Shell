@@ -1,17 +1,26 @@
-#include "../parser.h"
+#include "../../inc/parser.h"
+#include "../../libraries/libft.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-int export(char **args)
+int builtin_export(char **args)
 {
+    extern char **environ;
+    int i = 0;
+    
     if (!args[1]) {
-        fprintf(stderr, "export: missing argument\n");
-        return 1;
+        // Display all exported variables
+        while (environ[i]) {
+            ft_printf("declare -x %s\n", environ[i]);
+            i++;
+        }
+        return 0;
     }
+    
     char *key = args[1];
-    char *value = strchr(key, '=');
+    char *value = ft_strchr(key, '=');
     if (!value) {
-        fprintf(stderr, "export: invalid format, use KEY=VALUE\n");
+        ft_printf("export: invalid format, use KEY=VALUE\n");
         return 1;
     }
     *value = '\0';

@@ -19,6 +19,9 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
+# include "../libraries/libft.h"
+# include "../libraries/ft_printf.h"
 
 //Colors
 
@@ -31,5 +34,7 @@
 //UTILS
 
 void	print_banner(void);
+void	signal_handler(int sig);
+void	setup_signals(void);
 
 #endif

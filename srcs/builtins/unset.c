@@ -1,11 +1,12 @@
-#include "../parser.h"
+#include "../../inc/parser.h"
+#include "../../libraries/libft.h"
 #include <stdio.h>
 
-int unset(char **args)
+int builtin_unset(char **args)
 {
     if (!args[1])
     {
-        fprintf(stderr, "unset: missing argument\n");
+        ft_printf("unset: missing argument\n");
         return 1;
     }
     if (unsetenv(args[1]) != 0)
