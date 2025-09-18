@@ -1,5 +1,6 @@
 #include "../../inc/parser.h"
 #include "../../libraries/libft.h"
+#include "../../libraries/ft_printf.h"
 #include <stdio.h>
 #include <stdlib.h>
 
