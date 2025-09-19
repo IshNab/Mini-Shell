@@ -1,19 +1,15 @@
-#include "../../inc/parser.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include "../inc/minishell.h"
 
-extern char **environ;
+extern char **environ; //is it allowed?
 
 static int is_valid_identifier(const char *s)
 {
     if (!s || !*s) return 0;
-    if (!(isalpha((unsigned char)*s) || *s == '_')) return 0;
+    if (!(ft_isalpha((unsigned char)*s) || *s == '_')) return 0;
     s++;
     while (*s && *s != '=')
     {
-        if (!(isalnum((unsigned char)*s) || *s == '_')) return 0;
+        if (!(ft_isalnum((unsigned char)*s) || *s == '_')) return 0;
         s++;
     }
     return 1;

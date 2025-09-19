@@ -1,7 +1,18 @@
-#include "../../inc/parser.h"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 14:28:47 by maborges          #+#    #+#             */
+/*   Updated: 2025/09/19 14:29:18 by maborges         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-extern char **environ;
+#include "../inc/minishell.h"
+
+extern char **environ; // can we use this?
 
 int builtin_env(char **args)
 {
