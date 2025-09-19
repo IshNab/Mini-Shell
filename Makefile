@@ -25,7 +25,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(CYAN)Linking minishell...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) -L./libraries -lft -o $(NAME) -lreadline
 	@echo "$(GREEN)Minishell executable created successfully!$(RESET)"
 
 %.o: %.c
