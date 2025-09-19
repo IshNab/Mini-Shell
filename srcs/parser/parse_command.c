@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_command.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 14:35:26 by maborges          #+#    #+#             */
+/*   Updated: 2025/09/19 14:38:30 by maborges         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 int parse_command(char *input) {
@@ -13,7 +25,7 @@ int parse_command(char *input) {
 
     if (argc == 0) return 0;
 
-    if (strcmp(args[0], "cd") == 0) return builtin_cd(args);
+    if (strcmp(args[0], "cd") == 0) return builtin_cd(args); //strcmp not allowed
     if (strcmp(args[0], "echo") == 0) return builtin_echo(args);
     if (strcmp(args[0], "env") == 0) return builtin_env(args);
     if (strcmp(args[0], "exit") == 0) return builtin_exit(args);

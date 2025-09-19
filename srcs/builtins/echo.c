@@ -1,6 +1,16 @@
-#include "../../inc/parser.h"
-#include <stdio.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 14:28:17 by maborges          #+#    #+#             */
+/*   Updated: 2025/09/19 14:28:34 by maborges         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/minishell.h"
 
 int builtin_echo(char **args)
 {

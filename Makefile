@@ -10,13 +10,13 @@ REMOVE = rm -f
 SRCS = \
 ./srcs/main.c \
 ./srcs/utils.c \
-./srcs/builtins/cd.c
-./srcs/builtins/echo.c
-./srcs/builtins/env.c
-./srcs/builtins/exit.c
-./srcs/builtins/export.c
-./srcs/builtins/pwd.c
-./srcs/builtins/unset.c
+./srcs/builtins/cd.c \
+./srcs/builtins/echo.c \
+./srcs/builtins/env.c \
+./srcs/builtins/exit.c \
+./srcs/builtins/export.c \
+./srcs/builtins/pwd.c \
+./srcs/builtins/unset.c \
 ./srcs/parser/parse_command.c
 
 OBJS = $(SRCS:.c=.o)

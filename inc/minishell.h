@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 14:18:55 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:37:40 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/wait.h>
-# include <string.h> // take out before release
+# include <string.h> //strerror
 # include <readline/readline.h>
 # include <readline/history.h>
 
