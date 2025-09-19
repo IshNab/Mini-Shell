@@ -1,5 +1,4 @@
-#include "../../inc/parser.h"
-#include <string.h>
+#include "../inc/minishell.h"
 
 int parse_command(char *input) {
     // Simple parser: split input and call built-in if matched

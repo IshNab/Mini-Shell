@@ -10,6 +10,14 @@ REMOVE = rm -f
 SRCS = \
 ./srcs/main.c \
 ./srcs/utils.c \
+./srcs/builtins/cd.c
+./srcs/builtins/echo.c
+./srcs/builtins/env.c
+./srcs/builtins/exit.c
+./srcs/builtins/export.c
+./srcs/builtins/pwd.c
+./srcs/builtins/unset.c
+./srcs/parser/parse_command.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -25,7 +33,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(CYAN)Linking minishell...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) -L./libraries -lft -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) -L./libft -lft -o $(NAME) -lreadline
 	@echo "$(GREEN)Minishell executable created successfully!$(RESET)"
 
 %.o: %.c

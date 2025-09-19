@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/03 16:43:02 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:55:01 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*cell_read_line(void)
 int	main(void)
 {
 	char	*line;
-	char	cwd[BUFSIZ];
+	char	cwd[1024];
 	char	*last_dir;
 
 	line = NULL;
