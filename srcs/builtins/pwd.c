@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 14:33:51 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:40:34 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int builtin_pwd(char **args)
 {
     char cwd[1024];
+	(void)args;
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         printf("%s\n", cwd);
     else

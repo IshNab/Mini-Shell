@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 13:55:01 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:42:17 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,11 @@ int	main(void)
 	{
 		printf("%s", last_dir);
 		line = readline("$");
-		printf("%s\n", line);
+		//printf("%s\n", line);
 		if (!line)
 			break ;
 		add_history(line);
+		parse_command(line);
 		free(line);
 	}
 }
