@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 14:42:17 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/19 15:29:23 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,13 @@ char	*cell_read_line(void)
 int	main(void)
 {
 	char	*line;
-	char	cwd[1024];
-	char	*last_dir;
 
 	line = NULL;
 	print_banner();
 	using_history();
-	getcwd(cwd, sizeof(cwd));
-	last_dir = strrchr(cwd, '/');
 	while (1)
 	{
-		printf("%s", last_dir);
 		line = readline("$");
-		//printf("%s\n", line);
 		if (!line)
 			break ;
 		add_history(line);
