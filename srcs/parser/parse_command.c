@@ -15,12 +15,12 @@ int	parse_command(char *input)
 
 	if (has_pipe(input))
 	{
-		ft_printf("Pipe detected: %s\n", input);
+		printf("Pipe detected: %s\n", input);
 		return (0);
 	}
 	if (has_redirection(input))
 	{
-		ft_printf("Redirection detected: %s\n", input);
+		printf("Redirection detected: %s\n", input);
 		return (0);
 	}
 	argc = 0;
