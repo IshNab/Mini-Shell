@@ -6,17 +6,26 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:26 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 18:30:43 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:18:54 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+static void	init_t_cmd(t_cmd *cmd)
+{
+	cmd->args = (char *[]){"ls", "-la"};
+	cmd->input_file = NULL;
+	cmd->output_file = NULL;
+	cmd->append = 0;
+}
+
 // Simple parser: split input and call built-in if matched
-int	parse_command(char *input)
+int	parse_command(char *input, char **envp)
 {
 	char	*args[100];
 	int		argc = 0;
+	t_cmd	cmd;
 	char	*token = strtok(input, " \t\n"); // strtok not allowed
 	while (token && argc < 99)
 	{
@@ -24,14 +33,9 @@ int	parse_command(char *input)
 		token = strtok(NULL, " \t\n");
 	}
 	args[argc] = NULL;
-	if (argc == 0) return 0;
-	if(strcmp(args[0], "cd") == 0) return builtin_cd(args); //strcmp not allowed
-	if(strcmp(args[0], "echo") == 0) return builtin_echo(args);
-	if (strcmp(args[0], "env") == 0) return builtin_env(args);
-	if (strcmp(args[0], "exit") == 0) return builtin_exit(args);
-	if (strcmp(args[0], "export") == 0) return builtin_export(args);
-	if (strcmp(args[0], "pwd") == 0) return builtin_pwd(args);
-	if (strcmp(args[0], "unset") == 0) return builtin_unset(args);
-	// Not a built-in
-	return -1;
+	if (argc == 0)
+		return (1);
+	init_t_cmd(&cmd);
+	exec_cmd(&cmd, envp);
+	return (0);
 }

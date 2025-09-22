@@ -17,7 +17,8 @@ SRCS = \
 ./srcs/builtins/export.c \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
-./srcs/parser/parse_command.c
+./srcs/parser/parse_command.c \
+./srcs/executor/executor.c
 
 OBJS = $(SRCS:.c=.o)
 
