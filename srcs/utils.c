@@ -6,11 +6,21 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/03 16:49:56 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/23 15:14:49 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+int	fork_wrapper(void)
+{
+	int	pid;
+
+	pid = fork();
+	if (pid == -1)
+		panic("fork");
+	return (pid);
+}
 
 void	print_banner(void)
 {
