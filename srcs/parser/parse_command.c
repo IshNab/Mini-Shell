@@ -2,10 +2,10 @@
 #include "../../libraries/libft.h"
 #include "../../libraries/ft_printf.h"
 
-int execute_command(char **args);
-int has_redirection(char *input);
-int has_pipe(char *input);
-char *ft_strtok_custom(char *str, const char *delim);
+int		execute_command(char **args);
+int		has_redirection(char *input);
+int		has_pipe(char *input);
+char	*ft_strtok_custom(char *str, const char *delim);
 
 int	parse_command(char *input)
 {

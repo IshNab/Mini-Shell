@@ -6,7 +6,7 @@
 /*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/22 15:58:02 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:42:45 by inabakka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@
 //UTILS
 
 char	*ft_strtok(char *str, const char *delim);
+
+// Tokenizer for minishell
+char **ms_tokenize(const char *input);
+char *ms_remove_quotes(const char *token);
+char *ms_expand_token(const char *token, char **envp, int last_status);
 
 void	print_banner(void);
 void	signal_handler(int sig);
