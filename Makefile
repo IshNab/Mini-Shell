@@ -1,9 +1,13 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = -g -Wall -Werror -Wextra -I$(INC)
+CFLAGS = -g -Wall -Werror -Wextra -I$(INC) -I$(LIBFT_INC) -I$(PRINTF_INC)
 
 INC = ./inc/
+LIBFT_INC = ./libraries/
+PRINTF_INC = ./libraries/
+LIBFT = ./libraries/libft.a
+PRINTF = ./libraries/libftprintf.a
 
 REMOVE = rm -f
 
@@ -17,7 +21,9 @@ SRCS = \
 ./srcs/builtins/export.c \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
-./srcs/parser/parse_command.c
+./srcs/parser/parse_command.c \
+./srcs/executor/executor.c \
+./srcs/error_function.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -33,7 +39,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(CYAN)Linking minishell...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) -L./libft -lft -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT) $(PRINTF) -lreadline
 	@echo "$(GREEN)Minishell executable created successfully!$(RESET)"
 
 %.o: %.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 14:37:40 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/23 15:14:35 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 # include <string.h> //strerror
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
+# include "../libraries/libft.h"
+# include "../libraries/ft_printf.h"
 
 # include "../libft/libft.h"
 
@@ -38,16 +41,23 @@
 # define RESET "\033[0m"
 
 //=============================================================================/
-//								Utils                                          /
+//								Structs                                        /
 //=============================================================================/
+typedef struct s_cmd
+{
+	char			**args;
+	char			*input_file;
+	char			*output_file;
+	int				append; //0 no, 1 yes
+	struct s_cmd	*next;
+}	t_cmd;
 
-void			print_banner(void);
 
 //=============================================================================/
 //								Parser                                         /
 //=============================================================================/
 
-int				parse_command(char *input);
+int				parse_command(char *input, char **envp);
 
 //=============================================================================/
 //								Builtins                                       /
@@ -60,5 +70,27 @@ int				builtin_exit(char **args);
 int				builtin_export(char **args);
 int				builtin_pwd(char **args);
 int				builtin_unset(char **args);
+
+//=============================================================================/
+//								Executor                                       /
+//=============================================================================/
+
+int				exec_cmd(t_cmd *cmd, char **envp);
+
+//=============================================================================/
+//								Utils                                          /
+//=============================================================================/
+
+void			print_banner(void);
+void			signal_handler(int sig);
+void			setup_signals(void);
+int				panic(char *error_msg);
+int				fork_wrapper(void);
+
+// Tokenizer for minishell
+char			**ms_tokenize(const char *input);
+char			*ms_remove_quotes(const char *token);
+char			*ms_expand_token(const char *token, char **envp, int last_status);
+char			*ft_strtok(char *str, const char *delim);
 
 #endif
