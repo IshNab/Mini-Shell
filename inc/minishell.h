@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/22 19:25:22 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/23 15:14:35 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,8 @@ int				exec_cmd(t_cmd *cmd, char **envp);
 //=============================================================================/
 
 void			print_banner(void);
+int				panic(char *error_msg);
+int				fork_wrapper(void);
+
 
 #endif
