@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
 /*   Updated: 2025/09/23 15:14:35 by maborges         ###   ########.fr       */
@@ -24,9 +24,6 @@
 # include <string.h> //strerror
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <signal.h>
-# include "../libraries/libft.h"
-# include "../libraries/ft_printf.h"
 
 # include "../libft/libft.h"
 
@@ -82,15 +79,8 @@ int				exec_cmd(t_cmd *cmd, char **envp);
 //=============================================================================/
 
 void			print_banner(void);
-void			signal_handler(int sig);
-void			setup_signals(void);
 int				panic(char *error_msg);
 int				fork_wrapper(void);
 
-// Tokenizer for minishell
-char			**ms_tokenize(const char *input);
-char			*ms_remove_quotes(const char *token);
-char			*ms_expand_token(const char *token, char **envp, int last_status);
-char			*ft_strtok(char *str, const char *delim);
 
 #endif
