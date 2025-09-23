@@ -1,3 +1,9 @@
+static void	skip_whitespace(const char *input, int *i)
+{
+	while (input[*i] == ' ' || input[*i] == '\t')
+		(*i)++;
+}
+
 char *ft_strtok(char *str, const char *delim)
 {
     static char *save_ptr = NULL;
@@ -131,7 +137,7 @@ char	*ms_remove_quotes(const char *token)
 	return (res);
 }
 
-static char	*get_env_value(const char *var, char **envp)
+char	*get_env_value(const char *var, char **envp)
 {
 	int	k;
 	int	len;
@@ -196,4 +202,15 @@ char	*ms_expand_token(const char *token, char **envp, int last_status)
 	if (!res)
 		return (ft_strdup(""));
 	return (res);
+}
+
+char	*expand_status(int last_status)
+{
+	char	*buf;
+
+	buf = (char *)malloc(16);
+	if (!buf)
+		return (NULL);
+	ft_snprintf(buf, 16, "%d", last_status);
+	return (buf);
 }
