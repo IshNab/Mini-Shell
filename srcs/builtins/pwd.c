@@ -1,22 +1,24 @@
-#include "../../inc/parser.h"
-#include "../../libraries/libft.h"
-#include "../../libraries/ft_printf.h"
-#include <stdio.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
+/*   Updated: 2025/09/23 17:34:29 by inabakka         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int	builtin_pwd(char **args)
+#include "../inc/minishell.h"
+
+int builtin_pwd(char **args)
 {
-	char	cwd[1024];
-
+    char cwd[1024];
 	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-	{
-		ft_printf("%s\n", cwd);
-		return (0);
-	}
-	else
-	{
-		perror("pwd");
-		return (1);
-	}
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        printf("%s\n", cwd);
+    else
+        perror("pwd");
+    return 0;
 }

@@ -1,60 +1,90 @@
-#include "../../inc/parser.h"
-#include "../../libraries/libft.h"
-#include "../../libraries/ft_printf.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 14:27:31 by maborges          #+#    #+#             */
+/*   Updated: 2025/09/23 17:33:54 by inabakka         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int	ft_strcmp(const char *s1, const char *s2)
+#include "../inc/minishell.h"
+
+static int update_pwd_vars(const char *oldpwd)
 {
-	size_t	i;
+	char *newpwd = getcwd(NULL, 0);
 
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	if (!newpwd)
+	{
+		perror("cd: getcwd");
+		// Best effort: still try to update OLDPWD if provided
+		if (oldpwd)
+			setenv("OLDPWD", oldpwd, 1);
+		return (1);
+	}
+	if (oldpwd)
+		setenv("OLDPWD", oldpwd, 1);
+	setenv("PWD", newpwd, 1);
+	free(newpwd);
+	return (0);
 }
 
 int	builtin_cd(char **args)
 {
-	char	*path;
-	char	*old_pwd;
-	char	cwd[1024];
+	int	argc;
 
-	if (args[2])
+	argc = 0;
+	while (args[argc])
+		argc++;
+	if (argc > 2)
 	{
-		ft_printf("cd: too many arguments\n");
+		panic("cd: too many arguments\n");
 		return (1);
 	}
-	if (!args[1] || ft_strcmp(args[1], "~") == 0)
+	const char *target = NULL;
+	const char *home = getenv("HOME");
+	printf("home folder name: %s\n", home);
+	if (argc == 1 || (args[1] && (strcmp(args[1], "~") == 0 || ft_strcmp(args[1], "--") == 0)))
 	{
-		path = getenv("HOME");
-		if (!path)
+		if (!home)
 		{
-			ft_printf("cd: HOME not set\n");
+			fprintf(stderr, "cd: HOME not set\n");
 			return (1);
 		}
+		target = home;
 	}
-	else if (ft_strcmp(args[1], "-") == 0)
+	else if (strcmp(args[1], "-") == 0)
 	{
-		path = getenv("OLDPWD");
-		if (!path)
+		const char *oldpwd = getenv("OLDPWD");
+		if (!oldpwd)
 		{
-			ft_printf("cd: OLDPWD not set\n");
+			fprintf(stderr, "cd: OLDPWD not set\n");
 			return (1);
 		}
+		target = oldpwd;
 	}
 	else
-		path = args[1];
-	old_pwd = getcwd(cwd, sizeof(cwd));
-	if (chdir(path) != 0)
+		target = args[1];
+	char *oldpwd = getcwd(NULL, 0);
+	if (chdir(target) != 0)
 	{
 		perror("cd");
+		free(oldpwd);
 		return (1);
 	}
-	if (old_pwd)
-		setenv("OLDPWD", old_pwd, 1);
-	if (getcwd(cwd, sizeof(cwd)))
-		setenv("PWD", cwd, 1);
-	return (0);
+	// If 'cd -', print the new directory
+	if (args[1] && strcmp(args[1], "-") == 0)
+	{
+		char *pwd = getcwd(NULL, 0);
+		if (pwd)
+		{
+			printf("%s\n", pwd);
+			free(pwd);
+		}
+	}
+	int rc = update_pwd_vars(oldpwd);
+	free(oldpwd);
+	return rc;
 }

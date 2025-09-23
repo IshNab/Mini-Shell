@@ -1,3 +1,6 @@
 {
-    "makefile.configureOnOpen": false
+	"files.associations": {
+		"minishell.h": "c"
+	},
+	"makefile.configureOnOpen": false
 }

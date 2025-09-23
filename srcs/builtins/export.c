@@ -1,61 +1,58 @@
-#include "../../inc/parser.h"
-#include "../../libraries/libft.h"
-#include "../../libraries/ft_printf.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "../inc/minishell.h"
 
-static int	is_valid_var_name(char *name)
+extern char **environ; //is it allowed?
+
+static int is_valid_identifier(const char *s)
 {
-	int	i;
-
-	i = 0;
-	if (!ft_isalpha(name[i]) && name[i] != '_')
-		return (0);
-	i++;
-	while (name[i])
-	{
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
+    if (!s || !*s) return 0;
+    if (!(ft_isalpha((unsigned char)*s) || *s == '_')) return 0;
+    s++;
+    while (*s && *s != '=')
+    {
+        if (!(ft_isalnum((unsigned char)*s) || *s == '_')) return 0;
+        s++;
+    }
+    return 1;
 }
 
-int	builtin_export(char **args)
+int builtin_export(char **args)
 {
-	extern char	**environ;
-	int			i;
-	char		*key;
-	char		*value;
+    // No args: print environment (simplified)
+    if (!args[1])
+    {
+        for (char **e = environ; e && *e; ++e)
+            printf("declare -x %s\n", *e);
+        return 0;
+    }
 
-	i = 0;
-	if (!args[1])
-	{
-		while (environ[i])
-		{
-			ft_printf("declare -x %s\n", environ[i]);
-			i++;
-		}
-		return (0);
-	}
-	key = args[1];
-	value = ft_strchr(key, '=');
-	if (!value)
-	{
-		ft_printf("export: invalid format, use KEY=VALUE\n");
-		return (1);
-	}
-	*value = '\0';
-	value++;
-	if (!is_valid_var_name(key))
-	{
-		ft_printf("export: '%s': not a valid identifier\n", key);
-		return (1);
-	}
-	if (setenv(key, value, 1) != 0)
-	{
-		perror("export");
-		return (1);
-	}
-	return (0);
+    int status = 0;
+    for (int i = 1; args[i]; ++i)
+    {
+        if (!is_valid_identifier(args[i]))
+        {
+            fprintf(stderr, "export: `%s': not a valid identifier\n", args[i]);
+            status = 1;
+            continue;
+        }
+
+        char *eq = strchr(args[i], '=');
+        if (!eq)
+        {
+            // In bash, 'export KEY' marks it for export; for simplicity, ensure var exists
+            const char *val = getenv(args[i]);
+            if (!val) setenv(args[i], "", 0);
+            continue;
+        }
+
+        *eq = '\0';
+        const char *key = args[i];
+        const char *value = eq + 1;
+        if (setenv(key, value, 1) != 0)
+        {
+            perror("export");
+            status = 1;
+        }
+        *eq = '='; // restore
+    }
+    return status;
 }

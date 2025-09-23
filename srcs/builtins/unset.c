@@ -1,41 +1,34 @@
-#include "../../inc/parser.h"
-#include "../../libraries/libft.h"
-#include "../../libraries/ft_printf.h"
-#include <stdio.h>
+#include "../inc/minishell.h"
 
-static int	is_valid_var_name(char *name)
+static int is_valid_identifier(const char *s)
 {
-	int	i;
-
-	i = 0;
-	if (!ft_isalpha(name[i]) && name[i] != '_')
-		return (0);
-	i++;
-	while (name[i])
-	{
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
+    if (!s || !*s) return 0;
+    if (!(ft_isalpha((unsigned char)*s) || *s == '_')) return 0;
+    s++;
+    while (*s)
+    {
+        if (!(ft_isalnum((unsigned char)*s) || *s == '_')) return 0;
+        s++;
+    }
+    return 1;
 }
 
-int	builtin_unset(char **args)
+int builtin_unset(char **args)
 {
-	if (!args[1])
-	{
-		ft_printf("unset: missing argument\n");
-		return (1);
-	}
-	if (!is_valid_var_name(args[1]))
-	{
-		ft_printf("unset: '%s': not a valid identifier\n", args[1]);
-		return (1);
-	}
-	if (unsetenv(args[1]) != 0)
-	{
-		perror("unset");
-		return (1);
-	}
-	return (0);
+    int status = 0;
+    for (int i = 1; args[i]; ++i)
+    {
+        if (!is_valid_identifier(args[i]))
+        {
+            fprintf(stderr, "unset: `%s': not a valid identifier\n", args[i]);
+            status = 1;
+            continue;
+        }
+        if (unsetenv(args[i]) != 0)
+        {
+            perror("unset");
+            status = 1;
+        }
+    }
+    return status;
 }

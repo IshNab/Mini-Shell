@@ -1,38 +1,38 @@
-#include "../../inc/parser.h"
-#include "../../libraries/libft.h"
-#include "../../libraries/ft_printf.h"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 14:28:17 by maborges          #+#    #+#             */
+/*   Updated: 2025/09/23 17:34:00 by inabakka         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int	ft_strcmp(const char *s1, const char *s2)
+#include "../inc/minishell.h"
+
+int builtin_echo(char **args)
 {
-	size_t	i;
+    int i = 1;
+    int no_newline = 0;
 
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
+    // Support multiple -n flags like echo -n -n
+    while (args[i] && args[i][0] == '-' )
+    {
+        int j = 1;
+        if (args[i][j] == '\0') break; // just "-"
+        while (args[i][j] == 'n') j++;
+        if (args[i][j] != '\0') break; // not purely -n...n
+        no_newline = 1;
+        i++;
+    }
 
-int	builtin_echo(char **args)
-{
-	int	i;
-	int	newline;
-
-	i = 1;
-	newline = 1;
-	if (args[1] && ft_strcmp(args[1], "-n") == 0)
-	{
-		newline = 0;
-		i = 2;
-	}
-	while (args[i])
-	{
-		ft_printf("%s", args[i]);
-		if (args[i + 1])
-			ft_printf(" ");
-		i++;
-	}
-	if (newline)
-		ft_printf("\n");
-	return (0);
+    for (; args[i]; ++i)
+    {
+        fputs(args[i], stdout);
+        if (args[i + 1]) fputc(' ', stdout);
+    }
+    if (!no_newline) fputc('\n', stdout);
+    return 0;
 }
