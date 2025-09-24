@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/24 18:00:24 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:01:19 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+# include "./executor.h"
 
 //=============================================================================/
 //								Colors                                         /
