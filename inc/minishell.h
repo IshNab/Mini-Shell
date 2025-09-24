@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/23 15:14:35 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/24 12:04:37 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <sys/wait.h>
 # include <string.h> //strerror
+# include <sys/wait.h>
+# include <sys/stat.h> //check the need
+# include <fcntl.h> // check the need
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
 # include "../libft/libft.h"
 
 //=============================================================================/
@@ -40,6 +42,7 @@
 //=============================================================================/
 //								Structs                                        /
 //=============================================================================/
+
 typedef struct s_cmd
 {
 	char			**args;
