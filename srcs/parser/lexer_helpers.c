@@ -6,7 +6,7 @@
 /*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/24 15:46:09 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:01:43 by inabakka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static void	add_token(t_token **head, t_token **tail, t_token *tok)
 	}
 }
 
-static void	handle_operator(const char *input, int *i, t_token **head, t_token **tail)
+static void	handle_operator(const char *input, int *i,
+	t_token **head, t_token **tail)
 {
 	int			op_len;
 	t_token_type	type;

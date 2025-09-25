@@ -10,6 +10,10 @@ REMOVE = rm -f
 SRCS = \
 ./srcs/main.c \
 ./srcs/utils.c \
+./srcs/utils/tokenizer.c \
+./srcs/utils/quote_utils.c \
+./srcs/utils/expand_utils.c \
+./srcs/utils/str_append.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \

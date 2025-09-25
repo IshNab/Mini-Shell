@@ -6,7 +6,7 @@
 /*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:10:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/24 15:46:09 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 15:39:38 by inabakka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ static int	is_operator(const char *s)
 
 // Prototypes for helpers
 static t_token_type	get_token_type(const char *s, int op_len);
-static void	add_token(t_token **head, t_token **tail, t_token *tok);
-static void	handle_operator(const char *input, int *i, t_token **head,
-			t_token **tail);
-static void	handle_word(const char *input, int *i, t_token **head,
-			t_token **tail);
+static void			add_token(t_token **head, t_token **tail, t_token *tok);
+static void			handle_operator(const char *input, int *i, t_token **head,
+								t_token **tail);
+static void			handle_word(const char *input, int *i, t_token **head,
+								t_token **tail);
 
 t_token	*lexer(const char *input)
 {
@@ -82,7 +82,7 @@ t_token	*lexer(const char *input)
 
 void	free_token_list(t_token *head)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	while (head)
 	{
