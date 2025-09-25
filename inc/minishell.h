@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/25 18:01:47 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/25 18:25:19 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/wait.h>
 # include <sys/stat.h> //check the need
 # include <fcntl.h> // check the need
+# include <ctype.h> // need to take this out before release
 # include <errno.h>
 # include <signal.h>
 # include <readline/readline.h>

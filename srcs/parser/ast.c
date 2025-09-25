@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/24 15:04:40 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 18:24:13 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 
 t_ast	*ast_new_node(t_token_type type, char *value)
 {

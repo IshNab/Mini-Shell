@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   signal_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inabakka <inabakka@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 14:30:10 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/24 14:30:11 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 18:06:45 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../inc/minishell.h"
 

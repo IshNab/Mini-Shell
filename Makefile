@@ -9,7 +9,7 @@ REMOVE = rm -f
 
 SRCS = \
 ./srcs/main.c \
-./srcs/utils.c \
+./srcs/utils/utils.c \
 ./srcs/utils/tokenizer.c \
 ./srcs/utils/quote_utils.c \
 ./srcs/utils/expand_utils.c \

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   quote_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/24 13:22:17 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 18:06:40 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-#include <stdlib.h>
 
 static int	is_quote(char c)
 {
