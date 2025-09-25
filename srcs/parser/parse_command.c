@@ -6,7 +6,7 @@
 /*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:26 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/24 15:08:42 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:58:36 by inabakka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ int	parse_command(char *input, char **envp)
 	char	*token;
 
 	argc = 0;
-	token = strtok(input, " \t\n");
+	token = ft_strtok(input, " \t\n");
 	while (token && argc < 99)
 	{
 		args[argc] = token;
 		argc++;
-		token = strtok(NULL, " \t\n");
+		token = ft_strtok(NULL, " \t\n");
 	}
 	args[argc] = NULL;
 	if (argc == 0)
