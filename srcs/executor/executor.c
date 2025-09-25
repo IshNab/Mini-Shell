@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/24 17:55:55 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/25 12:28:44 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	try_builtin(t_command *node)
 		return (0);
 }
 
-int	executor_cmd_type(t_ast *node)
+int	execute_ast(t_ast *node, t_mshell *mshell)
 {
 	if (node->type == NODE_CMD)
 	{

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/24 18:01:19 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/25 15:32:05 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef enum e_node_type
 {
 	NODE_CMD,
 	NODE_PIPE,
-	NODE_REDIR,
+	NODE_REDIR
 }	t_node_type;
 
 
@@ -68,7 +68,6 @@ typedef enum e_redir_type
 	REDIR_APPEND, // >>
 	REDIR_HEREDOC // <<
 }	t_redir_type;
-
 typedef struct s_redir
 {
 	t_ast			base;
@@ -122,5 +121,6 @@ int					parse_command(char *input, char **envp);
 void				print_banner(void);
 int					panic(char *error_msg);
 int					fork_wrapper(void);
+void				*safe_malloc(size_t size);
 
 #endif

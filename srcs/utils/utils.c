@@ -6,11 +6,26 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/24 17:40:04 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:15:52 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+
+
+void	*safe_malloc(size_t size)
+{
+	void	*memory;
+
+	memory = malloc(size);
+	if (!memory)
+	{
+		error_msg("malloc failed");
+		return (NULL);
+	}
+	return (memory);
+}
 
 int	fork_wrapper(void)
 {

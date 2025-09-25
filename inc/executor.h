@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 17:58:36 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/24 18:00:27 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/25 12:28:00 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int					builtin_unset(char **args);
 //								Executor                                       /
 //=============================================================================/
 
-int					executor_cmd_type(t_ast *ast, t_mshell *shell);
+int					execute_ast(t_ast *ast, t_mshell *mshell);
 
 
 # endif
