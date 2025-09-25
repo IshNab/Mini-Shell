@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:26 by maborges          #+#    #+#             */
 /*   Updated: 2025/09/25 13:46:10 by maborges         ###   ########.fr       */
@@ -16,31 +16,33 @@ static void	init_t_cmd(t_cmd *cmd, char **args)
 {
 	int	i;
 
-	i = -1;
-	while(args[++i])
+	i = 0;
+	while (args[i])
+	{
 		cmd->args = &args[i];
-	//printf("%s\n", cmd->args[0]);
+		i++;
+	}
 	cmd->input_file = NULL;
 	cmd->output_file = NULL;
 	cmd->append = 0;
 }
 
-// Simple parser: split input and call built-in if matched
-
 int	parse_command(char *input, char **envp)
 {
 	char	*args[100];
-	int		argc = 0;
-	//t_cmd	cmd;
-	(void)envp;
-	char	*token = strtok(input, " \t\n"); // strtok not allowed
+	int		argc;
+	t_cmd	cmd;
+	char	*token;
+
+	argc = 0;
+	token = ft_strtok(input, " \t\n");
 	while (token && argc < 99)
 	{
-		args[argc++] = token;
-		token = strtok(NULL, " \t\n");
+		args[argc] = token;
+		argc++;
+		token = ft_strtok(NULL, " \t\n");
 	}
 	args[argc] = NULL;
-	//printf("%s\n", args[argc]);
 	if (argc == 0)
 		return (1);
 	init_t_cmd(&cmd, args);

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
 /*   Updated: 2025/09/25 15:32:05 by maborges         ###   ########.fr       */
@@ -53,6 +53,12 @@ typedef enum e_node_type
 	NODE_REDIR
 }	t_node_type;
 
+typedef struct s_expand_state
+{
+	int	in_squote;
+	int	in_dquote;
+	int	i;
+}	t_expand_state;
 
 typedef struct s_ast
 {
@@ -107,12 +113,6 @@ typedef struct s_mshell
 	int				must_exit; //flag for when u must exit shell
 	pid_t			shell_pid; //shell pid
 }	t_mshell;
-
-//=============================================================================/
-//								Parser                                         /
-//=============================================================================/
-
-int					parse_command(char *input, char **envp);
 
 //=============================================================================/
 //								Utils                                          /
