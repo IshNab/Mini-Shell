@@ -6,7 +6,7 @@
 /*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/25 16:01:43 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:11:03 by inabakka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ static void	add_token(t_token **head, t_token **tail, t_token *tok)
 static void	handle_operator(const char *input, int *i,
 	t_token **head, t_token **tail)
 {
-	int			op_len;
+	int				op_len;
 	t_token_type	type;
-	t_token		*tok;
+	t_token			*tok;
 
 	op_len = is_operator(&input[*i]);
 	type = get_token_type(&input[*i], op_len);
@@ -59,7 +59,8 @@ static void	handle_operator(const char *input, int *i,
 	*i += op_len;
 }
 
-static void	handle_word(const char *input, int *i, t_token **head, t_token **tail)
+static void	handle_word(const char *input, int *i, t_token **head,
+	t_token **tail)
 {
 	int		start;
 	t_token	*tok;
