@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/25 16:47:44 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:50:41 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //REPL
 // READ -> EVALUATE->PRINT->EXECUTE->LOOP
 
-t_env	*init_env(char **envp)
+static t_env	*init_env(char **envp)
 {
 	t_env	*head;
 	t_env	*new_node;
@@ -42,8 +42,8 @@ t_env	*init_env(char **envp)
 
 static void	init_shell(t_mshell *shell, char **envp)
 {
-	shell->env = init_env(envp); //TODO
-	shell->ast = NULL; //TODO
+	shell->env = init_env(envp);
+	shell->ast = NULL; //still waiting for the parsing team
 	shell->cmd_count = 0;
 	shell->exit_status = 0;
 	shell->must_exit = 0;
@@ -60,10 +60,10 @@ int	main(int argc, char **argv, char **envp)
 	line = NULL;
 	print_banner();
 	using_history();
-	init_shell(&shell, envp); //TODO
+	init_shell(&shell, envp);
 	while (1)
 	{
-		line = readline("$");
+		line = readline("minishell$");
 		//printf("%s\n", line);
 		if (!line)
 			break ;
