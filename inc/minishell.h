@@ -6,7 +6,7 @@
 /*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/24 15:51:58 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 15:32:05 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,16 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <sys/wait.h>
 # include <string.h> //strerror
+# include <sys/wait.h>
+# include <sys/stat.h> //check the need
+# include <fcntl.h> // check the need
+# include <errno.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
 # include "../libft/libft.h"
+# include "./executor.h"
 
 //=============================================================================/
 //								Colors                                         /
@@ -40,14 +44,14 @@
 //=============================================================================/
 //								Structs                                        /
 //=============================================================================/
-typedef struct s_cmd
+
+//Redirecion types
+typedef enum e_node_type
 {
-	char			**args;
-	char			*input_file;
-	char			*output_file;
-	int				append;
-	struct s_cmd	*next;
-}	t_cmd;
+	NODE_CMD,
+	NODE_PIPE,
+	NODE_REDIR
+}	t_node_type;
 
 typedef struct s_expand_state
 {
@@ -56,87 +60,67 @@ typedef struct s_expand_state
 	int	i;
 }	t_expand_state;
 
-typedef struct s_expand_ctx
+typedef struct s_ast
 {
-	t_expand_state	st;
-	char			**envp;
-	int				last_status;
-	char			**res;
-}	t_expand_ctx;
-
-typedef struct s_expand_vars
+	t_node_type		type;
+	struct s_ast	*left; //pipes: left cmd
+	struct s_ast	*right; //pipes: right cmd
+	int				exit_status;
+}	t_ast;
+typedef enum e_redir_type
 {
-	char	buf[16];
-	int		j;
-	char	var[128];
-	int		len;
-	char	*val;
-}	t_expand_vars;
+	REDIR_INPUT, // <
+	REDIR_OUTPUT, // >
+	REDIR_APPEND, // >>
+	REDIR_HEREDOC // <<
+}	t_redir_type;
+typedef struct s_redir
+{
+	t_ast			base;
+	char			*filename;
+	t_node_type		type;
+}	t_redir;
 
-void	init_expand_vars(t_expand_vars *vars);
-void	expand_token_handle(char c, t_expand_ctx *ctx);
-void	expand_token_handle_dollar(const char *token, t_expand_ctx *ctx);
-int		is_quote_to_skip(char c, int in_dquote, int in_squote);
+typedef struct s_command
+{
+	t_ast			base;
+	char			**args;
+	char			*input_file; //< input
+	char			*output_file; // > or >> output
+	int				is_append; //flag for no=0 yes=1
+	char			*heredoc_delimiter; //<< delimiter
+}	t_command;
 
+//pipe node
+typedef struct s_pipeline
+{
+	t_ast			base;
+}	t_pipeline;
 
-//=============================================================================/
-//								Builtins                                       /
-//=============================================================================/
+typedef struct s_env
+{
+	char			*key; // variable name
+	char			*value; // variable value
+	struct s_env	*next; //Next environment variable
+}	t_env;
 
-int		builtin_cd(char **args);
-int		builtin_echo(char **args);
-int		builtin_env(char **args);
-int		builtin_exit(char **args);
-int		builtin_export(char **args);
-int		builtin_pwd(char **args);
-int		builtin_unset(char **args);
-
-//=============================================================================/
-//								Executor                                       /
-//=============================================================================/
-
-int		exec_cmd(t_cmd *cmd, char **envp);
+typedef struct s_mshell
+{
+	t_env			*env; //environment variables
+	t_ast			*ast; //current AST
+	int				cmd_count;
+	int				exit_status; //last cmd exit status
+	int				must_exit; //flag for when u must exit shell
+	pid_t			shell_pid; //shell pid
+}	t_mshell;
 
 //=============================================================================/
 //								Utils                                          /
 //=============================================================================/
 
-void	print_banner(void);
-int		panic(char *error_msg);
-int		fork_wrapper(void);
-
-
-typedef enum e_token_type
-{
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIRECT_IN,
-	TOKEN_REDIRECT_OUT,
-	TOKEN_REDIRECT_APPEND,
-	TOKEN_REDIRECT_HEREDOC,
-	TOKEN_EOF
-} t_token_type;
-
-typedef struct s_token
-{
-	t_token_type	type;
-	char		*value;
-	struct s_token	*next;
-} t_token;
-
-typedef struct s_ast
-{
-	t_token_type	type;
-	char		*value;
-	struct s_ast	*left;
-	struct s_ast	*right;
-} t_ast;
-
-t_token *lexer(const char *input);
-void free_token_list(t_token *head);
-t_ast *ast_new_node(t_token_type type, char *value);
-void free_ast(t_ast *node);
-void print_tokens(t_token *tok);
-void print_ast(t_ast *node, int depth);
+void				print_banner(void);
+int					panic(char *error_msg);
+int					fork_wrapper(void);
+void				*safe_malloc(size_t size);
 
 #endif
