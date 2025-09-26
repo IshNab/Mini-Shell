@@ -6,17 +6,18 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/25 12:28:44 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:50:00 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
 
-void	execute_command(t_command * node)
+void	execute_command(t_command *node)
 {
+	(void)node;
 	if (fork_wrapper() == 0) //TODO
-		return (1);//runcmd(); //TODO
+		return ;//runcmd(); //TODO
 	wait(0);
 }
 
@@ -34,8 +35,9 @@ static int	try_builtin(t_command *node)
 		return (0);
 }
 
-int	execute_ast(t_ast *node, t_mshell *mshell)
+/* int	execute_ast(t_ast *node, t_mshell *mshell)
 {
+	(void)mshell;
 	if (node->type == NODE_CMD)
 	{
 		if (try_builtin((t_command *)node))
@@ -43,10 +45,10 @@ int	execute_ast(t_ast *node, t_mshell *mshell)
 		else
 			execute_command((t_command *)node);
 	}
-	/*if (node->type == NODE_PIPE)
-	{
-		execute_pipe((t_pipeline *)node);
+	//if (node->type == NODE_PIPE)
+	//{
+	//	execute_pipe((t_pipeline *)node);
 		//execute and next step
-	} */
+	//}
 	return (1);
-}
+} */

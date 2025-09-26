@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/25 16:50:41 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:50:20 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_mshell	shell;
+	t_command	*cmd;
 
 	(void)argc;
 	(void)argv;
@@ -61,6 +62,11 @@ int	main(int argc, char **argv, char **envp)
 	print_banner();
 	using_history();
 	init_shell(&shell, envp);
+
+	DEBUG_CHECKPOINT("Shell initialized");
+	debug_print_shell(&shell);
+	debug_print_env(shell.env);
+
 	while (1)
 	{
 		line = readline("minishell$");
@@ -69,7 +75,14 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		if (line)
 			add_history(line);
-		parse_command(line, envp);
+
+		DEBUG_CHECKPOINT("About to parse command");
+		cmd = mockup_parse(line, envp, shell.exit_status);
+		debug_print_command(cmd);
+
+		execute_command(&cmd);
+
+		free_command(cmd);
 		free(line);
 	}
 }
