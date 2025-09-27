@@ -6,25 +6,48 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/26 15:50:00 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:12:15 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-
-void	execute_command(t_command *node)
+void	run_external_cmd(t_command *cmd, t_mshell *shell)
 {
-	(void)node;
-	if (fork_wrapper() == 0) //TODO
-		return ;//runcmd(); //TODO
-	wait(0);
+
 }
 
-static int	try_builtin(t_command *node)
+void	execute_command(t_command *cmd, t_mshell *shell)
 {
-	if (!ft_strcmp(node->args[0], "cd"))
-		return (builtin_cd(node->args));
+	int	status;
+	pid_t	child_pid;
+
+	if (try_builtin(cmd, shell))
+		return ;
+	child_pid = fork_wrapper();
+	if (child_pid == 0)
+	{
+		run_external_cmd(cmd, shell); //TODO͘
+		exit(127);
+	}
+	waitpid(child_pid, &status, 0);
+	if (WIFEXITED(status))
+		shell->exit_status = WEXITSTATUS(status);
+	else
+		shell->exit_status = 128 + WTERMSIG(status);
+	//should I take also care of the return is -1?
+	return ;
+}
+
+static int	try_builtin(t_command *cmd, t_mshell *shell)
+{
+	if (!cmd->args[0])
+		return (0);
+	if (!ft_strcmp(cmd->args[0], "cd"))
+	{
+		builtin_cd(cmd->args);
+		return (1);
+	}
 	/*if(strcmp(cmd->args[0], "echo") == 0) return builtin_echo(cmd->args);
 	if (strcmp(cmd->args[0], "env") == 0) return builtin_env(cmd->args);
 	if (strcmp(cmd->args[0], "exit") == 0) return builtin_exit(cmd->args);

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/26 15:50:20 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/27 19:42:03 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("minishell$");
-		//printf("%s\n", line);
 		if (!line)
 			break ;
 		if (line)
@@ -80,8 +79,8 @@ int	main(int argc, char **argv, char **envp)
 		cmd = mockup_parse(line, envp, shell.exit_status);
 		debug_print_command(cmd);
 
-		execute_command(&cmd);
-
+		shell.exit_status = execute_command(&cmd);
+		//should I return smt here?
 		free_command(cmd);
 		free(line);
 	}
