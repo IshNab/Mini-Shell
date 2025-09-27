@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/27 21:12:15 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:22:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,23 @@
 
 void	run_external_cmd(t_command *cmd, t_mshell *shell)
 {
+	char *path;
 
+	path = find_cmd_path(cmd->args[0], &shell->env);
+	if (!path)
+	{
+		perror("command %s not found", cmd->args[0]); //make a good error_msg function that handle fd and variables
+		shell->exit_status = 127;
+		exit(127);
+	}
+	if (execve(path, cmd->args, shell->env) == -1)
+	{
+		perror("execve failed");
+		free(path);
+		shell->exit_status = 127;
+		exit(126);
+	}
+	free(path);
 }
 
 void	execute_command(t_command *cmd, t_mshell *shell)
@@ -45,14 +61,18 @@ static int	try_builtin(t_command *cmd, t_mshell *shell)
 		return (0);
 	if (!ft_strcmp(cmd->args[0], "cd"))
 	{
-		builtin_cd(cmd->args);
+		shell->exit_status = builtin_cd(cmd->args);
+		return (1);
+	}
+	if (!ft_strcmp(cmd->args[0], "pwd"))
+	{
+		shell->exit_status = builtin_pwd(cmd->args);
 		return (1);
 	}
 	/*if(strcmp(cmd->args[0], "echo") == 0) return builtin_echo(cmd->args);
 	if (strcmp(cmd->args[0], "env") == 0) return builtin_env(cmd->args);
 	if (strcmp(cmd->args[0], "exit") == 0) return builtin_exit(cmd->args);
 	if (strcmp(cmd->args[0], "export") == 0) return builtin_export(cmd->args); */
-	if (!strcmp(node->args[0], "pwd")) return builtin_pwd(node->args);
 	//if (strcmp(cmd->args[0], "unset") == 0) return builtin_unset(cmd->args);
 	else
 		return (0);
