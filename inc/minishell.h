@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/26 16:54:23 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:26:47 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,8 @@ typedef struct s_command {
 void				free_command(t_command *cmd);
 t_command			*mockup_parse(char *input, char **envp, int last_status);
 t_command			*create_mockup_command(char *input_line);
+void				execute_command(t_command *cmd, t_mshell *shell);
+
 
 
 int					execute_ast(t_ast *ast, t_mshell *mshell);
