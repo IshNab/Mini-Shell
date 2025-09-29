@@ -1,20 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 16:14:32 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/16 14:40:12 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/19 17:40:46 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	panic(char *error_msg)
+char	*ft_strchr(const char *s, int c)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(error_msg, 2);
-	exit(1);
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == (char)c)
+			return ((char *)&s[i]);
+		i++;
+	}
+	if ((char)c == '\0')
+		return ((char *)&s[i]);
+	return (NULL);
 }

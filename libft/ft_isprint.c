@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 16:14:32 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/12 18:44:01 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/25 13:50:41 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	panic(char *error_msg)
+int	ft_isprint(int c)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(error_msg, 2);
-	exit(1);
+	if (c >= 32 && c <= 126)
+		return (1);
+	return (0);
 }

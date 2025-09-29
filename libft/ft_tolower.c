@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 16:14:32 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/16 14:31:53 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/16 14:36:05 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	panic(char *error_msg)
+int	ft_tolower(int c)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(error_msg, 2);
-	exit(1);
+	if (c >= 'A' && c <= 'Z')
+		return (c +32);
+	return (c);
 }

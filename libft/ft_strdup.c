@@ -1,20 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 16:14:32 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/19 17:44:02 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/28 18:28:49 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	panic(char *error_msg)
+char	*ft_strdup(const char *s)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(error_msg, 2);
-	exit(1);
+	size_t	i;
+	char	*tmps1;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	tmps1 = (char *) malloc(i * sizeof(char) + 1);
+	if (!tmps1)
+		return (NULL);
+	i = 0;
+	while (s[i] != '\0')
+	{
+		tmps1[i] = s[i];
+		i++;
+	}
+	tmps1[i] = '\0';
+	return (tmps1);
 }

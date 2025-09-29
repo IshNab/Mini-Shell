@@ -4,6 +4,8 @@ CC = cc
 CFLAGS = -g -Wall -Werror -Wextra -I$(INC)
 
 INC = ./inc/
+LIBFT_DIR = ./libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
 REMOVE = rm -f
 
@@ -42,10 +44,13 @@ all: $(NAME)
 	@echo "$(GREEN)Compilation successfully done!!$(RESET)"
 
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
 	@echo "$(CYAN)Linking minishell...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) -L./libft -lft -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a -o $(NAME) -lreadline
 	@echo "$(GREEN)Minishell executable created successfully!$(RESET)"
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
 
 %.o: %.c
 	@echo "$(CYAN)Compiling $<...$(RESET)"

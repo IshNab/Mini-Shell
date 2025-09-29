@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/27 21:26:47 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/29 15:39:01 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ typedef struct s_command {
     int append;         // Append mode for output
     struct s_command *next; // For pipe chains
 } t_command;
+
 void				free_command(t_command *cmd);
 t_command			*mockup_parse(char *input, char **envp, int last_status);
 t_command			*create_mockup_command(char *input_line);
@@ -176,10 +177,12 @@ int					builtin_unset(char **args);
 //								Utils                                          /
 //=============================================================================/
 
-void				print_banner(void);
-int					panic(char *error_msg);
-int					fork_wrapper(void);
+int					ft_envsize(t_env *env);
 void				*safe_malloc(size_t size);
+int					fork_wrapper(void);
+void				print_banner(void);
+
+int					panic(char *error_msg);
 
 //=============================================================================/
 //								Debug                                          /

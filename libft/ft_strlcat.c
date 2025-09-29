@@ -1,20 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 16:14:32 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/15 01:35:24 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/26 14:52:32 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	panic(char *error_msg)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(error_msg, 2);
-	exit(1);
+	size_t	dstlen;
+	size_t	srclen;
+	size_t	i;
+
+	dstlen = ft_strlen(dst);
+	srclen = ft_strlen(src);
+	i = 0;
+	if (size <= dstlen)
+		return (size + srclen);
+	while (src[i] && (dstlen + i < size - 1))
+	{
+		dst[dstlen + i] = src[i];
+		i++;
+	}
+	dst[dstlen + i] = '\0';
+	return (dstlen + srclen);
 }

@@ -1,20 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 16:14:32 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/13 19:15:32 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/28 17:58:16 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	panic(char *error_msg)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(error_msg, 2);
-	exit(1);
+	char		*strdest;
+	const char	*strsrc;
+	size_t		i;
+
+	if (!dest && !src)
+		return (dest);
+	strdest = (char *)dest;
+	strsrc = (const char *)src;
+	i = 0;
+	while (i < n)
+	{
+		strdest[i] = strsrc[i];
+		i++;
+	}
+	return (strdest);
 }
