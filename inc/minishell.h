@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 17:28:51 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 21:10:18 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ int					execute_ast(t_ast *ast, t_mshell *mshell);
 //								Builtins                                       /
 //=============================================================================/
 
-int					builtin_cd(char **args);
+int					builtin_cd(char **args, t_mshell *shell);
 int					builtin_echo(char **args);
 int					builtin_env(char **args);
 int					builtin_exit(char **args);
@@ -183,7 +183,7 @@ int					fork_wrapper(void);
 void				print_banner(void);
 
 int					panic(char *error_msg);
-void				error_msg(char *msg, int exit_code, t_mshell *shell);
+int					error_msg(char *msg, int exit_code, t_mshell *shell);
 
 
 //=============================================================================/

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 17:28:34 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 21:15:57 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@ int	panic(char *error_msg)
 	exit(1);
 }
 
-void	error_msg(char *msg, int exit_code, t_mshell *shell)
+int	error_msg(char *msg, int exit_code, t_mshell *shell)
 {
-	ft_putchar_fd("minishell: ", 2);
-	ft_pustr_fd(msg, 2);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(msg, 2);
 	ft_putstr_fd("\n", 2);
 	if (shell)
 		shell->exit_status = exit_code;
+	return (exit_code);
 }
 

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 17:34:33 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 21:15:14 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,14 +150,14 @@ static int	try_builtin(t_command *cmd, t_mshell *shell)
 		shell->exit_status = builtin_pwd(cmd->args);
 	else if (!ft_strcmp(cmd->args[0], "echo"))
 		shell->exit_status = builtin_echo(cmd->args); //shouldnt also echo have a shell arg since it can be asked echo $?
-	else if (!ft_strcmp(cmd->args[0], "env"))
+	/*else if (!ft_strcmp(cmd->args[0], "env"))
 		shell->exit_status = builtin_env(cmd->args, shell);
 	else if (!ft_strcmp(cmd->args[0], "exit"))
 		shell->exit_status = builtin_exit(cmd->args, shell);
 	else if (!ft_strcmp(cmd->args[0], "export"))
 		shell->exit_status = builtin_export(cmd->args, shell);
 	else if (!ft_strcmp(cmd->args[0], "unset"))
-		shell->exit_status = builtin_unset(cmd->args, shell);
+		shell->exit_status = builtin_unset(cmd->args, shell); */
 	else
 		return (0);
 	return (1);

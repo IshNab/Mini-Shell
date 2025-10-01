@@ -6,16 +6,17 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:27:31 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 14:48:58 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 22:48:44 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static int update_pwd_vars(const char *oldpwd)
+static int	update_pwd_vars(const char *oldpwd)
 {
-	char *newpwd = getcwd(NULL, 0);
+	char	*newpwd;
 
+	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 	{
 		perror("cd: getcwd");
@@ -31,60 +32,60 @@ static int update_pwd_vars(const char *oldpwd)
 	return (0);
 }
 
-int	builtin_cd(char **args)
+int	builtin_cd(char **args, t_mshell *shell)
 {
-	int	argc;
+	const char	*target;
+	const char	*home;
+	char		*oldpwd;
+	char		*pwd;
+	int			rc;
 
-	argc = 0;
-	while (args[argc])
-		argc++;
-	if (argc > 2)
-	{
-		panic("cd: too many arguments\n");
-		return (1);
-	}
-	const char *target = NULL;
-	const char *home = getenv("HOME");
-	printf("home folder name: %s\n", home);
-	if (argc == 1 || (args[1] && (strcmp(args[1], "~") == 0 || ft_strcmp(args[1], "--") == 0)))
+	target = NULL;
+	home = getenv("HOME");
+	if (args[1] && args[2])
+		return (error_msg("cd: too many arguments\n", 1, NULL));
+	else if (!args[1] || (args[1] && (ft_strcmp(args[1], "~") == 0 ||
+				ft_strcmp(args[1], "--") == 0)))
 	{
 		if (!home)
-		{
-			fprintf(stderr, "cd: HOME not set\n");
-			return (1);
-		}
+			return (error_msg("cd: HOME not set\n", 1, shell));
 		target = home;
 	}
-	else if (strcmp(args[1], "-") == 0)
+	else if (ft_strcmp(args[1], "-") == 0)
 	{
-		const char *oldpwd = getenv("OLDPWD");
+		oldpwd = getenv("OLDPWD");
 		if (!oldpwd)
-		{
-			fprintf(stderr, "cd: OLDPWD not set\n");
-			return (1);
-		}
+			return (error_msg("cd: OLDPWD not set\n", 1, shell));
 		target = oldpwd;
 	}
 	else
 		target = args[1];
-	char *oldpwd = getcwd(NULL, 0);
+	oldpwd = getcwd(NULL, 0);
 	if (chdir(target) != 0)
 	{
 		perror("cd");
-		free(oldpwd);
-		return (1);
+		return (free(oldpwd), 1);
 	}
-	// If 'cd -', print the new directory
 	if (args[1] && strcmp(args[1], "-") == 0)
 	{
-		char *pwd = getcwd(NULL, 0);
+		pwd = getcwd(NULL, 0);
 		if (pwd)
 		{
 			printf("%s\n", pwd);
 			free(pwd);
 		}
 	}
-	int rc = update_pwd_vars(oldpwd);
+	rc = update_pwd_vars(oldpwd);
 	free(oldpwd);
-	return rc;
+	return (rc);
 }
+
+/* //DEBUG cd()
+	int i = 0;
+	printf("DEBUG cd args:\n");
+	while (args[i])
+	{
+		printf("  args[%d] = '%s'\n", i, args[i]);
+		i++;
+	}
+	printf("  args[%d] = NULL\n", i); */
