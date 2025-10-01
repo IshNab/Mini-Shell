@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 15:39:01 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 17:28:51 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_ast
 	t_node_type		type;
 	struct s_ast	*left; //pipes: left cmd
 	struct s_ast	*right; //pipes: right cmd
-	int				exit_status;
+	int				exit_status; //should this be here? maybe only on the shell->exit_status
 }	t_ast;
 typedef enum e_redir_type
 {
@@ -183,6 +183,8 @@ int					fork_wrapper(void);
 void				print_banner(void);
 
 int					panic(char *error_msg);
+void				error_msg(char *msg, int exit_code, t_mshell *shell);
+
 
 //=============================================================================/
 //								Debug                                          /

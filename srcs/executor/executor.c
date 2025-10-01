@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 16:23:32 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 17:34:33 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,23 +144,23 @@ static int	try_builtin(t_command *cmd, t_mshell *shell)
 {
 	if (!cmd->args[0])
 		return (0);
-	if (!ft_strcmp(cmd->args[0], "cd"))
-	{
-		shell->exit_status = builtin_cd(cmd->args);
-		return (1);
-	}
-	if (!ft_strcmp(cmd->args[0], "pwd"))
-	{
+	else if (!ft_strcmp(cmd->args[0], "cd"))
+		shell->exit_status = builtin_cd(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "pwd"))
 		shell->exit_status = builtin_pwd(cmd->args);
-		return (1);
-	}
-	/*if(strcmp(cmd->args[0], "echo") == 0) return builtin_echo(cmd->args);
-	if (strcmp(cmd->args[0], "env") == 0) return builtin_env(cmd->args);
-	if (strcmp(cmd->args[0], "exit") == 0) return builtin_exit(cmd->args);
-	if (strcmp(cmd->args[0], "export") == 0) return builtin_export(cmd->args); */
-	//if (strcmp(cmd->args[0], "unset") == 0) return builtin_unset(cmd->args);
+	else if (!ft_strcmp(cmd->args[0], "echo"))
+		shell->exit_status = builtin_echo(cmd->args); //shouldnt also echo have a shell arg since it can be asked echo $?
+	else if (!ft_strcmp(cmd->args[0], "env"))
+		shell->exit_status = builtin_env(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "exit"))
+		shell->exit_status = builtin_exit(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "export"))
+		shell->exit_status = builtin_export(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "unset"))
+		shell->exit_status = builtin_unset(cmd->args, shell);
 	else
 		return (0);
+	return (1);
 }
 
 void	execute_command(t_command *cmd, t_mshell *shell)
@@ -170,24 +170,23 @@ void	execute_command(t_command *cmd, t_mshell *shell)
 
 	if (try_builtin(cmd, shell))
 		return ;
-	child_pid = fork_wrapper();
+	child_pid = fork();
 	if (child_pid == 0)
 	{
 		run_external_cmd(cmd, shell);
 		exit(127);
+	}
+	if (child_pid == -1)
+	{
+		perror("minishell: Fork");
+		shell->exit_status = 1;
+		return ;
 	}
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		shell->exit_status = 128 + WTERMSIG(status);
-	else
-	{
-		shell->exit_status = -1;
-		ft_putstr_fd("failed to get status for the last command", 2);
-		//TODO cleanup here needed
-	}
-	//should I do a cleanup for when the child failed?
 	return ;
 }
 

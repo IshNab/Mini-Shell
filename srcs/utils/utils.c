@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/29 15:40:57 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 17:12:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	fork_wrapper(void)
 
 	pid = fork();
 	if (pid == -1)
-		panic("fork failed");
+		perror("fork failed");
 	return (pid);
 }
 
