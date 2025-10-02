@@ -43,6 +43,10 @@ static t_token_type	get_token_type(const char *s, int op_len)
 		return (TOKEN_REDIRECT_IN);
 	else if (!strncmp(s, ">", 1))
 		return (TOKEN_REDIRECT_OUT);
+	else if (!strncmp(s, "'", 1))
+		return (TOKEN_SINGLE_QUOTE);
+	else if (!strncmp(s, "\"", 1))
+		return (TOKEN_DOUBLE_QUOTE);
 	return (TOKEN_WORD);
 }
 

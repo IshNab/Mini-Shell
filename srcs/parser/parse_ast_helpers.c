@@ -15,12 +15,20 @@
 void	fill_args_from_tokens(t_token *tokens, char **args, int *argc)
 {
 	t_token	*curr;
+	char	*processed_value;
 
 	curr = tokens;
 	while (curr)
 	{
-		if (curr->type == TOKEN_WORD)
-			args[(*argc)++] = ft_strdup(curr->value);
+		if (curr->type == TOKEN_WORD || curr->type == TOKEN_QUOTED_WORD)
+		{
+			// Process quoted content by removing quotes if needed
+			if (curr->type == TOKEN_QUOTED_WORD)
+				processed_value = ms_remove_quotes(curr->value);
+			else
+				processed_value = ft_strdup(curr->value);
+			args[(*argc)++] = processed_value;
+		}
 		curr = curr->next;
 	}
 }

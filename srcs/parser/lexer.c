@@ -38,7 +38,7 @@ static int	is_operator(const char *s)
 {
 	if (!strncmp(s, ">>", 2) || !strncmp(s, "<<", 2))
 		return (2);
-	if (*s == '|' || *s == '<' || *s == '>')
+	if (*s == '|' || *s == '<' || *s == '>' || *s == '\'' || *s == '"')
 		return (1);
 	return (0);
 }
