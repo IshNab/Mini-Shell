@@ -21,7 +21,7 @@ void	*safe_malloc(size_t size)
 	memory = malloc(size);
 	if (!memory)
 	{
-		error_msg("malloc failed");
+		panic("malloc failed");
 		return (NULL);
 	}
 	return (memory);

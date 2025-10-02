@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdio.h>
 
-t_ast	*ast_new_node(t_token_type type, char *value)
+t_ast	*ast_new_node(t_node_type type, char *value)
 {
 	t_ast	*node;
 
@@ -23,20 +23,30 @@ t_ast	*ast_new_node(t_token_type type, char *value)
 	if (node == NULL)
 		return (NULL);
 	node->type = type;
-	if (value != NULL)
-		node->value = strdup(value);
-	else
-		node->value = NULL;
 	node->left = NULL;
 	node->right = NULL;
+	node->exit_status = 0;
+	node->args = NULL;
+	(void)value; // value parameter not used in current AST structure
 	return (node);
 }
 
 void	free_ast(t_ast *node)
 {
+	int	i;
+
 	if (node == NULL)
 		return ;
-	free(node->value);
+	if (node->args)
+	{
+		i = 0;
+		while (node->args[i])
+		{
+			free(node->args[i]);
+			i++;
+		}
+		free(node->args);
+	}
 	free_ast(node->left);
 	free_ast(node->right);
 	free(node);
@@ -45,6 +55,7 @@ void	free_ast(t_ast *node)
 void	print_ast(t_ast *node, int depth)
 {
 	int	i;
+	int	j;
 
 	if (node == NULL)
 		return ;
@@ -54,7 +65,20 @@ void	print_ast(t_ast *node, int depth)
 		printf("  ");
 		i++;
 	}
-	printf("[Type: %d, Value: %s]\n", node->type, node->value);
+	printf("[Type: %d", node->type);
+	if (node->args && node->args[0])
+	{
+		printf(", Args: ");
+		j = 0;
+		while (node->args[j])
+		{
+			printf("%s", node->args[j]);
+			if (node->args[j + 1])
+				printf(" ");
+			j++;
+		}
+	}
+	printf("]\n");
 	print_ast(node->left, depth + 1);
 	print_ast(node->right, depth + 1);
 }

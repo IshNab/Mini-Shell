@@ -9,7 +9,7 @@ REMOVE = rm -f
 
 SRCS = \
 ./srcs/main.c \
-./srcs/utils.c \
+./srcs/utils/utils.c \
 ./srcs/utils/tokenizer.c \
 ./srcs/utils/quote_utils.c \
 ./srcs/utils/expand_utils.c \
@@ -21,9 +21,14 @@ SRCS = \
 ./srcs/builtins/export.c \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
+./srcs/parser/lexer.c \
+./srcs/parser/lexer_helpers.c \
+./srcs/parser/ast.c \
 ./srcs/parser/parse_command.c \
+./srcs/parser/parse_helpers.c \
+./srcs/parser/parse_ast_helpers.c \
 ./srcs/executor/executor.c \
-./srcs/error_function.c
+./srcs/error.c
 
 OBJS = $(SRCS:.c=.o)
 

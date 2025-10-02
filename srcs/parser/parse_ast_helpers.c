@@ -31,11 +31,20 @@ t_ast	*build_simple_ast(t_token *tokens)
 	int		argc;
 	char	**args;
 
-	cmd_node = ast_new_node(TOKEN_WORD, NULL);
+	cmd_node = malloc(sizeof(t_ast));
+	if (!cmd_node)
+		return (NULL);
+	cmd_node->type = NODE_CMD;
+	cmd_node->left = NULL;
+	cmd_node->right = NULL;
+	cmd_node->exit_status = 0;
 	argc = 0;
 	args = malloc(sizeof(char *) * 100);
 	if (!args)
+	{
+		free(cmd_node);
 		return (NULL);
+	}
 	fill_args_from_tokens(tokens, args, &argc);
 	args[argc] = NULL;
 	cmd_node->args = args;
@@ -44,9 +53,21 @@ t_ast	*build_simple_ast(t_token *tokens)
 
 void	execute_ast_wrapper(t_ast *ast)
 {
-	extern int execute_ast(t_ast *node, void *mshell);
-
-	execute_ast(ast, NULL);
+	// For now, just print the command that would be executed
+	// TODO: Implement proper execution
+	if (ast && ast->args && ast->args[0])
+	{
+		printf("Would execute: ");
+		int i = 0;
+		while (ast->args[i])
+		{
+			printf("%s", ast->args[i]);
+			if (ast->args[i + 1])
+				printf(" ");
+			i++;
+		}
+		printf("\n");
+	}
 }
 
 void	parse_and_exec_ast(t_token *tokens)

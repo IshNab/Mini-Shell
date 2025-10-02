@@ -18,7 +18,7 @@
 
 // Helpers are now in lexer_helpers.c
 
-static t_token	*new_token(t_token_type type, char *value)
+t_token	*new_token(t_token_type type, char *value)
 {
 	t_token	*tok;
 
