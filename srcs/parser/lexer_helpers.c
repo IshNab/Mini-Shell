@@ -12,6 +12,22 @@
 
 #include "../inc/minishell.h"
 
+static char	*ft_strndup(const char *s, size_t n)
+{
+	char	*dup;
+	size_t	len;
+
+	len = ft_strlen(s);
+	if (n < len)
+		len = n;
+	dup = malloc(len + 1);
+	if (!dup)
+		return (NULL);
+	ft_memcpy(dup, s, len);
+	dup[len] = '\0';
+	return (dup);
+}
+
 static t_token_type	get_token_type(const char *s, int op_len)
 {
 	if (!strncmp(s, "|", 1))
@@ -24,6 +40,10 @@ static t_token_type	get_token_type(const char *s, int op_len)
 		return (TOKEN_REDIRECT_IN);
 	else if (!strncmp(s, ">", 1))
 		return (TOKEN_REDIRECT_OUT);
+	else if (!strncmp(s, "'", 1))
+		return (TOKEN_SINGLE_QUOTE);
+	else if (!strncmp(s, "\"", 1))
+		return (TOKEN_DOUBLE_QUOTE);
 	return (TOKEN_WORD);
 }
 
@@ -51,7 +71,7 @@ static void	handle_operator(const char *input, int *i,
 	op_len = is_operator(&input[*i]);
 	type = get_token_type(&input[*i], op_len);
 	tok = new_token(type,
-			strndup(&input[*i], op_len));
+			ft_strndup(&input[*i], op_len));
 	add_token(head, tail, tok);
 	*i += op_len;
 }
@@ -66,6 +86,6 @@ static void	handle_word(const char *input, int *i, t_token **head,
 	while (input[*i] && !isspace(input[*i]) && !is_operator(&input[*i]))
 		(*i)++;
 	tok = new_token(TOKEN_WORD,
-			strndup(&input[start], *i - start));
+			ft_strndup(&input[start], *i - start));
 	add_token(head, tail, tok);
 }
