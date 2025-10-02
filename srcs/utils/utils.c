@@ -34,7 +34,7 @@ void	*safe_malloc(size_t size)
 	memory = malloc(size);
 	if (!memory)
 	{
-		write(2, "malloc failed", ft_strlen("malloc failed"));
+		panic("malloc failed");
 		return (NULL);
 	}
 	return (memory);

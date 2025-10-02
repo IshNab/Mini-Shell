@@ -41,8 +41,60 @@ char	*ft_strtok(char *str, const char *delim)
 	return (token_start);
 }
 
-char	*ms_tokenize_next(const char *input, int *i, int *in_squote,
-			int *in_dquote);
+char	*ms_tokenize_next(const char *input, int *i, int *in_squote,\ 
+	 int *in_dquote)
+{
+	char	*token;
+	int		start;
+	int		len;
+
+	if (!input[*i])
+		return (NULL);
+	start = *i;
+	len = 0;
+	// Handle quoted content
+	if (input[*i] == '\'' && !(*in_dquote))
+	{
+		*in_squote = !(*in_squote);
+		(*i)++;
+		token = ft_strdup("'");
+		return (token);
+	}
+	else if (input[*i] == '"' && !(*in_squote))
+	{
+		*in_dquote = !(*in_dquote);
+		(*i)++;
+		token = ft_strdup("\"");
+		return (token);
+	}
+	// Handle quoted word content
+	else if (*in_squote || *in_dquote)
+	{
+		while (input[*i] && ((*in_squote && input[*i] != '\'') || 
+			   (*in_dquote && input[*i] != '"')))
+		{
+			(*i)++;
+			len++;
+		}
+		token = ft_strndup(&input[start], len);
+		return (token);
+	}
+	// Handle regular word
+	else
+	{
+		while (input[*i] && input[*i] != ' ' && input[*i] != '\t' && 
+			   input[*i] != '\'' && input[*i] != '"' && 
+			   input[*i] != '|' && input[*i] != '<' && input[*i] != '>')
+		{
+			(*i)++;
+			len++;
+		}
+		if (len == 0)
+			return (NULL);
+		token = ft_strndup(&input[start], len);
+		return (token);
+	}
+}
 
 static void	token_append(char **tokens, int *t, char *token)
 {

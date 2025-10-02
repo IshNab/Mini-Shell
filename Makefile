@@ -30,6 +30,12 @@ SRCS = \
 ./srcs/builtins/unset.c \
 ./srcs/executor/executor.c \
 ./srcs/executor/mockup_parser.c \
+./srcs/parser/lexer.c \
+./srcs/parser/lexer_helpers.c \
+./srcs/parser/ast.c \
+./srcs/parser/parse_command.c \
+./srcs/parser/parse_helpers.c \
+./srcs/parser/parse_ast_helpers.c \
 ./srcs/error.c
 
 OBJS = $(SRCS:.c=.o)
