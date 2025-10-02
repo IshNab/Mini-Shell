@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:36:17 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/12 15:58:03 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/18 22:24:04 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(char **args)
+int	ft_isdigit(int c)
 {
-	char	cwd[1024];
-
-	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
+	if (c >= '0' && c <= '9')
+		return (1);
 	else
-		perror("pwd");
-	return (0);
+		return (0);
 }

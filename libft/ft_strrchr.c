@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:36:17 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/17 12:19:47 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/19 11:19:49 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(char **args)
+char	*ft_strrchr(const char *s, int c)
 {
-	char	cwd[1024];
+	size_t	i;
 
-	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
-	return (0);
+	i = ft_strlen(s);
+	if ((char)c == '\0')
+		return ((char *)&s[i]);
+	while (i > 0)
+	{
+		if (s[i - 1] == (char)c)
+			return ((char *)&s[i - 1]);
+		i--;
+	}
+	return (NULL);
 }

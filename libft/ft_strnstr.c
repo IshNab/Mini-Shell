@@ -1,25 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:36:17 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/18 13:41:11 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/28 14:20:38 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(char **args)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	char	cwd[1024];
+	size_t	i;
+	size_t	j;
 
-	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
-	return (0);
+	i = 0;
+	if (little[0] == '\0')
+		return ((char *)big);
+	while (big[i] != '\0' && i < len)
+	{
+		j = 0;
+		if (big[i] == little[j])
+		{
+			while (little[j] != '\0' && i + j < len && big[i + j] == little[j])
+				j++;
+			if (little[j] == '\0')
+				return ((char *)&big[i]);
+		}
+		i++;
+	}
+	return (NULL);
 }

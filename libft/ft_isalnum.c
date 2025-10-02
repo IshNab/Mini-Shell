@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:36:17 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/12 16:12:18 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/19 11:11:00 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(char **args)
+int	ft_isalnum(int c)
 {
-	char	cwd[1024];
-
-	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
+	if (ft_isalpha(c) || ft_isdigit(c))
+		return (1);
 	return (0);
 }

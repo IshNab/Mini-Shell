@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:36:17 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/12 23:24:39 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/28 17:39:10 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(char **args)
+void	ft_bzero(void *s, size_t n)
 {
-	char	cwd[1024];
+	char	*str;
+	size_t	i;
 
-	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
-	return (0);
+	str = (char *)s;
+	i = 0;
+	if (!n)
+		return ;
+	while (i < n)
+	{
+		str[i] = 0;
+		i++;
+	}
 }

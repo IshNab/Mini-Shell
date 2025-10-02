@@ -6,12 +6,14 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/25 18:25:19 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 12:44:19 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+#define DEBUG 0
 
 //=============================================================================/
 //								Library Headers                                /
@@ -87,7 +89,7 @@ typedef struct s_ast
 	t_node_type		type;
 	struct s_ast	*left; //pipes: left cmd
 	struct s_ast	*right; //pipes: right cmd
-	int				exit_status;
+	int				exit_status; //should this be here? maybe only on the shell->exit_status
 	char			**args; //command arguments
 }	t_ast;
 typedef enum e_redir_type
@@ -104,7 +106,8 @@ typedef struct s_redir
 	t_node_type		type;
 }	t_redir;
 
-typedef struct s_command
+//UNCOMMENT BEFORE RELEASE
+/* typedef struct s_command
 {
 	t_ast			base;
 	char			**args;
@@ -112,7 +115,9 @@ typedef struct s_command
 	char			*output_file; // > or >> output
 	int				is_append; //flag for no=0 yes=1
 	char			*heredoc_delimiter; //<< delimiter
-}	t_command;
+}	t_command; */
+
+
 
 //pipe node
 typedef struct s_pipeline
@@ -160,13 +165,30 @@ void	expand_and_append(char **res, char *tmp);
 //								Executor                                       /
 //=============================================================================/
 
+//MOCKUP PARSER (DELETE THIS BEFORE RELEASE)
+// Simple mockup structure for testing
+typedef struct s_command {
+    char **args;        // Array of arguments
+    char *input_file;   // Input redirection
+    char *output_file;  // Output redirection
+    int append;         // Append mode for output
+    struct s_command *next; // For pipe chains
+} t_command;
+
+void				free_command(t_command *cmd);
+t_command			*mockup_parse(char *input, char **envp, int last_status);
+t_command			*create_mockup_command(char *input_line);
+void				execute_command(t_command *cmd, t_mshell *shell);
+
+
+
 int					execute_ast(t_ast *ast, t_mshell *mshell);
 
 //=============================================================================/
 //								Builtins                                       /
 //=============================================================================/
 
-int					builtin_cd(char **args);
+int					builtin_cd(char **args, t_mshell *shell);
 int					builtin_echo(char **args);
 int					builtin_env(char **args);
 int					builtin_exit(char **args);
@@ -200,9 +222,25 @@ void				print_ast(t_ast *node, int depth);
 //								Utils                                          /
 //=============================================================================/
 
-void				print_banner(void);
-int					panic(char *error_msg);
-int					fork_wrapper(void);
+int					ft_envsize(t_env *env);
 void				*safe_malloc(size_t size);
+int					fork_wrapper(void);
+void				print_banner(void);
+
+int					panic(char *error_msg);
+int					error_msg(char *msg, int exit_code, t_mshell *shell);
+
+
+//=============================================================================/
+//								Debug                                          /
+//=============================================================================/
+
+// Debug functions
+void debug_print_env(t_env *env);
+void debug_print_command(t_command *cmd);
+void debug_print_shell(t_mshell *shell);
+void debug_checkpoint(const char *function, int line, const char *message);
+
+#define DEBUG_CHECKPOINT(msg) debug_checkpoint(__FUNCTION__, __LINE__, msg)
 
 #endif

@@ -1,25 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:36:17 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/22 17:23:46 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/25 12:59:42 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(char **args)
+/* static void	ft_test(unsigned int i, char *str)
 {
-	char	cwd[1024];
+	*str = ft_toupper(*str);
+} */
 
-	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
-	return (0);
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
+{
+	int	i;
+	int	j;
+
+	if (!s || !f)
+		return ;
+	i = 0;
+	j = ft_strlen(s);
+	while (i < j)
+	{
+		(*f)(i, &s[i]);
+		i++;
+	}
 }
+
+/* int	main(void)
+{
+	char	str[] = "Oi gente linda!";
+
+	ft_striteri(str, ft_test);
+	printf("%s", str);
+} */

@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 14:33:35 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:36:17 by maborges         ###   ########.fr       */
+/*   Created: 2024/11/18 13:31:20 by maborges          #+#    #+#             */
+/*   Updated: 2024/11/25 17:43:06 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(char **args)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	char	cwd[1024];
+	size_t			i;
+	unsigned char	*tmps1;
+	unsigned char	*tmps2;
 
-	(void)args;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
+	i = 0;
+	tmps1 = (unsigned char *)s1;
+	tmps2 = (unsigned char *)s2;
+	while (i < n)
+	{
+		if (tmps1[i] != tmps2[i])
+			return (tmps1[i] - tmps2[i]);
+		i++;
+	}
 	return (0);
 }

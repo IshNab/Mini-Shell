@@ -6,13 +6,26 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/25 18:05:40 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/01 17:12:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+int	ft_envsize(t_env *env)
+{
+	t_env	*tmp;
+	int		i;
 
+	tmp = env;
+	i = 0;
+	while (tmp)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	return (i);
+}
 
 void	*safe_malloc(size_t size)
 {
@@ -33,7 +46,7 @@ int	fork_wrapper(void)
 
 	pid = fork();
 	if (pid == -1)
-		panic("fork");
+		perror("fork failed");
 	return (pid);
 }
 

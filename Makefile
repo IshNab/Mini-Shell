@@ -4,16 +4,23 @@ CC = cc
 CFLAGS = -g -Wall -Werror -Wextra -I$(INC)
 
 INC = ./inc/
+LIBFT_DIR = ./libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
 REMOVE = rm -f
+
+#Commented out files for executor implementation
+#./srcs/executor/mockup_parser.c DELETE BEFORE RELEASE	!!!
+#./srcs/utils/tokenizer.c \
+./srcs/utils/quote_utils.c \
+./srcs/utils/expand_utils.c \
+./srcs/utils/str_append.c \
+./srcs/parser/parse_command.c \
 
 SRCS = \
 ./srcs/main.c \
 ./srcs/utils/utils.c \
-./srcs/utils/tokenizer.c \
-./srcs/utils/quote_utils.c \
-./srcs/utils/expand_utils.c \
-./srcs/utils/str_append.c \
+./srcs/utils/debug_functions.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \
@@ -21,13 +28,14 @@ SRCS = \
 ./srcs/builtins/export.c \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
+./srcs/executor/executor.c \
+./srcs/executor/mockup_parser.c \
 ./srcs/parser/lexer.c \
 ./srcs/parser/lexer_helpers.c \
 ./srcs/parser/ast.c \
 ./srcs/parser/parse_command.c \
 ./srcs/parser/parse_helpers.c \
 ./srcs/parser/parse_ast_helpers.c \
-./srcs/executor/executor.c \
 ./srcs/error.c
 
 OBJS = $(SRCS:.c=.o)
@@ -42,10 +50,13 @@ all: $(NAME)
 	@echo "$(GREEN)Compilation successfully done!!$(RESET)"
 
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
 	@echo "$(CYAN)Linking minishell...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJS) -L./libft -lft -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a -o $(NAME) -lreadline
 	@echo "$(GREEN)Minishell executable created successfully!$(RESET)"
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
 
 %.o: %.c
 	@echo "$(CYAN)Compiling $<...$(RESET)"
