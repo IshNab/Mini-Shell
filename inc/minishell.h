@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/25 15:32:05 by maborges         ###   ########.fr       */
+/*   Updated: 2025/09/25 18:25:19 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@
 # include <sys/wait.h>
 # include <sys/stat.h> //check the need
 # include <fcntl.h> // check the need
+# include <ctype.h> // need to take this out before release
 # include <errno.h>
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
-# include "./executor.h"
 
 //=============================================================================/
 //								Colors                                         /
@@ -75,7 +75,7 @@ typedef enum e_node_type
 	NODE_REDIR
 }	t_node_type;
 
-typedef struct s_expand_state
+typedef struct s_expand_state // Ishta gonna check what it is and if we need
 {
 	int	in_squote;
 	int	in_dquote;
@@ -136,6 +136,43 @@ typedef struct s_mshell
 	int				must_exit; //flag for when u must exit shell
 	pid_t			shell_pid; //shell pid
 }	t_mshell;
+
+
+//=============================================================================/
+//								Parser                                         /
+//=============================================================================/
+
+int		parse_command(char *input, char **envp);
+char	*ms_remove_quotes(const char *token);
+int		is_quote(char c);
+char	*str_append(char *s, char c);
+char	*expand_status(int last_status);
+char	*ft_strtok(char *str, const char *delim);
+char	**ms_tokenize(const char *input);
+char	*ms_tokenize_next(const char *input, int *i, int *in_squote,int *in_dquote);
+char	*ms_expand_token(const char *token, char **envp, int last_status);
+void	expand_token_loop(const char *token, char **res, char **envp,
+			int last_status);
+char	*expand_variable(const char *token, int *i, char **envp, int last_status);
+void	expand_and_append(char **res, char *tmp);
+
+//=============================================================================/
+//								Executor                                       /
+//=============================================================================/
+
+int					execute_ast(t_ast *ast, t_mshell *mshell);
+
+//=============================================================================/
+//								Builtins                                       /
+//=============================================================================/
+
+int					builtin_cd(char **args);
+int					builtin_echo(char **args);
+int					builtin_env(char **args);
+int					builtin_exit(char **args);
+int					builtin_export(char **args);
+int					builtin_pwd(char **args);
+int					builtin_unset(char **args);
 
 //=============================================================================/
 //								Lexer & Parser                                 /

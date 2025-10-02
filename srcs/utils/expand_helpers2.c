@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand_helpers2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inabakka <inabakka@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/24 14:13:05 by inabakka         ###   ########.fr       */
+/*   Updated: 2025/09/25 18:06:34 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-#include <stdlib.h>
-#include <string.h>
 
 void	init_expand_vars(t_expand_vars *vars)
 {
