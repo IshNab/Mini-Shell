@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/25 18:06:30 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:02:53 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,42 +14,43 @@
 
 char	*expand_variable(const char *token, int *i,
 			char **envp, int last_status);
-void	init_expand_vars(t_expand_vars *vars);
-void	expand_token_handle(char c, t_expand_ctx *ctx);
-void	expand_token_handle_dollar(const char *token, t_expand_ctx *ctx);
+void	expand_token_handle(char c, t_expand_state *ctx);
+void	expand_token_handle_dollar(const char *token, t_expand_state *ctx,
+			char **envp, int last_status, char **res);
 int		is_quote_to_skip(char c, int in_dquote, int in_squote);
 
-static char	*expand_variable_env(const char *token, int *i,
-			char **envp, t_expand_vars *vars)
+static char	*expand_variable_env(const char *token, int *i, char **envp)
 {
-	vars->j = *i + 1;
-	while (ft_isalnum(token[vars->j]) || token[vars->j] == '_')
-		vars->j++;
-	vars->len = vars->j - *i - 1;
-	ft_strlcpy(vars->var, token + *i + 1, vars->len + 1);
-	vars->val = get_env_value(vars->var, envp);
-	*i = vars->j - 1;
-	if (vars->val)
-		return (ft_strdup(vars->val));
+	int		j;
+	int		len;
+	char	var[256];
+	char	*val;
+
+	j = *i + 1;
+	while (ft_isalnum(token[j]) || token[j] == '_')
+		j++;
+	len = j - *i - 1;
+	ft_strlcpy(var, token + *i + 1, len + 1);
+	val = get_env_value(var, envp);
+	*i = j - 1;
+	if (val)
+		return (ft_strdup(val));
 	return (NULL);
 }
 
 char	*expand_variable(const char *token, int *i,
 			char **envp, int last_status)
 {
-	t_expand_vars	vars;
-	char			*res;
+	char	*res;
 
 	res = NULL;
-	init_expand_vars(&vars);
 	if (token[*i + 1] == '?')
 	{
-		ft_snprintf(vars.buf, sizeof(vars.buf), "%d", last_status);
-		res = ft_strdup(vars.buf);
+		res = ft_itoa(last_status);
 		(*i)++;
 	}
 	else if (ft_isalnum(token[*i + 1]) || token[*i + 1] == '_')
-		res = expand_variable_env(token, i, envp, &vars);
+		res = expand_variable_env(token, i, envp);
 	else
 		res = str_append(NULL, '$');
 	return (res);
@@ -66,30 +67,27 @@ void	expand_and_append(char **res, char *tmp)
 		free(old);
 }
 
-static void	expand_token_loop_body(const char *token, t_expand_ctx *ctx)
+static void	expand_token_loop_body(const char *token, t_expand_state *ctx,
+			char **envp, int last_status, char **res)
 {
-	if (token[ctx->st.i] == '$' && !ctx->st.in_squote)
-		expand_token_handle_dollar(token, ctx);
-	else if (!is_quote_to_skip(token[ctx->st.i], ctx->st.in_dquote,
-			ctx->st.in_squote))
-		*(ctx->res) = str_append(*(ctx->res), token[ctx->st.i]);
+	if (token[ctx->i] == '$' && !ctx->in_squote)
+		expand_token_handle_dollar(token, ctx, envp, last_status, res);
+	else if (!is_quote_to_skip(token[ctx->i], ctx->in_dquote, ctx->in_squote))
+		*res = str_append(*res, token[ctx->i]);
 }
 
 void	expand_token_loop(const char *token, char **res, char **envp,
 			int last_status)
 {
-	t_expand_ctx	ctx;
+	t_expand_state	ctx;
 
-	ctx.st.in_squote = 0;
-	ctx.st.in_dquote = 0;
-	ctx.st.i = 0;
-	ctx.envp = envp;
-	ctx.last_status = last_status;
-	ctx.res = res;
-	while (token[ctx.st.i])
+	ctx.in_squote = 0;
+	ctx.in_dquote = 0;
+	ctx.i = 0;
+	while (token[ctx.i])
 	{
-		expand_token_handle(token[ctx.st.i], &ctx);
-		expand_token_loop_body(token, &ctx);
-		ctx.st.i++;
+		expand_token_handle(token[ctx.i], &ctx);
+		expand_token_loop_body(token, &ctx, envp, last_status, res);
+		ctx.i++;
 	}
 }

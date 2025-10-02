@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:10:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/25 18:25:34 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 17:56:29 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_token	*new_token(t_token_type type, char *value)
 	return (tok);
 }
 
-static int	is_operator(const char *s)
+int	is_operator(const char *s)
 {
 	if (!strncmp(s, ">>", 2) || !strncmp(s, "<<", 2))
 		return (2);
@@ -38,14 +38,6 @@ static int	is_operator(const char *s)
 		return (1);
 	return (0);
 }
-
-// Prototypes for helpers
-static t_token_type	get_token_type(const char *s, int op_len);
-static void			add_token(t_token **head, t_token **tail, t_token *tok);
-static void			handle_operator(const char *input, int *i, t_token **head,
-								t_token **tail);
-static void			handle_word(const char *input, int *i, t_token **head,
-								t_token **tail);
 
 t_token	*lexer(const char *input)
 {

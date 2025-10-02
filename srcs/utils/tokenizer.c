@@ -6,19 +6,16 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/25 18:07:24 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:04:18 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-#include <stdlib.h>
-#include <string.h>
 
 char	*ft_strtok(char *str, const char *delim)
 {
 	static char	*save_ptr = NULL;
 	char		*token_start;
-	int			i;
 
 	if (str)
 		save_ptr = str;
@@ -41,8 +38,8 @@ char	*ft_strtok(char *str, const char *delim)
 	return (token_start);
 }
 
-char	*ms_tokenize_next(const char *input, int *i, int *in_squote,\ 
-	 int *in_dquote)
+char	*ms_tokenize_next(const char *input, int *i, int *in_squote,
+			int *in_dquote)
 {
 	char	*token;
 	int		start;
@@ -70,7 +67,7 @@ char	*ms_tokenize_next(const char *input, int *i, int *in_squote,\
 	// Handle quoted word content
 	else if (*in_squote || *in_dquote)
 	{
-		while (input[*i] && ((*in_squote && input[*i] != '\'') || 
+		while (input[*i] && ((*in_squote && input[*i] != '\'') ||
 			   (*in_dquote && input[*i] != '"')))
 		{
 			(*i)++;
@@ -82,8 +79,8 @@ char	*ms_tokenize_next(const char *input, int *i, int *in_squote,\
 	// Handle regular word
 	else
 	{
-		while (input[*i] && input[*i] != ' ' && input[*i] != '\t' && 
-			   input[*i] != '\'' && input[*i] != '"' && 
+		while (input[*i] && input[*i] != ' ' && input[*i] != '\t' &&
+			   input[*i] != '\'' && input[*i] != '"' &&
 			   input[*i] != '|' && input[*i] != '<' && input[*i] != '>')
 		{
 			(*i)++;

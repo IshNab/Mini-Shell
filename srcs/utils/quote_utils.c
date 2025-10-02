@@ -6,16 +6,11 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/25 18:06:40 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:03:28 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-static int	is_quote(char c)
-{
-	return (c == '\'' || c == '"');
-}
 
 char	*ms_remove_quotes(const char *token)
 {

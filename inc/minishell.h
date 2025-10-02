@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/02 12:44:19 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:06:15 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_expand_state // Ishta gonna check what it is and if we need
 	int	i;
 }	t_expand_state;
 
+
 typedef struct s_ast
 {
 	t_node_type		type;
@@ -116,8 +117,6 @@ typedef struct s_redir
 	int				is_append; //flag for no=0 yes=1
 	char			*heredoc_delimiter; //<< delimiter
 }	t_command; */
-
-
 
 //pipe node
 typedef struct s_pipeline
@@ -152,12 +151,16 @@ char	*ms_remove_quotes(const char *token);
 int		is_quote(char c);
 char	*str_append(char *s, char c);
 char	*expand_status(int last_status);
+char	*get_env_value(const char *var, char **envp);
 char	*ft_strtok(char *str, const char *delim);
 char	**ms_tokenize(const char *input);
 char	*ms_tokenize_next(const char *input, int *i, int *in_squote,int *in_dquote);
 char	*ms_expand_token(const char *token, char **envp, int last_status);
 void	expand_token_loop(const char *token, char **res, char **envp,
 			int last_status);
+void	expand_token_handle(char c, t_expand_state *ctx);
+void	expand_token_handle_dollar(const char *token, t_expand_state *ctx,
+			char **envp, int last_status, char **res);
 char	*expand_variable(const char *token, int *i, char **envp, int last_status);
 void	expand_and_append(char **res, char *tmp);
 

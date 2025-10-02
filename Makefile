@@ -11,16 +11,19 @@ REMOVE = rm -f
 
 #Commented out files for executor implementation
 #./srcs/executor/mockup_parser.c DELETE BEFORE RELEASE	!!!
-#./srcs/utils/tokenizer.c \
-./srcs/utils/quote_utils.c \
-./srcs/utils/expand_utils.c \
-./srcs/utils/str_append.c \
-./srcs/parser/parse_command.c \
+#
+
 
 SRCS = \
 ./srcs/main.c \
 ./srcs/utils/utils.c \
 ./srcs/utils/debug_functions.c \
+./srcs/utils/str_append.c \
+./srcs/utils/quote_utils.c \
+./srcs/utils/tokenizer.c \
+./srcs/utils/expand_utils.c \
+./srcs/utils/expand_helpers.c \
+./srcs/utils/expand_helpers2.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \

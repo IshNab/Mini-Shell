@@ -6,13 +6,13 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/25 18:25:29 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:13:16 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static char	*ft_strndup(const char *s, size_t n)
+char	*ft_strndup(const char *s, size_t n)
 {
 	char	*dup;
 	size_t	len;
@@ -28,7 +28,7 @@ static char	*ft_strndup(const char *s, size_t n)
 	return (dup);
 }
 
-static t_token_type	get_token_type(const char *s, int op_len)
+static t_token_type	get_token_type(const char *s)
 {
 	if (!strncmp(s, "|", 1))
 		return (TOKEN_PIPE);
@@ -61,7 +61,7 @@ static void	add_token(t_token **head, t_token **tail, t_token *tok)
 	}
 }
 
-static void	handle_operator(const char *input, int *i,
+void	handle_operator(const char *input, int *i,
 	t_token **head, t_token **tail)
 {
 	int				op_len;
@@ -69,14 +69,14 @@ static void	handle_operator(const char *input, int *i,
 	t_token			*tok;
 
 	op_len = is_operator(&input[*i]);
-	type = get_token_type(&input[*i], op_len);
+	type = get_token_type(&input[*i]);
 	tok = new_token(type,
 			ft_strndup(&input[*i], op_len));
 	add_token(head, tail, tok);
 	*i += op_len;
 }
 
-static void	handle_word(const char *input, int *i, t_token **head,
+void	handle_word(const char *input, int *i, t_token **head,
 	t_token **tail)
 {
 	int		start;

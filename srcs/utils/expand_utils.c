@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/09/25 18:06:36 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:19:46 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,5 @@ char	*ms_expand_token(const char *token, char **envp, int last_status)
 
 char	*expand_status(int last_status)
 {
-	char	*buf;
-
-	buf = (char *)malloc(16);
-	if (!buf)
-		return (NULL);
-	ft_snprintf(buf, 16, "%d", last_status);
-	return (buf);
+	return (ft_itoa(last_status));
 }
