@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/27 21:28:53 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:00:28 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ int	main(int argc, char **argv, char **envp)
 		cmd = mockup_parse(line, envp, shell.exit_status);
 		debug_print_command(cmd);
 
-		execute_command(cmd, &shell);
+		if (cmd)
+			execute_command(cmd, &shell);
 		//should I return smt here?
 		free_command(cmd);
 		free(line);

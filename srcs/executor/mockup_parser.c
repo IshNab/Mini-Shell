@@ -33,17 +33,18 @@ t_command	*mockup_parse(char *input, char **envp, int last_status)
 // Helper function to free command structure
 void	free_command(t_command *cmd)
 {
-    int i = 0;
-    if (!cmd)
-        return;
+	int	i;
 
-    if (cmd->args)
-    {
-        while (cmd->args[i])
-            free(cmd->args[i++]);
-        free(cmd->args);
-    }
-    free(cmd->input_file);
-    free(cmd->output_file);
-    free(cmd);
+	i = 0;
+	if (!cmd)
+		return ;
+	if (cmd->args)
+	{
+		while (cmd->args[i])
+			free(cmd->args[i++]);
+		free(cmd->args);
+	}
+	free(cmd->input_file);
+	free(cmd->output_file);
+	free(cmd);
 }
