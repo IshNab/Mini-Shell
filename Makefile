@@ -23,7 +23,6 @@ SRCS = \
 ./srcs/utils/tokenizer.c \
 ./srcs/utils/expand_utils.c \
 ./srcs/utils/expand_helpers.c \
-./srcs/utils/expand_helpers2.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \
