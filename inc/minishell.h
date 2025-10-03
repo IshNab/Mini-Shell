@@ -200,6 +200,10 @@ t_token				*new_token(t_token_type type, char *value);
 void				free_token_list(t_token *head);
 void				print_tokens(t_token *tok);
 int					is_operator(const char *s);
+void				handle_operator(const char *input, int *i,
+						t_token **head, t_token **tail);
+void				handle_word(const char *input, int *i, t_token **head,
+						t_token **tail);
 
 // Parser functions
 int					parse_command(char *input, char **envp);
