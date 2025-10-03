@@ -77,12 +77,6 @@ typedef enum e_node_type
 	NODE_REDIR
 }	t_node_type;
 
-typedef struct s_expand_state // Ishta gonna check what it is and if we need
-{
-	int	in_squote;
-	int	in_dquote;
-	int	i;
-}	t_expand_state;
 
 
 typedef struct s_ast
@@ -158,9 +152,6 @@ char	*ms_tokenize_next(const char *input, int *i, int *in_squote,int *in_dquote)
 char	*ms_expand_token(const char *token, char **envp, int last_status);
 void	expand_token_loop(const char *token, char **res, char **envp,
 			int last_status);
-void	expand_token_handle(char c, t_expand_state *ctx);
-void	expand_token_handle_dollar(const char *token, t_expand_state *ctx,
-			char **envp, int last_status, char **res);
 char	*expand_variable(const char *token, int *i, char **envp, int last_status);
 void	expand_and_append(char **res, char *tmp);
 

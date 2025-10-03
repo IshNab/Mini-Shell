@@ -14,9 +14,6 @@
 
 char	*expand_variable(const char *token, int *i,
 			char **envp, int last_status);
-void	expand_token_handle(char c, t_expand_state *ctx);
-void	expand_token_handle_dollar(const char *token, t_expand_state *ctx,
-			char **envp, int last_status, char **res);
 int		is_quote_to_skip(char c, int in_dquote, int in_squote);
 
 static char	*expand_variable_env(const char *token, int *i, char **envp)
@@ -67,27 +64,46 @@ void	expand_and_append(char **res, char *tmp)
 		free(old);
 }
 
-static void	expand_token_loop_body(const char *token, t_expand_state *ctx,
-			char **envp, int last_status, char **res)
+static void	expand_token_loop_body(const char *token, int *i, int *in_squote, 
+			int *in_dquote, char **envp, int last_status, char **res)
 {
-	if (token[ctx->i] == '$' && !ctx->in_squote)
-		expand_token_handle_dollar(token, ctx, envp, last_status, res);
-	else if (!is_quote_to_skip(token[ctx->i], ctx->in_dquote, ctx->in_squote))
-		*res = str_append(*res, token[ctx->i]);
+	if (token[*i] == '$' && !(*in_squote))
+	{
+		char	*tmp;
+		tmp = expand_variable(token, i, envp, last_status);
+		if (tmp)
+			expand_and_append(res, tmp);
+	}
+	else if (!is_quote_to_skip(token[*i], *in_dquote, *in_squote))
+		*res = str_append(*res, token[*i]);
 }
 
 void	expand_token_loop(const char *token, char **res, char **envp,
 			int last_status)
 {
-	t_expand_state	ctx;
+	int	in_squote;
+	int	in_dquote;
+	int	i;
 
-	ctx.in_squote = 0;
-	ctx.in_dquote = 0;
-	ctx.i = 0;
-	while (token[ctx.i])
+	in_squote = 0;
+	in_dquote = 0;
+	i = 0;
+	while (token[i])
 	{
-		expand_token_handle(token[ctx.i], &ctx);
-		expand_token_loop_body(token, &ctx, envp, last_status, res);
-		ctx.i++;
+		// Handle quote state changes
+		if (token[i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (token[i] == '"' && !in_squote)
+			in_dquote = !in_dquote;
+		
+		expand_token_loop_body(token, &i, &in_squote, &in_dquote, envp, last_status, res);
+		i++;
 	}
+}
+
+int	is_quote_to_skip(char c, int in_dquote, int in_squote)
+{
+	if ((c == '\'' && !in_dquote) || (c == '"' && !in_squote))
+		return (1);
+	return (0);
 }
