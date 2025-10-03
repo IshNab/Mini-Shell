@@ -60,7 +60,9 @@ int	validate_syntax(t_token *tokens)
 			expect_word = 0;
 		// Skip quote tokens in syntax validation
 		else if (curr->type == TOKEN_SINGLE_QUOTE || curr->type == TOKEN_DOUBLE_QUOTE)
-			; // Do nothing, quotes are handled by the lexer
+		{
+			// Do nothing, quotes are handled by the lexer
+		}
 		curr = curr->next;
 	}
 	if (expect_word)
