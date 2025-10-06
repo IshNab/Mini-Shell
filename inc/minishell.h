@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/02 19:06:15 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/05 14:33:53 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,12 @@ typedef enum e_node_type
 	NODE_REDIR
 }	t_node_type;
 
+typedef struct s_expand_state // Ishta gonna check what it is and if we need
+{
+	int	in_squote;
+	int	in_dquote;
+	int	i;
+}	t_expand_state;
 
 
 typedef struct s_ast
@@ -102,7 +108,7 @@ typedef struct s_redir
 }	t_redir;
 
 //UNCOMMENT BEFORE RELEASE
-/* typedef struct s_command
+typedef struct s_command
 {
 	t_ast			base;
 	char			**args;
@@ -110,7 +116,7 @@ typedef struct s_redir
 	char			*output_file; // > or >> output
 	int				is_append; //flag for no=0 yes=1
 	char			*heredoc_delimiter; //<< delimiter
-}	t_command; */
+}	t_command;
 
 //pipe node
 typedef struct s_pipeline
@@ -146,12 +152,15 @@ int		is_quote(char c);
 char	*str_append(char *s, char c);
 char	*expand_status(int last_status);
 char	*get_env_value(const char *var, char **envp);
-char	*ft_strtok(char *str, const char *delim);
+char	*//ft_strtok(char *str, const char *delim);
 char	**ms_tokenize(const char *input);
 char	*ms_tokenize_next(const char *input, int *i, int *in_squote,int *in_dquote);
 char	*ms_expand_token(const char *token, char **envp, int last_status);
 void	expand_token_loop(const char *token, char **res, char **envp,
 			int last_status);
+void	expand_token_handle(char c, t_expand_state *ctx);
+void	expand_token_handle_dollar(const char *token, t_expand_state *ctx,
+			char **envp, int last_status, char **res);
 char	*expand_variable(const char *token, int *i, char **envp, int last_status);
 void	expand_and_append(char **res, char *tmp);
 
@@ -159,7 +168,7 @@ void	expand_and_append(char **res, char *tmp);
 //								Executor                                       /
 //=============================================================================/
 
-//MOCKUP PARSER (DELETE THIS BEFORE RELEASE)
+/* //MOCKUP PARSER (DELETE THIS BEFORE RELEASE)
 // Simple mockup structure for testing
 typedef struct s_command {
     char **args;        // Array of arguments
@@ -167,11 +176,11 @@ typedef struct s_command {
     char *output_file;  // Output redirection
     int append;         // Append mode for output
     struct s_command *next; // For pipe chains
-} t_command;
+} t_command; */
 
 void				free_command(t_command *cmd);
-t_command			*mockup_parse(char *input, char **envp, int last_status);
-t_command			*create_mockup_command(char *input_line);
+//t_command			*mockup_parse(char *input, char **envp, int last_status);
+//t_command			*create_mockup_command(char *input_line);
 void				execute_command(t_command *cmd, t_mshell *shell);
 
 
@@ -200,10 +209,6 @@ t_token				*new_token(t_token_type type, char *value);
 void				free_token_list(t_token *head);
 void				print_tokens(t_token *tok);
 int					is_operator(const char *s);
-void				handle_operator(const char *input, int *i,
-						t_token **head, t_token **tail);
-void				handle_word(const char *input, int *i, t_token **head,
-						t_token **tail);
 
 // Parser functions
 int					parse_command(char *input, char **envp);

@@ -6,13 +6,13 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/02 18:04:18 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/05 16:22:01 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-char	*ft_strtok(char *str, const char *delim)
+/*char	*ft_strtok(char *str, const char *delim)
 {
 	static char	*save_ptr = NULL;
 	char		*token_start;
@@ -36,9 +36,9 @@ char	*ft_strtok(char *str, const char *delim)
 	else
 		save_ptr = NULL;
 	return (token_start);
-}
+} */
 
-char	*ms_tokenize_next(const char *input, int *i, int *in_squote,
+/* char	*ms_tokenize_next(const char *input, int *i, int *in_squote,
 			int *in_dquote)
 {
 	char	*token;
@@ -91,45 +91,103 @@ char	*ms_tokenize_next(const char *input, int *i, int *in_squote,
 		token = ft_strndup(&input[start], len);
 		return (token);
 	}
-}
+} */
 
-static void	token_append(char **tokens, int *t, char *token)
+static void	list_token_append(t_token *new, t_token *head, t_token *tail)
 {
-	if (token)
+	if (!head)
+		head = new;
+	else
+		tail->next = new;
+	tail = new;
+
+	/* if (token)
 	{
 		tokens[*t] = token;
 		(*t)++;
-	}
+	} */
 }
 
-static void	init_tokenize_vars(int *t, int *i, int *in_squote, int *in_dquote)
+/* static void	init_tokenize_vars(int *i, int *in_squote, int *in_dquote)
 {
-	*t = 0;
 	*i = 0;
 	*in_squote = 0;
 	*in_dquote = 0;
+} */
+
+// Check for special characters
+static void	check_special_chars(t_token *new, const char *input, int *i)
+{
+	if (input[*i] == '|')
+	{
+		new->type = TOKEN_PIPE;
+		new->value = ft_strdup("|");
+		(*i)++;
+	}
+	else if (input[*i] == '<')
+	{
+		new->type = TOKEN_REDIR_IN;
+		new->value = ft_strdup("<");
+		(*i)++;
+	}
+	else if (input[*i] == '>' && input[*i + 1] == '>')
+	{
+		new->type = TOKEN_APPEND;
+		new->value = ft_strdup(">>");
+		(*i) += 2;
+	}
+	else if (input[*i] == '>')
+	{
+		new->type = TOKEN_REDIR_OUT;
+		new->value = ft_strdup(">");
+		(*i)++;
+	}
+	else if (input[*i] == '"' || input[*i] == '\'')
+	{
+		// Handle quoted string
+		char quote = input[*i++];
+		int start = i;
+		while (input[*i] && input[*i] != quote)
+			(*i)++;
+		new->type = TOKEN_WORD;
+		new->value = ft_substr(input, start, i - start);
+		if (input[*i] == quote)
+			(*i)++;
+	}
+	else
+	{
+		// Regular word
+		int start = i;
+		while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
+			&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>')
+			(*i)++;
+		new->type = TOKEN_WORD;
+		new->value = ft_substr(input, start, *i - start);
+	}
 }
 
 char	**ms_tokenize(const char *input)
 {
-	char	**tokens;
-	int		t;
+	t_token	*head;
+	t_token	*tail;
+	t_token	*new;
 	int		i;
-	int		in_squote;
-	int		in_dquote;
+	char	*token;
 
-	tokens = (char **)malloc(sizeof(char *) * 256);
-	if (!tokens)
-		return (NULL);
-	init_tokenize_vars(&t, &i, &in_squote, &in_dquote);
+	head = NULL;
+	tail = NULL;
+	i = 0;
 	while (input[i])
 	{
-		char *token;
-		while (input[i] == ' ' || input[i] == '\t')
+		while (input[i] && (input[i] == ' ' || input[i] == '\t'))
 			i++;
-		token = ms_tokenize_next(input, &i, &in_squote, &in_dquote);
-		token_append(tokens, &t, token);
+		if (!input[i])
+			break ;
+		new = malloc(sizeof(t_token));
+		new->next = NULL;
+		check_special_chars(&new, &input, &i);
+		new->value = token;
+		list_token_append(&new, &head, &tail);
 	}
-	tokens[t] = NULL;
-	return (tokens);
+	return (head);
 }

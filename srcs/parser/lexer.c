@@ -6,11 +6,11 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:10:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/02 17:56:29 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/04 21:17:18 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 // Helpers are now in lexer_helpers.c
 

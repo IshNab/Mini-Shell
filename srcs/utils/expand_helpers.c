@@ -6,15 +6,15 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/02 19:02:53 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/05 14:36:54 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-char	*expand_variable(const char *token, int *i,
-			char **envp, int last_status);
-int		is_quote_to_skip(char c, int in_dquote, int in_squote);
+//char	*expand_variable(const char *token, int *i,
+//			char **envp, int last_status);
+//int		is_quote_to_skip(char c, int in_dquote, int in_squote);
 
 static char	*expand_variable_env(const char *token, int *i, char **envp)
 {
@@ -64,7 +64,7 @@ void	expand_and_append(char **res, char *tmp)
 		free(old);
 }
 
-static void	expand_token_loop_body(const char *token, int *i, int *in_squote, 
+static void	expand_token_loop_body(const char *token, int *i, int *in_squote,
 			int *in_dquote, char **envp, int last_status, char **res)
 {
 	if (token[*i] == '$' && !(*in_squote))
@@ -95,7 +95,7 @@ void	expand_token_loop(const char *token, char **res, char **envp,
 			in_squote = !in_squote;
 		else if (token[i] == '"' && !in_squote)
 			in_dquote = !in_dquote;
-		
+
 		expand_token_loop_body(token, &i, &in_squote, &in_dquote, envp, last_status, res);
 		i++;
 	}

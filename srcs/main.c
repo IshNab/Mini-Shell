@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/02 15:00:28 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/04 22:07:17 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_mshell	shell;
-	t_command	*cmd;
+	t_ast		ast;
 
 	(void)argc;
 	(void)argv;
@@ -74,15 +74,13 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		if (line)
 			add_history(line);
-
 		DEBUG_CHECKPOINT("About to parse command");
-		cmd = mockup_parse(line, envp, shell.exit_status);
-		debug_print_command(cmd);
-
-		if (cmd)
+		//TODOmake here a parser main function
+		// to mother all the parsing process
+		if (parser(line, envp, shell))
 			execute_command(cmd, &shell);
 		//should I return smt here?
-		free_command(cmd);
+		free_command(cmd); // TODO free ast
 		free(line);
 	}
 	return (shell.exit_status);
