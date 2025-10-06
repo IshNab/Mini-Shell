@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/06 15:34:25 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/06 20:01:01 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ typedef enum e_token_type
 	TOKEN_HEREDOC,
 	TOKEN_SQUOTE,
 	TOKEN_DQUOTE,
-	TOKEN_QUOTED_WORD
 }	t_token_type;
 
 // Token structure for lexer
@@ -77,12 +76,12 @@ typedef enum e_node_type
 	NODE_REDIR
 }	t_node_type;
 
-typedef struct s_expand_state // Ishta gonna check what it is and if we need
+/* typedef struct s_expand_state // Ishta gonna check what it is and if we need
 {
 	int	in_squote;
 	int	in_dquote;
 	int	i;
-}	t_expand_state;
+}	t_expand_state; */
 
 
 typedef struct s_ast
@@ -152,9 +151,7 @@ int		is_quote(char c);
 char	*str_append(char *s, char c);
 char	*expand_status(int last_status);
 char	*get_env_value(const char *var, char **envp);
-char	*//ft_strtok(char *str, const char *delim);
-char	**ms_tokenize(const char *input);
-char	*ms_tokenize_next(const char *input, int *i, int *in_squote,int *in_dquote);
+t_token	*ms_tokenize(const char *input);
 char	*ms_expand_token(const char *token, char **envp, int last_status);
 void	expand_token_loop(const char *token, char **res, char **envp,
 			int last_status);
@@ -203,12 +200,12 @@ int					builtin_unset(char **args);
 //								Lexer & Parser                                 /
 //=============================================================================/
 
-// Lexer functions
-t_token				*lexer(const char *input);
-t_token				*new_token(t_token_type type, char *value);
+// Tokenizer helspers
+char				*ft_strndup(const char *s, size_t n);
+void	handle_word(const char *input, int *i, t_token **head,
+	t_token **tail);
 void				free_token_list(t_token *head);
 void				print_tokens(t_token *tok);
-int					is_operator(const char *s);
 
 // Parser functions
 int					parse_command(char *input, char **envp);

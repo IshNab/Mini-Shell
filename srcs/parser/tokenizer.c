@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/05 16:22:01 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:15:31 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,12 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		new->value = ft_strdup("<");
 		(*i)++;
 	}
+	else if (input[*i] == '<' && input[*i + 1] == '<')
+	{
+		new->type = TOKEN_HEREDOC;
+		new->value = ft_strdup("<<");
+		(*i) += 2;
+	}
 	else if (input[*i] == '>' && input[*i + 1] == '>')
 	{
 		new->type = TOKEN_APPEND;
@@ -142,17 +148,17 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		new->value = ft_strdup(">");
 		(*i)++;
 	}
-	else if (input[*i] == '"' || input[*i] == '\'')
+	else if (input[*i] == '"')
 	{
-		// Handle quoted string
-		char quote = input[*i++];
-		int start = i;
-		while (input[*i] && input[*i] != quote)
-			(*i)++;
-		new->type = TOKEN_WORD;
-		new->value = ft_substr(input, start, i - start);
-		if (input[*i] == quote)
-			(*i)++;
+		input[*i++];
+		new->type = TOKEN_DQUOTE;
+		new->value = "\"";
+	}
+	else if (input[*i] == '\'')
+	{
+		input[*i++];
+		new->type = TOKEN_SQUOTE;
+		new->value = '\'';
 	}
 	else
 	{
@@ -166,7 +172,8 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 	}
 }
 
-char	**ms_tokenize(const char *input)
+//nedd to swap the callers that still call lexer()
+t_token	*ms_tokenize(const char *input)
 {
 	t_token	*head;
 	t_token	*tail;
@@ -184,6 +191,11 @@ char	**ms_tokenize(const char *input)
 		if (!input[i])
 			break ;
 		new = malloc(sizeof(t_token));
+		if (!new)
+		{
+			free_token_list(head);
+			return (NULL);
+		}
 		new->next = NULL;
 		check_special_chars(&new, &input, &i);
 		new->value = token;

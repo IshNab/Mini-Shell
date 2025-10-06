@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/04 22:07:17 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/06 16:19:22 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	main(int argc, char **argv, char **envp)
 		DEBUG_CHECKPOINT("About to parse command");
 		//TODOmake here a parser main function
 		// to mother all the parsing process
-		if (parser(line, envp, shell))
+		if (parser(&line, envp, &shell))
 			execute_command(cmd, &shell);
 		//should I return smt here?
 		free_command(cmd); // TODO free ast

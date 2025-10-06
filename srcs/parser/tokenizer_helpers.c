@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_helpers.c                                    :+:      :+:    :+:   */
+/*   tokenizer_helpers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/04 21:17:11 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/06 16:28:29 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*ft_strndup(const char *s, size_t n)
 	return (dup);
 }
 
-static t_token_type	get_token_type(const char *s)
+/* static t_token_type	get_token_type(const char *s)
 {
 	if (!strncmp(s, "|", 1))
 		return (TOKEN_PIPE);
@@ -45,9 +45,9 @@ static t_token_type	get_token_type(const char *s)
 	else if (!strncmp(s, "\"", 1))
 		return (TOKEN_DOUBLE_QUOTE);
 	return (TOKEN_WORD);
-}
+} */
 
-static void	add_token(t_token **head, t_token **tail, t_token *tok)
+/* static void	add_token(t_token **head, t_token **tail, t_token *tok)
 {
 	if (!*head)
 	{
@@ -59,9 +59,9 @@ static void	add_token(t_token **head, t_token **tail, t_token *tok)
 		(*tail)->next = tok;
 		*tail = tok;
 	}
-}
+} */
 
-void	handle_operator(const char *input, int *i,
+/* void	handle_operator(const char *input, int *i,
 	t_token **head, t_token **tail)
 {
 	int				op_len;
@@ -74,7 +74,7 @@ void	handle_operator(const char *input, int *i,
 			ft_strndup(&input[*i], op_len));
 	add_token(head, tail, tok);
 	*i += op_len;
-}
+} */
 
 void	handle_word(const char *input, int *i, t_token **head,
 	t_token **tail)
@@ -88,4 +88,27 @@ void	handle_word(const char *input, int *i, t_token **head,
 	tok = new_token(TOKEN_WORD,
 			ft_strndup(&input[start], *i - start));
 	add_token(head, tail, tok);
+}
+
+void	free_token_list(t_token *head)
+{
+	t_token	*tmp;
+
+	while (head)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp->value);
+		free(tmp);
+	}
+}
+
+void	print_tokens(t_token *tok)
+{
+	while (tok)
+	{
+		printf("Type: %d, Value: %s\n",
+			tok->type, tok->value);
+		tok = tok->next;
+	}
 }
