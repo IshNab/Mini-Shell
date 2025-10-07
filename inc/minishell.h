@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 16:48:54 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 16:54:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,8 @@ void				free_token_list(t_token *head);
 void				print_tokens(t_token *tok);
 
 //void				process_quotes(t_token *tokens);
-void				handle_word(const char *input, int *i, t_token **head,
-						t_token **tail);
+//void				handle_word(const char *input, int *i, t_token **head,
+						//t_token **tail);
 void				remove_quote_tokens(t_token **tokens);
 //Variable Expansion
 void				expand_vars(t_token *tokens, t_mshell *shell);
@@ -190,11 +190,11 @@ void				execute_pipe(t_ast *pipe_node, t_mshell *shell);
 
 int					builtin_cd(char **args, t_mshell *shell);
 int					builtin_echo(char **args);
-int					builtin_env(char **args);
-int					builtin_exit(char **args);
-int					builtin_export(char **args);
-int					builtin_pwd(char **args);
-int					builtin_unset(char **args);
+int					builtin_env(char **args, t_mshell *shell);
+int					builtin_exit(char **args, t_mshell *shell);
+int					builtin_export(char **arg, t_mshell *shell);
+int					builtin_pwd(char **args, t_mshell *shell);
+int					builtin_unset(char **args, t_mshell *shell);
 
 //=============================================================================/
 //								Utils                                          /
