@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 13:45:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/04 21:17:24 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:03:04 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	execute_ast_wrapper(t_ast *ast)
 	}
 }
 
-void	parse_and_exec_ast(t_token *tokens)
+/* void	parse_and_exec_ast(t_token *tokens)
 {
 	t_ast	*ast;
 
@@ -88,4 +88,4 @@ void	parse_and_exec_ast(t_token *tokens)
 		execute_ast_wrapper(ast);
 		free_ast(ast);
 	}
-}
+} */

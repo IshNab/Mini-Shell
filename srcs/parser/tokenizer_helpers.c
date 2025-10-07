@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/06 16:28:29 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:06:21 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*ft_strndup(const char *s, size_t n)
 	*i += op_len;
 } */
 
-void	handle_word(const char *input, int *i, t_token **head,
+/* void	handle_word(const char *input, int *i, t_token **head,
 	t_token **tail)
 {
 	int		start;
@@ -88,7 +88,7 @@ void	handle_word(const char *input, int *i, t_token **head,
 	tok = new_token(TOKEN_WORD,
 			ft_strndup(&input[start], *i - start));
 	add_token(head, tail, tok);
-}
+} */
 
 void	free_token_list(t_token *head)
 {

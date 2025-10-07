@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/06 20:01:01 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:28:26 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,6 @@ typedef enum e_node_type
 	NODE_REDIR
 }	t_node_type;
 
-/* typedef struct s_expand_state // Ishta gonna check what it is and if we need
-{
-	int	in_squote;
-	int	in_dquote;
-	int	i;
-}	t_expand_state; */
-
-
 typedef struct s_ast
 {
 	t_node_type		type;
@@ -142,24 +134,33 @@ typedef struct s_mshell
 
 
 //=============================================================================/
-//								Parser                                         /
+//								Lexer & Parser                                 /
 //=============================================================================/
 
-int		parse_command(char *input, char **envp);
-char	*ms_remove_quotes(const char *token);
-int		is_quote(char c);
-char	*str_append(char *s, char c);
-char	*expand_status(int last_status);
-char	*get_env_value(const char *var, char **envp);
-t_token	*ms_tokenize(const char *input);
-char	*ms_expand_token(const char *token, char **envp, int last_status);
-void	expand_token_loop(const char *token, char **res, char **envp,
-			int last_status);
-void	expand_token_handle(char c, t_expand_state *ctx);
-void	expand_token_handle_dollar(const char *token, t_expand_state *ctx,
-			char **envp, int last_status, char **res);
-char	*expand_variable(const char *token, int *i, char **envp, int last_status);
-void	expand_and_append(char **res, char *tmp);
+// Parser functions
+int	parser(char *input, char **envp, t_mshell *shell);
+int					validate_syntax(t_token *tokens);
+t_ast				*build_simple_ast(t_token *tokens);
+//void				parse_and_exec_ast(t_token *tokens);
+
+// Tokenizer
+t_token				*ms_tokenize(const char *input);
+void				free_token_list(t_token *head);
+void				print_tokens(t_token *tok);
+
+//void				process_quotes(t_token *tokens);
+void				handle_word(const char *input, int *i, t_token **head,
+						t_token **tail);
+
+//Variable Expansion
+void				expand_vars(t_token *tokens, t_mshell *shell);
+
+// AST functions
+t_ast				*build_simple_ast(t_token *tokens);
+t_ast				*ast_new_node(t_node_type type, char *value);
+void				free_ast(t_ast *node);
+void				print_ast(t_ast *node, int depth);
+
 
 //=============================================================================/
 //								Executor                                       /
@@ -180,8 +181,6 @@ void				free_command(t_command *cmd);
 //t_command			*create_mockup_command(char *input_line);
 void				execute_command(t_command *cmd, t_mshell *shell);
 
-
-
 int					execute_ast(t_ast *ast, t_mshell *mshell);
 
 //=============================================================================/
@@ -197,28 +196,6 @@ int					builtin_pwd(char **args);
 int					builtin_unset(char **args);
 
 //=============================================================================/
-//								Lexer & Parser                                 /
-//=============================================================================/
-
-// Tokenizer helspers
-char				*ft_strndup(const char *s, size_t n);
-void	handle_word(const char *input, int *i, t_token **head,
-	t_token **tail);
-void				free_token_list(t_token *head);
-void				print_tokens(t_token *tok);
-
-// Parser functions
-int					parse_command(char *input, char **envp);
-int					validate_syntax(t_token *tokens);
-t_ast				*build_simple_ast(t_token *tokens);
-void				parse_and_exec_ast(t_token *tokens);
-
-// AST functions
-t_ast				*ast_new_node(t_node_type type, char *value);
-void				free_ast(t_ast *node);
-void				print_ast(t_ast *node, int depth);
-
-//=============================================================================/
 //								Utils                                          /
 //=============================================================================/
 
@@ -230,6 +207,9 @@ void				print_banner(void);
 int					panic(char *error_msg);
 int					error_msg(char *msg, int exit_code, t_mshell *shell);
 
+char				*ft_strndup(const char *s, size_t n);
+char	*str_append(char *s, char c);
+char	*get_env_value(const char *var, char **envp);
 
 //=============================================================================/
 //								Debug                                          /

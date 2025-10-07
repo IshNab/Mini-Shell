@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/06 16:19:22 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:09:02 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_mshell	shell;
-	t_ast		ast;
+	t_ast		*ast;
 
 	(void)argc;
 	(void)argv;
@@ -62,11 +62,9 @@ int	main(int argc, char **argv, char **envp)
 	print_banner();
 	using_history();
 	init_shell(&shell, envp);
-
 	DEBUG_CHECKPOINT("Shell initialized");
 	debug_print_shell(&shell);
 	debug_print_env(shell.env);
-
 	while (1)
 	{
 		line = readline("minishell$");
@@ -75,12 +73,10 @@ int	main(int argc, char **argv, char **envp)
 		if (line)
 			add_history(line);
 		DEBUG_CHECKPOINT("About to parse command");
-		//TODOmake here a parser main function
-		// to mother all the parsing process
-		if (parser(&line, envp, &shell))
-			execute_command(cmd, &shell);
-		//should I return smt here?
-		free_command(cmd); // TODO free ast
+		ast = parser(&line, envp, &shell);
+		if (ast)
+			execute_command(ast, &shell);
+		free_ast(ast); //TODO
 		free(line);
 	}
 	return (shell.exit_status);

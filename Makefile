@@ -22,7 +22,7 @@ SRCS = \
 ./srcs/utils/quote_utils.c \
 ./srcs/utils/tokenizer.c \
 ./srcs/utils/expand_utils.c \
-./srcs/utils/expand_helpers.c \
+./srcs/utils/expand_functions.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \
