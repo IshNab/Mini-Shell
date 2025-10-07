@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/07 15:20:19 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 16:41:18 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	remove_quote_tokens(t_token **tokens)
 
 	curr = *tokens;
 	prev = NULL;
-
 	while (curr)
 	{
 		if (curr->type == TOKEN_SQUOTE || curr->type == TOKEN_DQUOTE)
@@ -41,7 +40,6 @@ void	remove_quote_tokens(t_token **tokens)
 				prev->next = curr->next;
 			else
 				*tokens = curr->next;  // Update head
-
 			temp = curr;
 			curr = curr->next;
 			free(temp->value);

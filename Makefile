@@ -21,6 +21,7 @@ SRCS = \
 ./srcs/parser/tokenizer_helpers.c \
 ./srcs/parser/parse_helpers.c \
 ./srcs/parser/ast.c \
+./srcs/parser/command_builder.c \
 ./srcs/utils/utils.c \
 ./srcs/utils/debug_functions.c \
 ./srcs/utils/str_append.c \
@@ -34,6 +35,7 @@ SRCS = \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
 ./srcs/executor/executor.c \
+./srcs/executor/executor_pipe.c \
 ./srcs/error.c
 
 OBJS = $(SRCS:.c=.o)

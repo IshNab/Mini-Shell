@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 16:12:35 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 16:48:54 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,9 @@ typedef struct s_mshell
 // Parser functions
 t_ast				*parser(char *input, char **envp, t_mshell *shell);
 int					validate_syntax(t_token *tokens);
-t_ast				*build_simple_ast(t_token *tokens);
-//void				parse_and_exec_ast(t_token *tokens);
+t_ast				*build_ast(t_token *tokens);
+t_command			*create_command_node(t_token *tokens);
+t_ast				*create_pipe_node(t_ast *left, t_ast *right);
 
 // Tokenizer
 t_token				*ms_tokenize(const char *input);
@@ -150,7 +151,7 @@ void				print_tokens(t_token *tok);
 //void				process_quotes(t_token *tokens);
 void				handle_word(const char *input, int *i, t_token **head,
 						t_token **tail);
-
+void				remove_quote_tokens(t_token **tokens);
 //Variable Expansion
 void				expand_vars(t_token *tokens, t_mshell *shell);
 
@@ -181,6 +182,7 @@ void				free_command(t_command *cmd);
 void				execute_command(t_ast *ast, t_mshell *shell);
 
 int					execute_ast(t_ast *ast, t_mshell *mshell);
+void				execute_pipe(t_ast *pipe_node, t_mshell *shell);
 
 //=============================================================================/
 //								Builtins                                       /
