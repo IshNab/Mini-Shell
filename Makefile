@@ -16,12 +16,15 @@ REMOVE = rm -f
 
 SRCS = \
 ./srcs/main.c \
+./srcs/parser/parser.c \
+./srcs/parser/tokenizer.c \
+./srcs/parser/tokenizer_helpers.c \
+./srcs/parser/parse_helpers.c \
+./srcs/parser/ast.c \
 ./srcs/utils/utils.c \
 ./srcs/utils/debug_functions.c \
 ./srcs/utils/str_append.c \
 ./srcs/utils/quote_utils.c \
-./srcs/utils/tokenizer.c \
-./srcs/utils/expand_utils.c \
 ./srcs/utils/expand_functions.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
@@ -31,13 +34,6 @@ SRCS = \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
 ./srcs/executor/executor.c \
-./srcs/executor/mockup_parser.c \
-./srcs/parser/lexer.c \
-./srcs/parser/lexer_helpers.c \
-./srcs/parser/ast.c \
-./srcs/parser/parse_command.c \
-./srcs/parser/parse_helpers.c \
-./srcs/parser/parse_ast_helpers.c \
 ./srcs/error.c
 
 OBJS = $(SRCS:.c=.o)

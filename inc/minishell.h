@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 14:28:26 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 16:12:35 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ typedef struct s_redir
 typedef struct s_command
 {
 	t_ast			base;
-	char			**args;
 	char			*input_file; //< input
 	char			*output_file; // > or >> output
 	int				is_append; //flag for no=0 yes=1
@@ -138,7 +137,7 @@ typedef struct s_mshell
 //=============================================================================/
 
 // Parser functions
-int	parser(char *input, char **envp, t_mshell *shell);
+t_ast				*parser(char *input, char **envp, t_mshell *shell);
 int					validate_syntax(t_token *tokens);
 t_ast				*build_simple_ast(t_token *tokens);
 //void				parse_and_exec_ast(t_token *tokens);
@@ -179,7 +178,7 @@ typedef struct s_command {
 void				free_command(t_command *cmd);
 //t_command			*mockup_parse(char *input, char **envp, int last_status);
 //t_command			*create_mockup_command(char *input_line);
-void				execute_command(t_command *cmd, t_mshell *shell);
+void				execute_command(t_ast *ast, t_mshell *shell);
 
 int					execute_ast(t_ast *ast, t_mshell *mshell);
 
@@ -208,8 +207,9 @@ int					panic(char *error_msg);
 int					error_msg(char *msg, int exit_code, t_mshell *shell);
 
 char				*ft_strndup(const char *s, size_t n);
-char	*str_append(char *s, char c);
-char	*get_env_value(const char *var, char **envp);
+char				*str_append(char *s1, const char *s2);
+char				*get_env_from_list(t_env *env, const char *key);
+
 
 //=============================================================================/
 //								Debug                                          /

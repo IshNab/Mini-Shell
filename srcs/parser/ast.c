@@ -6,27 +6,11 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/04 21:16:49 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 16:02:05 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-t_ast	*ast_new_node(t_node_type type, char *value)
-{
-	t_ast	*node;
-
-	node = malloc(sizeof(t_ast));
-	if (node == NULL)
-		return (NULL);
-	node->type = type;
-	node->left = NULL;
-	node->right = NULL;
-	node->exit_status = 0;
-	node->args = NULL;
-	(void)value; // value parameter not used in current AST structure
-	return (node);
-}
 
 void	free_ast(t_ast *node)
 {
@@ -49,33 +33,86 @@ void	free_ast(t_ast *node)
 	free(node);
 }
 
-void	print_ast(t_ast *node, int depth)
+// Create a pipe node (RECURSIVE!)
+t_ast	*create_pipe_node(t_ast *left, t_ast *right)
 {
-	int	i;
-	int	j;
+    t_ast	*pipe;
 
-	if (node == NULL)
-		return ;
-	i = 0;
-	while (i < depth)
-	{
-		printf("  ");
-		i++;
-	}
-	printf("[Type: %d", node->type);
-	if (node->args && node->args[0])
-	{
-		printf(", Args: ");
-		j = 0;
-		while (node->args[j])
-		{
-			printf("%s", node->args[j]);
-			if (node->args[j + 1])
-				printf(" ");
-			j++;
-		}
-	}
-	printf("]\n");
-	print_ast(node->left, depth + 1);
-	print_ast(node->right, depth + 1);
+    pipe = malloc(sizeof(t_ast));
+    if (!pipe)
+        return (NULL);
+
+    pipe->type = NODE_PIPE;
+    pipe->left = left;   // Left side of pipe (recursive!)
+    pipe->right = right; // Right side of pipe (recursive!)
+    pipe->args = NULL;
+    pipe->exit_status = 0;
+
+    return (pipe);
 }
+
+// Split token list at pipe
+static t_token	*split_at_pipe(t_token *tokens, t_token *pipe)
+{
+    t_token	*curr;
+
+    curr = tokens;
+    while (curr && curr->next != pipe)
+        curr = curr->next;
+
+    if (curr)
+        curr->next = NULL;  // Cut the list
+
+    return (pipe->next);  // Return right side
+}
+
+// Find pipe token in list
+static t_token	*find_pipe(t_token *tokens)
+{
+    while (tokens)
+    {
+        if (tokens->type == TOKEN_PIPE)
+            return (tokens);
+        tokens = tokens->next;
+    }
+    return (NULL);
+}
+
+// RECURSIVE AST builder
+t_ast	*build_ast(t_token *tokens)
+{
+    t_token		*pipe;
+    t_token		*right_tokens;
+    t_ast		*left;
+    t_ast		*right;
+
+    if (!tokens)
+        return (NULL);
+
+    // Find first pipe (if any)
+    pipe = find_pipe(tokens);
+
+    if (pipe)
+    {
+        // We have a pipe - RECURSIVE CASE
+        right_tokens = split_at_pipe(tokens, pipe);
+
+        // Build left side (RECURSIVE!)
+        left = build_ast(tokens);
+
+        // Build right side (RECURSIVE!)
+        right = build_ast(right_tokens);
+
+        // Create pipe node connecting them
+        return (create_pipe_node(left, right));
+    }
+    else
+    {
+        // No pipe - BASE CASE
+        // Create a command node (cast to t_ast* for return)
+        return ((t_ast *)create_command_node(tokens));
+    }
+}
+
+
+

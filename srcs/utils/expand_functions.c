@@ -6,11 +6,22 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/07 14:41:35 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:20:19 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+char	*get_env_from_list(t_env *env, const char *key)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
+}
 
 void	remove_quote_tokens(t_token **tokens)
 {
@@ -48,6 +59,7 @@ char	*expand_word(char *word, t_env *env, int exit_status)
 {
 	char	*result;
 	char	*temp;
+	char	*value;
 	int		i;
 	int		j;
 
@@ -72,7 +84,7 @@ char	*expand_word(char *word, t_env *env, int exit_status)
 				while (word[j] && (ft_isalnum(word[j]) || word[j] == '_'))
 					j++;
 				temp = ft_substr(word, i + 1, j - i - 1);
-				char *value = get_env_value(env, temp);
+				value = get_env_from_list(env, temp);
 				if (value)
 					result = str_append(result, value);
 				free(temp);

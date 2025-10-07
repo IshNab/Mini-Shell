@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 15:38:19 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/26 15:42:21 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:46:09 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	debug_print_env(t_env *env)
 	printf("=== END ENV ===\n\n");
 }
 
-void	debug_print_command(t_command *cmd)
+/* void	debug_print_command(t_command *cmd)
 {
 	int	i;
 
@@ -53,7 +53,7 @@ void	debug_print_command(t_command *cmd)
 	printf("Append mode: %d\n", cmd->append);
 	printf("Next command: %s\n", cmd->next ? "EXISTS" : "NULL");
 	printf("=== END COMMAND ===\n\n");
-}
+} */
 
 void	debug_print_shell(t_mshell *shell)
 {

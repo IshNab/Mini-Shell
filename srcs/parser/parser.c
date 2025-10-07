@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 16:16:33 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 14:27:50 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:48:53 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ t_ast	*parser(char *input, char **envp, t_mshell *shell)
 	t_token	*tokens;
 	t_ast	*ast;
 
+	(void)envp;
 	if (!input)
 		return (NULL);
 	//error check? when to free the linked list?

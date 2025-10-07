@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/04 21:18:00 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:21:39 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*ms_remove_quotes(const char *token)
 		else if (token[i] == '"' && !in_squote)
 			in_dquote = !in_dquote;
 		else
-			res = str_append(res, token[i]);
+			res = str_append(res, &token[i]);
 		i++;
 	}
 	return (res);
