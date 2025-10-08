@@ -32,7 +32,7 @@ t_command	*create_command_node(t_token *tokens)
 	t_command	*cmd;
 	int			argc;
 	int			i;
-
+	//initialize command structure, NULL by default
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
@@ -52,14 +52,14 @@ t_command	*create_command_node(t_token *tokens)
 		return (NULL);
 	}
 	i = 0;
-	while (tokens)
+	while (tokens)	//iterate through the tokens, process each token
 	{
 		if (tokens->type == TOKEN_WORD)
 		{
-			cmd->base.args[i++] = ft_strdup(tokens->value);
+			cmd->base.args[i++] = ft_strdup(tokens->value);	//add argument
 			tokens = tokens->next;
 		}
-		else if (tokens->type == TOKEN_REDIR_IN)
+		else if (tokens->type == TOKEN_REDIR_IN)	// (<) redirects input from a file
 		{
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
@@ -77,7 +77,7 @@ t_command	*create_command_node(t_token *tokens)
 				tokens = tokens->next;
 			}
 		}
-		else if (tokens->type == TOKEN_APPEND)
+		else if (tokens->type == TOKEN_APPEND)	// (>>) appends to the file instead of overwriting
 		{
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
@@ -87,7 +87,7 @@ t_command	*create_command_node(t_token *tokens)
 				tokens = tokens->next;
 			}
 		}
-		else if (tokens->type == TOKEN_HEREDOC)
+		else if (tokens->type == TOKEN_HEREDOC)	// (<<) command reads from a file until it finds the delimiter
 		{
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)

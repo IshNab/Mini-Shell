@@ -23,6 +23,8 @@ char	*get_env_from_list(t_env *env, const char *key)
 	return (NULL);
 }
 
+//removes TOKEN_SQUOTE and TOKEN_DQUOTE tokens from the linked list
+//keeps the meaning for the variable expansion
 void	remove_quote_tokens(t_token **tokens)
 {
 	t_token	*curr;
