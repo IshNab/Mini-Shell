@@ -47,18 +47,18 @@ int	validate_syntax(t_token *tokens)
 	int		expect_word;
 
 	curr = tokens;
-	expect_word = 1;
+	expect_word = 1;	//start expecting a word
 	while (curr)
 	{
 		if (curr->type == TOKEN_PIPE)
 		{
-			if (syntax_error_pipe(expect_word))
+			if (syntax_error_pipe(expect_word))	//check for syntax error in pipe
 				return (0);
-			expect_word = 1;
+			expect_word = 1;	//after pipe, expect another word
 		}
 		else if (is_redir_token(curr->type))
 		{
-			if (syntax_error_redir(curr))
+			if (syntax_error_redir(curr))	//check redirection had a target
 				return (0);
 			expect_word = 0;
 		}
@@ -73,3 +73,7 @@ int	validate_syntax(t_token *tokens)
 	}
 	return (1);
 }
+
+//check if there are pipes at the start or end of the command
+//check if there are redirections without a target
+//check if there are incomplete commands

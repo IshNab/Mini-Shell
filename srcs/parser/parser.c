@@ -21,19 +21,19 @@ t_ast	*parser(char *input, char **envp, t_mshell *shell)
 	if (!input || !*input)
 		return (NULL);
 	//error check? when to free the linked list?
-	tokens = ms_tokenize(input);
+	tokens = ms_tokenize(input);	//step 1. tokenize the input
 	if (!tokens)
 		return (NULL);
-	if (!validate_syntax(tokens))
+	if (!validate_syntax(tokens)) //step 2. validate the syntax
 	{
 		free_token_list(tokens);
 		shell->exit_status = 2;
 		return (NULL);
 	}
 	//TODO a way to check if we need to expand or not (flags?)
-	expand_vars(tokens, shell);
-	remove_quote_tokens(&tokens);
-	ast = build_ast(tokens);
+	expand_vars(tokens, shell); //step 3. expand the variables
+	remove_quote_tokens(&tokens); //step 4. remove the quote tokens
+	ast = build_ast(tokens); //step 5. build the AST
 	if (!ast)
 	{
 		free_token_list(tokens);

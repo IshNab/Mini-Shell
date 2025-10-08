@@ -81,8 +81,7 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 	}
 }
 
-//nedd to swap the callers that still call lexer()
-t_token	*ms_tokenize(const char *input)
+t_token	*ms_tokenize(const char *input)	//convert input string into linked list of tokens
 {
 	t_token	*head;
 	t_token	*tail;
@@ -92,7 +91,7 @@ t_token	*ms_tokenize(const char *input)
 	head = NULL;
 	tail = NULL;
 	i = 0;
-	while (input[i])
+	while (input[i])	//initialization
 	{
 		while (input[i] && (input[i] == ' ' || input[i] == '\t'))
 			i++;
@@ -105,7 +104,7 @@ t_token	*ms_tokenize(const char *input)
 			return (NULL);
 		}
 		new->next = NULL;
-		check_special_chars(new, input, &i);
+		check_special_chars(new, input, &i);	//check for special characters; identify tokens
 		list_token_append(new, &head, &tail);
 	}
 	return (head);
