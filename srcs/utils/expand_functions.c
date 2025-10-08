@@ -55,6 +55,7 @@ void	remove_quote_tokens(t_token **tokens)
 	}
 }
 
+//modified this because need access to shell's PID to expand $$
 char	*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid)
 {
 	char	*result;
@@ -78,14 +79,14 @@ char	*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid)
 				free(temp);
 				i += 2;
 			}
-			else if (word[i + 1] == '$')
+			else if (word[i + 1] == '$')	//handle $$
 			{
-				temp = ft_itoa(shell_pid);
+				temp = ft_itoa(shell_pid);	//convert PID to string
 				result = str_append(result, temp);
 				free(temp);
 				i += 2;
 			}
-			else if (ft_isalpha(word[i + 1]) || word[i + 1] == '_')
+			else if (ft_isalpha(word[i + 1]) || word[i + 1] == '_')	//handle variable expansion
 			{
 				j = i + 1;
 				while (word[j] && (ft_isalnum(word[j]) || word[j] == '_'))
