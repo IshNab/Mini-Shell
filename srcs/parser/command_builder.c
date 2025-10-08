@@ -26,7 +26,10 @@ static int	count_word_tokens(t_token *tokens)
 	return (count);
 }
 
-// Create a command node (with redirections)
+// extract command arguments and redirections from the tokens
+// identify redirections and their target files
+// set flags (liek append node)
+// create command structure that executor can use
 t_command	*create_command_node(t_token *tokens)
 {
 	t_command	*cmd;
