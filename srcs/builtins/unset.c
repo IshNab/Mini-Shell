@@ -13,8 +13,9 @@ static int is_valid_identifier(const char *s)
     return 1;
 }
 
-int builtin_unset(char **args)
+int builtin_unset(char **args, t_mshell *shell)
 {
+	(void)shell;
     int status = 0;
     for (int i = 1; args[i]; ++i)
     {

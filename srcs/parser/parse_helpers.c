@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 13:40:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/07 14:25:35 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:55:24 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	validate_syntax(t_token *tokens)
 	t_token	*curr;
 	int		expect_word;
 
+	if (!tokens)
+		return (0);
 	curr = tokens;
 	expect_word = 1;
 	while (curr)

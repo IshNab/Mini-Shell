@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:32:23 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 14:32:25 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 12:53:03 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ static int ft_is_numeric(const char *s)
     return 1;
 }
 
-int builtin_exit(char **args)
+int builtin_exit(char **args, t_mshell *shell)
 {
+	(void)shell; //TODO
     int argc = 0;
     while (args[argc]) argc++;
 

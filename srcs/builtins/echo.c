@@ -6,33 +6,41 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:28:17 by maborges          #+#    #+#             */
-/*   Updated: 2025/09/19 14:28:34 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 16:00:08 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int builtin_echo(char **args)
+int	builtin_echo(char **args)
 {
-    int i = 1;
-    int no_newline = 0;
+	int	i;
+	int	no_newline;
+	int	j;
 
-    // Support multiple -n flags like echo -n -n
-    while (args[i] && args[i][0] == '-' )
-    {
-        int j = 1;
-        if (args[i][j] == '\0') break; // just "-"
-        while (args[i][j] == 'n') j++;
-        if (args[i][j] != '\0') break; // not purely -n...n
-        no_newline = 1;
-        i++;
-    }
-
-    for (; args[i]; ++i)
-    {
-        fputs(args[i], stdout);
-        if (args[i + 1]) fputc(' ', stdout);
-    }
-    if (!no_newline) fputc('\n', stdout);
-    return 0;
+	i = 1;
+	no_newline = 0;
+	// Support multiple -n flags like echo -n -n
+	while (args[i] && args[i][0] == '-' )
+	{
+		j = 1;
+		if (args[i][j] == '\0')
+			break ; // just "-"
+		while (args[i][j] == 'n')
+			j++;
+		if (args[i][j] != '\0')
+			break ; // not purely -n...n
+		no_newline = 1;
+		i++;
+	}
+	while (args[i])
+	{
+		ft_putstr_fd(args[i], STDOUT_FILENO);
+		if (args[i + 1])
+			ft_putchar_fd(' ', STDOUT_FILENO);
+		i++;
+	}
+	if (!no_newline)
+		ft_putchar_fd('\n', STDOUT_FILENO);
+	return (0);
 }

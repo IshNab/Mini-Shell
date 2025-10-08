@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:28:47 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 12:39:50 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 12:52:06 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	builtin_env(char **args, t_mshell *shell)
 	while (current)
 	{
 		ft_putstr_fd(current->key, 1);
-		ft_puchar_fd('=', 1);
+		ft_putchar_fd('=', 1);
 		ft_putstr_fd(current->value, 1);
 		ft_putchar_fd('\n', 1);
 		current = current->next;

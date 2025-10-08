@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:26 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 16:48:25 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:50 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ t_command	*create_command_node(t_token *tokens)
 	int			argc;
 	int			i;
 
+	if (!tokens)
+		return (NULL);
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
