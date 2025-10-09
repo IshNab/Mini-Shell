@@ -47,7 +47,7 @@ static void	init_shell(t_mshell *shell, char **envp)
 	shell->cmd_count = 0;
 	shell->exit_status = 0;
 	shell->must_exit = 0;
-	shell->shell_pid = 0;
+	shell->shell_pid = getpid();
 }
 
 int	main(int argc, char **argv, char **envp)
