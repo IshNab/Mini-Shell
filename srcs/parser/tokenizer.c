@@ -67,6 +67,8 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		{
 			new->type = TOKEN_WORD;
 			new->value = ft_substr(input, start, *i - start);
+			if (!new->value)
+				new->value = ft_strdup(""); // Handle empty quotes
 			(*i)++; // Skip closing quote
 		}
 		else
@@ -74,6 +76,8 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 			// Unclosed quote - treat as word
 			new->type = TOKEN_WORD;
 			new->value = ft_substr(input, start, *i - start);
+			if (!new->value)
+				new->value = ft_strdup(""); // Handle empty quotes
 		}
 	}
 	else if (input[*i] == '\'')
@@ -87,6 +91,8 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		{
 			new->type = TOKEN_WORD;
 			new->value = ft_substr(input, start, *i - start);
+			if (!new->value)
+				new->value = ft_strdup(""); // Handle empty quotes
 			(*i)++; // Skip closing quote
 		}
 		else
@@ -94,6 +100,8 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 			// Unclosed quote - treat as word
 			new->type = TOKEN_WORD;
 			new->value = ft_substr(input, start, *i - start);
+			if (!new->value)
+				new->value = ft_strdup(""); // Handle empty quotes
 		}
 	}
 	else
