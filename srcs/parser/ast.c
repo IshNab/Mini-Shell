@@ -91,17 +91,17 @@ t_ast	*build_ast(t_token *tokens)
 
 	if (!tokens)
 		return (NULL);
-	pipe = find_pipe(tokens);
+	pipe = find_pipe(tokens);	//look for pipes in the linked list
 	if (pipe)
 	{
-		right_tokens = split_at_pipe(tokens, pipe);
-		left = build_ast(tokens);
-		right = build_ast(right_tokens);
-		return (create_pipe_node(left, right));
+		right_tokens = split_at_pipe(tokens, pipe);	//split the linked list at the pipe
+		left = build_ast(tokens);	//recursively build the left side of the pipe
+		right = build_ast(right_tokens);	//recursively build the right side of the pipe
+		return (create_pipe_node(left, right));	//create a pipe node
 	}
 	else
 	{
-		return ((t_ast *)create_command_node(tokens));
+		return ((t_ast *)create_command_node(tokens));	//create a command node
 	}
 }
 

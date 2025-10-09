@@ -23,6 +23,8 @@ char	*get_env_from_list(t_env *env, const char *key)
 	return (NULL);
 }
 
+//removes TOKEN_SQUOTE and TOKEN_DQUOTE tokens from the linked list
+//keeps the meaning for the variable expansion
 void	remove_quote_tokens(t_token **tokens)
 {
 	t_token	*curr;
@@ -53,7 +55,7 @@ void	remove_quote_tokens(t_token **tokens)
 	}
 }
 
-char	*expand_word(char *word, t_env *env, int exit_status)
+char	*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid)
 {
 	char	*result;
 	char	*temp;
@@ -72,6 +74,13 @@ char	*expand_word(char *word, t_env *env, int exit_status)
 			if (word[i + 1] == '?')
 			{
 				temp = ft_itoa(exit_status);
+				result = str_append(result, temp);
+				free(temp);
+				i += 2;
+			}
+			else if (word[i + 1] == '$')
+			{
+				temp = ft_itoa(shell_pid);
 				result = str_append(result, temp);
 				free(temp);
 				i += 2;
@@ -133,7 +142,7 @@ void	expand_vars(t_token *tokens, t_mshell *shell)
 		{
 			if (!in_single_quote)  // Expand if NOT in single quotes
 			{
-				expanded = expand_word(curr->value, shell->env, shell->exit_status);
+				expanded = expand_word(curr->value, shell->env, shell->exit_status, shell->shell_pid);
 				free(curr->value);
 				curr->value = expanded;
 			}

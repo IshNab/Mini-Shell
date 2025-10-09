@@ -154,6 +154,7 @@ void				print_tokens(t_token *tok);
 void				remove_quote_tokens(t_token **tokens);
 //Variable Expansion
 void				expand_vars(t_token *tokens, t_mshell *shell);
+char				*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid);
 
 // AST functions
 t_ast				*build_simple_ast(t_token *tokens);

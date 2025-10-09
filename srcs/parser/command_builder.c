@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:26 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 13:56:50 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/09 16:02:56 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ static int	count_word_tokens(t_token *tokens)
 	return (count);
 }
 
-// Create a command node (with redirections)
+// extract command arguments and redirections from the tokens
+// identify redirections and their target files
+// set flags (liek append node)
+// create command structure that executor can use
 t_command	*create_command_node(t_token *tokens)
 {
 	t_command	*cmd;
@@ -54,14 +57,14 @@ t_command	*create_command_node(t_token *tokens)
 		return (NULL);
 	}
 	i = 0;
-	while (tokens)
+	while (tokens)	//iterate through the tokens, process each token
 	{
 		if (tokens->type == TOKEN_WORD)
 		{
-			cmd->base.args[i++] = ft_strdup(tokens->value);
+			cmd->base.args[i++] = ft_strdup(tokens->value);	//add argument
 			tokens = tokens->next;
 		}
-		else if (tokens->type == TOKEN_REDIR_IN)
+		else if (tokens->type == TOKEN_REDIR_IN)	// (<) redirects input from a file
 		{
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
@@ -79,7 +82,7 @@ t_command	*create_command_node(t_token *tokens)
 				tokens = tokens->next;
 			}
 		}
-		else if (tokens->type == TOKEN_APPEND)
+		else if (tokens->type == TOKEN_APPEND)	// (>>) appends to the file instead of overwriting
 		{
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
@@ -89,7 +92,7 @@ t_command	*create_command_node(t_token *tokens)
 				tokens = tokens->next;
 			}
 		}
-		else if (tokens->type == TOKEN_HEREDOC)
+		else if (tokens->type == TOKEN_HEREDOC)	// (<<) command reads from a file until it finds the delimiter
 		{
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
