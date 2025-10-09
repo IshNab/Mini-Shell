@@ -25,7 +25,6 @@ SRCS = \
 ./srcs/utils/utils.c \
 ./srcs/utils/debug_functions.c \
 ./srcs/utils/str_append.c \
-./srcs/utils/quote_utils.c \
 ./srcs/utils/expand_functions.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \

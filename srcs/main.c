@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 14:43:05 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:01:49 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	main(int argc, char **argv, char **envp)
 		DEBUG_CHECKPOINT("About to parse command");
 		ast = parser(line, envp, &shell);
 		if (ast)
-			execute_command(ast, &shell);
+			execute_ast(ast, &shell);
 		free_ast(ast); //TODO
 		free(line);
 	}

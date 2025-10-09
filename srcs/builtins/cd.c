@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:27:31 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/01 22:48:44 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 16:02:03 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	update_pwd_vars(const char *oldpwd)
 	}
 	if (oldpwd)
 		setenv("OLDPWD", oldpwd, 1);
-	setenv("PWD", newpwd, 1);
+	setenv("PWD", newpwd, 1); //Illegal function
 	free(newpwd);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 16:55:10 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 12:54:16 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ static int	try_builtin(t_command *cmd, t_mshell *shell)
 	if (!ft_strcmp(cmd->base.args[0], "cd"))
 		shell->exit_status = builtin_cd(cmd->base.args, shell);
 	else if (!ft_strcmp(cmd->base.args[0], "pwd"))
-		shell->exit_status = builtin_pwd(cmd->base.args, shell);
+		shell->exit_status = builtin_pwd(cmd->base.args);
 	else if (!ft_strcmp(cmd->base.args[0], "echo"))
 		shell->exit_status = builtin_echo(cmd->base.args);
 	else if (!ft_strcmp(cmd->base.args[0], "env"))

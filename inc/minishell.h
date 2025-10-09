@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 16:54:59 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:02:08 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,12 +177,10 @@ typedef struct s_command {
     struct s_command *next; // For pipe chains
 } t_command; */
 
-void				free_command(t_command *cmd);
+//void				free_command(t_command *cmd);
 //t_command			*mockup_parse(char *input, char **envp, int last_status);
 //t_command			*create_mockup_command(char *input_line);
-void				execute_command(t_ast *ast, t_mshell *shell);
-
-int					execute_ast(t_ast *ast, t_mshell *mshell);
+void				execute_ast(t_ast *ast, t_mshell *mshell);
 void				execute_pipe(t_ast *pipe_node, t_mshell *shell);
 
 //=============================================================================/
@@ -194,7 +192,7 @@ int					builtin_echo(char **args);
 int					builtin_env(char **args, t_mshell *shell);
 int					builtin_exit(char **args, t_mshell *shell);
 int					builtin_export(char **arg, t_mshell *shell);
-int					builtin_pwd(char **args, t_mshell *shell);
+int					builtin_pwd(char **args);
 int					builtin_unset(char **args, t_mshell *shell);
 
 //=============================================================================/
