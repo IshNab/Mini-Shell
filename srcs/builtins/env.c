@@ -22,10 +22,7 @@ int	builtin_env(char **args, t_mshell *shell)
 	current = shell->env;
 	while (current)
 	{
-		ft_putstr_fd(current->key, 1);
-		ft_putchar_fd('=', 1);
-		ft_putstr_fd(current->value, 1);
-		ft_putchar_fd('\n', 1);
+		printf("%s=%s\n", current->key, current->value);
 		current = current->next;
 	}
 	return (0);

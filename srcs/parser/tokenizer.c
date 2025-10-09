@@ -58,19 +58,47 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 	}
 	else if (input[*i] == '"')
 	{
+		// Handle double quoted content
+		start = *i + 1; // Skip opening quote
 		(*i)++;
-		new->type = TOKEN_DQUOTE;
-		new->value = ft_strdup("\"");
+		while (input[*i] && input[*i] != '"')
+			(*i)++;
+		if (input[*i] == '"')
+		{
+			new->type = TOKEN_WORD;
+			new->value = ft_substr(input, start, *i - start);
+			(*i)++; // Skip closing quote
+		}
+		else
+		{
+			// Unclosed quote - treat as word
+			new->type = TOKEN_WORD;
+			new->value = ft_substr(input, start, *i - start);
+		}
 	}
 	else if (input[*i] == '\'')
 	{
+		// Handle single quoted content
+		start = *i + 1; // Skip opening quote
 		(*i)++;
-		new->type = TOKEN_SQUOTE;
-		new->value = ft_strdup("'");
+		while (input[*i] && input[*i] != '\'')
+			(*i)++;
+		if (input[*i] == '\'')
+		{
+			new->type = TOKEN_WORD;
+			new->value = ft_substr(input, start, *i - start);
+			(*i)++; // Skip closing quote
+		}
+		else
+		{
+			// Unclosed quote - treat as word
+			new->type = TOKEN_WORD;
+			new->value = ft_substr(input, start, *i - start);
+		}
 	}
 	else
 	{
-		// Regular word
+		// Regular word - stop at quote boundaries
 		start = *i;
 		while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
 			&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>'

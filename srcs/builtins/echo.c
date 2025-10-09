@@ -35,12 +35,12 @@ int	builtin_echo(char **args)
 	}
 	while (args[i])
 	{
-		ft_putstr_fd(args[i], STDOUT_FILENO);
+		printf("%s", args[i]);
 		if (args[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
+			printf(" ");
 		i++;
 	}
 	if (!no_newline)
-		ft_putchar_fd('\n', STDOUT_FILENO);
+		printf("\n");
 	return (0);
 }

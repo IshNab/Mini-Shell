@@ -86,6 +86,21 @@ char	*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid)
 				free(temp);
 				i += 2;
 			}
+			else if (word[i + 1] == '@')	//handle $@ - all arguments
+			{
+				// For now, just skip $@ expansion (would need command args)
+				i += 2;
+			}
+			else if (word[i + 1] == '#')	//handle $# - number of arguments
+			{
+				// For now, just skip $# expansion (would need command args)
+				i += 2;
+			}
+			else if (ft_isdigit(word[i + 1]))	//handle $0, $1, $2, etc.
+			{
+				// For now, just skip positional parameter expansion
+				i += 2;
+			}
 			else if (ft_isalpha(word[i + 1]) || word[i + 1] == '_')	//handle variable expansion
 			{
 				j = i + 1;
@@ -100,6 +115,7 @@ char	*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid)
 			}
 			else
 			{
+				// Handle edge cases: $ followed by non-alphanumeric
 				temp = ft_substr(word, i, 1);
 				result = str_append(result, temp);
 				free(temp);
@@ -121,33 +137,17 @@ void	expand_vars(t_token *tokens, t_mshell *shell)
 {
 	t_token	*curr;
 	char	*expanded;
-	int		in_single_quote;
-	int		in_double_quote;
 
 	curr = tokens;
-	in_single_quote = 0;
-	in_double_quote = 0;
 
 	while (curr)
 	{
-		// Track quote state from separate quote tokens
-		if (curr->type == TOKEN_SQUOTE)
-			in_single_quote = !in_single_quote;
-		else if (curr->type == TOKEN_DQUOTE)
-			in_double_quote = !in_double_quote;
-
-		// Only expand WORD tokens that are:
-		// 1. NOT in single quotes (single quotes = no expansion)
-		// 2. Either unquoted OR in double quotes (double quotes = yes expansion)
-		else if (curr->type == TOKEN_WORD)
+		// Expand all WORD tokens - quote handling is now done in tokenizer
+		if (curr->type == TOKEN_WORD)
 		{
-			if (!in_single_quote)  // Expand if NOT in single quotes
-			{
-				expanded = expand_word(curr->value, shell->env, shell->exit_status, shell->shell_pid);
-				free(curr->value);
-				curr->value = expanded;
-			}
-			// If in_single_quote = 1, skip expansion (keep literal $HOME)
+			expanded = expand_word(curr->value, shell->env, shell->exit_status, shell->shell_pid);
+			free(curr->value);
+			curr->value = expanded;
 		}
 
 		curr = curr->next;

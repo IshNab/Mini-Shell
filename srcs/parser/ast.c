@@ -48,7 +48,7 @@ t_ast	*create_pipe_node(t_ast *left, t_ast *right)
 {
 	t_ast	*pipe;
 
-	pipe = malloc(sizeof(t_ast));
+	pipe = safe_malloc(sizeof(t_ast));
 	if (!pipe)
 		return (NULL);
 	pipe->type = NODE_PIPE;

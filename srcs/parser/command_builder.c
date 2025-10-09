@@ -38,7 +38,7 @@ t_command	*create_command_node(t_token *tokens)
 
 	if (!tokens)
 		return (NULL);
-	cmd = malloc(sizeof(t_command));
+	cmd = safe_malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
 	cmd->base.type = NODE_CMD;
@@ -50,7 +50,7 @@ t_command	*create_command_node(t_token *tokens)
 	cmd->is_append = 0;
 	cmd->heredoc_delimiter = NULL;
 	argc = count_word_tokens(tokens);
-	cmd->base.args = malloc(sizeof(char *) * (argc + 1));
+	cmd->base.args = safe_malloc(sizeof(char *) * (argc + 1));
 	if (!cmd->base.args)
 	{
 		free(cmd);

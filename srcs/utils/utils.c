@@ -46,7 +46,9 @@ int	fork_wrapper(void)
 
 	pid = fork();
 	if (pid == -1)
-		perror("fork failed");
+		ft_putstr_fd("fork failed: ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
 	return (pid);
 }
 
