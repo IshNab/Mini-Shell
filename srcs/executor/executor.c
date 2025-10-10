@@ -170,9 +170,15 @@ void	execute_simple_command(t_command *cmd, t_mshell *shell)
 		return ;
 	if (try_builtin(cmd, shell))
 		return ;
+	
+	// Setup non-interactive signals for child process
+	setup_non_interactive_signals();
+	
 	child_pid = fork();
 	if (child_pid == 0)
 	{
+		// Child process: restore default signal behavior
+		restore_default_signals();
 		if (cmd->input_file)
 		{
 			fd = open(cmd->input_file, O_RDONLY);
@@ -209,6 +215,10 @@ void	execute_simple_command(t_command *cmd, t_mshell *shell)
 		shell->exit_status = 1;
 		return ;
 	}
+	
+	// Restore interactive signals in parent
+	setup_interactive_signals();
+	
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);

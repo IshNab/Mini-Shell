@@ -29,6 +29,9 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
     left_pid = fork();
     if (left_pid == 0)
     {
+        // Child process: restore default signal behavior
+        restore_default_signals();
+        
         close(pipe_fds[0]);  // Close read end
         dup2(pipe_fds[1], STDOUT_FILENO);  // Redirect stdout to pipe
         close(pipe_fds[1]);
@@ -42,6 +45,9 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
     right_pid = fork();
     if (right_pid == 0)
     {
+        // Child process: restore default signal behavior
+        restore_default_signals();
+        
         close(pipe_fds[1]);  // Close write end
         dup2(pipe_fds[0], STDIN_FILENO);  // Redirect stdin from pipe
         close(pipe_fds[0]);
@@ -54,9 +60,15 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
     // Parent closes both ends and waits
     close(pipe_fds[0]);
     close(pipe_fds[1]);
+    
+    // Restore interactive signals in parent
+    setup_interactive_signals();
+    
     waitpid(left_pid, &status, 0);
     waitpid(right_pid, &status, 0);
 
     if (WIFEXITED(status))
         shell->exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        shell->exit_status = 128 + WTERMSIG(status);
 }

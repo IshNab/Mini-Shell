@@ -211,6 +211,16 @@ char				*ft_strndup(const char *s, size_t n);
 char				*str_append(char *s1, const char *s2);
 char				*get_env_from_list(t_env *env, const char *key);
 
+//=============================================================================/
+//								Signal Handling                                /
+//=============================================================================/
+
+// Signal handling functions
+void				signal_handler(int sig);
+void				setup_signals(void);
+void				setup_interactive_signals(void);
+void				setup_non_interactive_signals(void);
+void				restore_default_signals(void);
 
 //=============================================================================/
 //								Debug                                          /
