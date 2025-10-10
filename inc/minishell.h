@@ -222,6 +222,9 @@ void				setup_interactive_signals(void);
 void				setup_non_interactive_signals(void);
 void				restore_default_signals(void);
 
+// Global signal state
+extern int			g_interactive_mode;
+
 //=============================================================================/
 //								Debug                                          /
 //=============================================================================/

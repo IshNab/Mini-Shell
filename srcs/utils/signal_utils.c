@@ -13,7 +13,7 @@
 #include "../../inc/minishell.h"
 
 // Global variable to track if we're in interactive mode
-static int g_interactive_mode = 1;
+int g_interactive_mode = 1;
 
 void	signal_handler(int sig)
 {
