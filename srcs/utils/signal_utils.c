@@ -13,18 +13,21 @@
 #include "../../inc/minishell.h"
 
 // Single global to store last received signal number (subject requirement)
+// volatile because variable can change anytime, compiler read variable from memory line every time
+// sig_atomic can be read/ written in one operation
+// works safely for signal handlers
 volatile sig_atomic_t g_signal_received = 0;
 
 void	signal_handler(int sig)
 {
-    // Only record the signal; actual handling is done in main loop/parent
+    // Only record the signal; actual handling is done in main loop/parent; set a flag
     g_signal_received = sig;
 }
 
 void	setup_interactive_signals(void)
 {
-    struct sigaction sa_int;
-    struct sigaction sa_quit;
+    struct sigaction sa_int;	//sigint interupts signals
+    struct sigaction sa_quit;	//sigquit ignores/quits signals
 
     sigemptyset(&sa_int.sa_mask);
     sa_int.sa_flags = 0; // do not use SA_RESTART so readline can be interrupted
