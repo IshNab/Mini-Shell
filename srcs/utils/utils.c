@@ -6,11 +6,37 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/04 21:19:14 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:35:13 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+
+void	unset_env_var(t_mshell *shell, const char *key)
+{
+	t_env	*current;
+	t_env	*prev;
+
+	current = shell->env;
+	prev = NULL;
+	while (current)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			if (prev)
+				prev->next = current->next;
+			else
+				shell->env = current->next;
+			free(current->key);
+			free(current->value);
+			free(current);
+			return ;
+		}
+		prev = current;
+		current = current->next;
+	}
+}
 
 int	ft_envsize(t_env *env)
 {

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:28:47 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 12:52:06 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/09 21:52:47 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ int	builtin_env(char **args, t_mshell *shell)
 {
 	t_env	*current;
 
-	(void)args;
-	if (args)
+	if (args[1])
 		error_msg("env gets no args", 1, shell);
 	current = shell->env;
 	while (current)

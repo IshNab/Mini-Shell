@@ -1,35 +1,45 @@
-#include "../inc/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/09 21:43:19 by maborges          #+#    #+#             */
+/*   Updated: 2025/10/14 13:07:27 by maborges         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int is_valid_identifier(const char *s)
-{
-    if (!s || !*s) return 0;
-    if (!(ft_isalpha((unsigned char)*s) || *s == '_')) return 0;
-    s++;
-    while (*s)
-    {
-        if (!(ft_isalnum((unsigned char)*s) || *s == '_')) return 0;
-        s++;
-    }
-    return 1;
-}
+#include "../../inc/minishell.h"
 
-int builtin_unset(char **args, t_mshell *shell)
+/* static int	is_valid_identifier(const char *s)
 {
-	(void)shell;
-    int status = 0;
-    for (int i = 1; args[i]; ++i)
-    {
-        if (!is_valid_identifier(args[i]))
-        {
-            fprintf(stderr, "unset: `%s': not a valid identifier\n", args[i]);
-            status = 1;
-            continue;
-        }
-        if (unsetenv(args[i]) != 0)
-        {
-            perror("unset");
-            status = 1;
-        }
-    }
-    return status;
+	while (*s)
+	{
+		if (!(ft_isalnum((unsigned char)*s) || *s == '_'
+				|| !ft_isalpha((unsigned char) *s)))
+			return (0);
+		s++;
+	}
+	return (1);
+} */
+
+int	builtin_unset(char **args, t_mshell *shell)
+{
+	int	i;
+
+	i = 0;
+	if (!args[1])
+		return (0);
+	while (args[++i])
+	{
+		if (!is_valid_identifier(args[i]))
+		{
+			fprintf(stderr, "unset: `%s': not a valid identifier\n", args[i]);
+			shell->exit_status = 1;
+			continue ;
+		}
+		unset_env_var(shell, args[i]);
+	}
+	return (shell->exit_status);
 }

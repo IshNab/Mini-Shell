@@ -6,13 +6,13 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/07 16:52:33 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:39:23 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-char	*ft_strndup(const char *s, size_t n)
+/* char	*ft_strndup(const char *s, size_t n)
 {
 	char	*dup;
 	size_t	len;
@@ -27,7 +27,7 @@ char	*ft_strndup(const char *s, size_t n)
 	dup[len] = '\0';
 	return (dup);
 }
-
+ */
 /* static t_token_type	get_token_type(const char *s)
 {
 	if (!strncmp(s, "|", 1))
