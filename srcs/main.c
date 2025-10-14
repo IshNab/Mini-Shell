@@ -72,6 +72,16 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("minishell$");
+		// If SIGINT was received, refresh prompt like bash and continue
+		if (g_signal_received == SIGINT)
+		{
+			ft_printf("\n");
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+			g_signal_received = 0;
+			continue;
+		}
 		if (!line)  // This handles Ctrl+D (EOF)
 		{
 			ft_printf("exit\n");

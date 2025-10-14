@@ -12,51 +12,61 @@
 
 #include "../../inc/minishell.h"
 
-// Global variable to track if we're in interactive mode
-int g_interactive_mode = 1;
+// Single global to store last received signal number (subject requirement)
+volatile sig_atomic_t g_signal_received = 0;
 
 void	signal_handler(int sig)
 {
-	if (sig == SIGINT)
-	{
-		if (g_interactive_mode)
-		{
-			// Interactive mode: display new prompt
-			ft_printf("\n");
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
-		}
-		else
-		{
-			// Non-interactive mode: terminate current command
-			exit(130); // Standard exit code for SIGINT
-		}
-	}
+    // Only record the signal; actual handling is done in main loop/parent
+    g_signal_received = sig;
 }
 
 void	setup_interactive_signals(void)
 {
-	g_interactive_mode = 1;
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+    struct sigaction sa_int;
+    struct sigaction sa_quit;
+
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0; // do not use SA_RESTART so readline can be interrupted
+    sa_int.sa_handler = signal_handler;
+    sigaction(SIGINT, &sa_int, NULL);
+
+    sigemptyset(&sa_quit.sa_mask);
+    sa_quit.sa_flags = 0;
+    sa_quit.sa_handler = SIG_IGN; // ctrl-\ does nothing in interactive mode
+    sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 void	setup_non_interactive_signals(void)
 {
-	g_interactive_mode = 0;
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+    struct sigaction sa_int;
+    struct sigaction sa_quit;
+
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0;
+    sa_int.sa_handler = signal_handler; // parent tracks SIGINT while launching
+    sigaction(SIGINT, &sa_int, NULL);
+
+    // In parent, ignore SIGQUIT during command launch; child restores defaults
+    sigemptyset(&sa_quit.sa_mask);
+    sa_quit.sa_flags = 0;
+    sa_quit.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 void	restore_default_signals(void)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+    struct sigaction sa;
+
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sa.sa_handler = SIG_DFL;
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGQUIT, &sa, NULL);
 }
 
 // Legacy function for backward compatibility
 void	setup_signals(void)
 {
-	setup_interactive_signals();
+    setup_interactive_signals();
 }
