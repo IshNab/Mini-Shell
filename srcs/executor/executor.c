@@ -179,7 +179,18 @@ void	execute_simple_command(t_command *cmd, t_mshell *shell)
 	{
 		// Child process: restore default signal behavior
 		restore_default_signals();
-		if (cmd->input_file)
+		if (cmd->heredoc_delimiter)
+		{
+			fd = create_heredoc_file(cmd->heredoc_delimiter);
+			if (fd == -1)
+			{
+				perror("minishell");
+				exit(1);
+			}
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else if (cmd->input_file)
 		{
 			fd = open(cmd->input_file, O_RDONLY);
 			if (fd == -1)
@@ -218,6 +229,13 @@ void	execute_simple_command(t_command *cmd, t_mshell *shell)
 	
 	// Restore interactive signals in parent
 	setup_interactive_signals();
+	
+	// Check for SIGINT during command execution
+	if (g_signal_received == SIGINT)
+	{
+		kill(child_pid, SIGINT);
+		g_signal_received = 0;
+	}
 	
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))

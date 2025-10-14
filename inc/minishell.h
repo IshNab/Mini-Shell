@@ -221,6 +221,9 @@ void				setup_signals(void);
 void				setup_interactive_signals(void);
 void				setup_non_interactive_signals(void);
 void				restore_default_signals(void);
+void				heredoc_signal_handler(int sig);
+void				setup_heredoc_signals(void);
+int					create_heredoc_file(char *delimiter);
 
 // Global signal state
 extern volatile sig_atomic_t			g_signal_received;

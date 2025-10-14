@@ -64,6 +64,14 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
     // Restore interactive signals in parent
     setup_interactive_signals();
     
+    // Check for SIGINT during pipe execution
+    if (g_signal_received == SIGINT)
+    {
+        kill(left_pid, SIGINT);
+        kill(right_pid, SIGINT);
+        g_signal_received = 0;
+    }
+    
     waitpid(left_pid, &status, 0);
     waitpid(right_pid, &status, 0);
 
