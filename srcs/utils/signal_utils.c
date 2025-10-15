@@ -103,6 +103,7 @@ void	setup_heredoc_signals(void)
 }
 
 // Create heredoc file with proper signal handling
+// heredoc redirects input from a temp file that has lines of text, used with ( << ) oeprator
 int	create_heredoc_file(char *delimiter)
 {
     int		fd;
