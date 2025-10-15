@@ -56,6 +56,12 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		new->value = ft_strdup(">");
 		(*i)++;
 	}
+	else if (input[*i] == '=')
+	{
+		new->type = TOKEN_WORD;
+		new->value = ft_strdup("=");
+		(*i)++;
+	}
 	else if (input[*i] == '"')
 	{
 		// Handle double quoted content
@@ -110,7 +116,7 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		start = *i;
 		while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
 			&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>'
-			&& input[*i] != '"' && input[*i] != '\'')
+			&& input[*i] != '"' && input[*i] != '\'' && input[*i] != '=')
 			(*i)++;
 		new->type = TOKEN_WORD;
 		new->value = ft_substr(input, start, *i - start);
