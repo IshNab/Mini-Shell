@@ -38,7 +38,7 @@ t_command	*create_command_node(t_token *tokens)
 
 	if (!tokens)
 		return (NULL);
-	cmd = malloc(sizeof(t_command));
+	cmd = safe_malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
 	cmd->base.type = NODE_CMD;
