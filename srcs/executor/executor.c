@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 12:54:16 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:50:00 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,17 +112,20 @@ static void	run_external_cmd(t_command *cmd, t_mshell *shell)
 	char	**env_array;
 	int		i;
 
-	if (!cmd || !cmd->base.args || !cmd->base.args[0])
+	if (!cmd || !cmd->args || !cmd->args[0])
 		exit(127);
-	path = find_cmd_path(cmd->base.args[0], shell->env);
+	path = find_cmd_path(cmd->args[0], shell->env);
 	i = 0;
 	if (!path)
 	{
 		perror("minishell");
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putstr_fd("\n", 2);
 		exit(127);
 	}
 	env_array = env_to_array(shell->env);
-	if (execve(path, cmd->base.args, env_array) == -1)
+	if (execve(path, cmd->args, env_array) == -1)
 	{
 		perror("minishell");
 		free(path);
@@ -136,42 +139,61 @@ static void	run_external_cmd(t_command *cmd, t_mshell *shell)
 
 static int	try_builtin(t_command *cmd, t_mshell *shell)
 {
-	if (!cmd->base.args || !cmd->base.args[0])
+	if (!cmd->args || !cmd->args[0])
 		return (0);
-	if (!ft_strcmp(cmd->base.args[0], "cd"))
-		shell->exit_status = builtin_cd(cmd->base.args, shell);
-	else if (!ft_strcmp(cmd->base.args[0], "pwd"))
-		shell->exit_status = builtin_pwd(cmd->base.args);
-	else if (!ft_strcmp(cmd->base.args[0], "echo"))
-		shell->exit_status = builtin_echo(cmd->base.args);
-	else if (!ft_strcmp(cmd->base.args[0], "env"))
-		shell->exit_status = builtin_env(cmd->base.args, shell);
-	else if (!ft_strcmp(cmd->base.args[0], "exit"))
-		shell->exit_status = builtin_exit(cmd->base.args, shell);
-	else if (!ft_strcmp(cmd->base.args[0], "export"))
-		shell->exit_status = builtin_export(cmd->base.args, shell);
-	else if (!ft_strcmp(cmd->base.args[0], "unset"))
-		shell->exit_status = builtin_unset(cmd->base.args, shell);
+	if (!ft_strcmp(cmd->args[0], "cd"))
+		shell->exit_status = builtin_cd(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "pwd"))
+		shell->exit_status = builtin_pwd(cmd->args);
+	else if (!ft_strcmp(cmd->args[0], "echo"))
+		shell->exit_status = builtin_echo(cmd->args);
+	else if (!ft_strcmp(cmd->args[0], "env"))
+		shell->exit_status = builtin_env(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "exit"))
+		shell->exit_status = builtin_exit(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "export"))
+		shell->exit_status = builtin_export(cmd->args, shell);
+	else if (!ft_strcmp(cmd->args[0], "unset"))
+		shell->exit_status = builtin_unset(cmd->args, shell);
 	else
 		return (0);
 	return (1);
 }
 
-void	execute_simple_command(t_command *cmd, t_mshell *shell)
+void	execute_simple_command(t_ast *ast, t_mshell *shell)
 {
-	int		status;
-	pid_t	child_pid;
-	int		fd;
-	int		flags;
+	t_command	*cmd;
+	int			status;
+	pid_t		child_pid;
+	int			fd;
+	int			flags;
 
-	if (!cmd || !cmd->base.args || !cmd->base.args[0])
+	if (!ast)
 		return ;
+	cmd = (t_command *)ast;
 	if (try_builtin(cmd, shell))
 		return ;
+	
+	// Setup non-interactive signals for child process
+	setup_non_interactive_signals();
+	
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		if (cmd->input_file)
+		// Child process: restore default signal behavior
+		restore_default_signals();
+		if (cmd->heredoc_delimiter)
+		{
+			fd = create_heredoc_file(cmd->heredoc_delimiter);
+			if (fd == -1)
+			{
+				perror("minishell");
+				exit(1);
+			}
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else if (cmd->input_file)
 		{
 			fd = open(cmd->input_file, O_RDONLY);
 			if (fd == -1)
@@ -207,6 +229,17 @@ void	execute_simple_command(t_command *cmd, t_mshell *shell)
 		shell->exit_status = 1;
 		return ;
 	}
+	
+	// Restore interactive signals in parent
+	setup_interactive_signals();
+	
+	// Check for SIGINT during command execution
+	if (g_signal_received == SIGINT)
+	{
+		kill(child_pid, SIGINT);
+		g_signal_received = 0;
+	}
+	
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
@@ -216,8 +249,6 @@ void	execute_simple_command(t_command *cmd, t_mshell *shell)
 
 void	execute_ast(t_ast *ast, t_mshell *shell)
 {
-	t_command	*cmd;
-
 	if (!ast)
 		return ;
 	if (ast->type == NODE_PIPE)
@@ -226,7 +257,6 @@ void	execute_ast(t_ast *ast, t_mshell *shell)
 	}
 	else if (ast->type == NODE_CMD)
 	{
-		cmd = (t_command *)ast;
-		execute_simple_command(cmd, shell);
+		execute_simple_command(ast, shell);
 	}
 }
