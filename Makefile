@@ -24,9 +24,10 @@ SRCS = \
 ./srcs/parser/command_builder.c \
 ./srcs/utils/utils.c \
 ./srcs/utils/debug_functions.c \
-./srcs/utils/str_append.c \
+./srcs/utils/str_utils.c \
 ./srcs/utils/expand_functions.c \
-./srcs/utils/signal_utils.c \
+./srcs/utils/export_utils.c \
+./srcs/utils/frees.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \
