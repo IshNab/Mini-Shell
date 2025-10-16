@@ -75,6 +75,7 @@ void	setup_signals(void)
 }
 
 // Heredoc signal handler - aborts heredoc on SIGINT
+// heredoc redirects input from a temporary file that has lines of text, used with ( << ) oeprator
 void	heredoc_signal_handler(int sig)
 {
     if (sig == SIGINT)
@@ -104,6 +105,7 @@ void	setup_heredoc_signals(void)
 
 // Create heredoc file with proper signal handling
 // heredoc redirects input from a temp file that has lines of text, used with ( << ) oeprator
+// shell reads until it finds the delimiter, uses content as input for command
 int	create_heredoc_file(char *delimiter)
 {
     int		fd;
@@ -163,3 +165,11 @@ int	create_heredoc_file(char *delimiter)
     fd = open(tmp_file, O_RDONLY);
     return (fd);
 }
+
+//child process: set up heredoc signals and read input
+// read line until delimiter is found or EOF is reached
+// write line to temporary file
+
+//parent process: wait for child and handle signals
+// check if child was terminated by signal
+// if interrupted, cleans up temp file
