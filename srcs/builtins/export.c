@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/14 20:09:41 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/16 13:17:48 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,8 @@ int	builtin_export(char **args, t_mshell *shell)
 				*eq = '=';
 			}
 			else
-			{
 				if (!get_env_from_list(shell->env, args[i]))
 					set_env_var(shell, args[i], "");
-			}
 		}
 		i++;
 	}

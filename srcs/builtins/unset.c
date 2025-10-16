@@ -6,23 +6,44 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 21:43:19 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/14 13:07:27 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/16 13:20:17 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-/* static int	is_valid_identifier(const char *s)
+static int	error_msg_unset(char *id)
 {
-	while (*s)
-	{
-		if (!(ft_isalnum((unsigned char)*s) || *s == '_'
-				|| !ft_isalpha((unsigned char) *s)))
-			return (0);
-		s++;
-	}
+	ft_putstr_fd("minishell: unset: ", 2);
+	ft_putstr_fd(id, 2);
+	ft_putstr_fd(": not a valid identifier\n", 2);
 	return (1);
-} */
+}
+
+void	unset_env_var(t_mshell *shell, const char *key)
+{
+	t_env	*current;
+	t_env	*prev;
+
+	current = shell->env;
+	prev = NULL;
+	while (current)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			if (prev)
+				prev->next = current->next;
+			else
+				shell->env = current->next;
+			free(current->key);
+			free(current->value);
+			free(current);
+			return ;
+		}
+		prev = current;
+		current = current->next;
+	}
+}
 
 int	builtin_unset(char **args, t_mshell *shell)
 {
@@ -35,7 +56,7 @@ int	builtin_unset(char **args, t_mshell *shell)
 	{
 		if (!is_valid_identifier(args[i]))
 		{
-			fprintf(stderr, "unset: `%s': not a valid identifier\n", args[i]);
+			error_msg_unset(args[i]);
 			shell->exit_status = 1;
 			continue ;
 		}
