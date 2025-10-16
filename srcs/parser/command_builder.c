@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:26 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/09 16:02:56 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:21:41 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,20 @@ t_command	*create_command_node(t_token *tokens)
 	if (!cmd)
 		return (NULL);
 	cmd->base.type = NODE_CMD;
-	cmd->base.left = NULL;
-	cmd->base.right = NULL;
-	cmd->base.exit_status = 0;
 	cmd->input_file = NULL;
 	cmd->output_file = NULL;
 	cmd->is_append = 0;
 	cmd->heredoc_delimiter = NULL;
 	argc = count_word_tokens(tokens);
-	cmd->base.args = malloc(sizeof(char *) * (argc + 1));
-	if (!cmd->base.args)
-	{
-		free(cmd);
-		return (NULL);
-	}
+	cmd->args = malloc(sizeof(char *) * (argc + 1));
+	if (!cmd->args)
+		return (free(cmd), NULL);
 	i = 0;
 	while (tokens)	//iterate through the tokens, process each token
 	{
 		if (tokens->type == TOKEN_WORD)
 		{
-			cmd->base.args[i++] = ft_strdup(tokens->value);	//add argument
+			cmd->args[i++] = ft_strdup(tokens->value);	//add argument
 			tokens = tokens->next;
 		}
 		else if (tokens->type == TOKEN_REDIR_IN)	// (<) redirects input from a file
@@ -104,6 +98,6 @@ t_command	*create_command_node(t_token *tokens)
 		else
 			tokens = tokens->next;  // Skip unknown tokens
 	}
-	cmd->base.args[i] = NULL;
+	cmd->args[i] = NULL;
 	return (cmd);
 }
