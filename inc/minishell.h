@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 13:02:08 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/14 21:03:23 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,6 @@ typedef enum e_node_type
 typedef struct s_ast
 {
 	t_node_type		type;
-	struct s_ast	*left; //pipes: left cmd
-	struct s_ast	*right; //pipes: right cmd
-	int				exit_status; //should this be here? maybe only on the shell->exit_status
-	char			**args; //command arguments
 }	t_ast;
 typedef enum e_redir_type
 {
@@ -102,6 +98,7 @@ typedef struct s_redir
 typedef struct s_command
 {
 	t_ast			base;
+	char			**args;
 	char			*input_file; //< input
 	char			*output_file; // > or >> output
 	int				is_append; //flag for no=0 yes=1
@@ -112,6 +109,8 @@ typedef struct s_command
 typedef struct s_pipeline
 {
 	t_ast			base;
+	struct s_ast	*left; //pipes: left cmd
+	struct s_ast	*right; //pipes: right cmd
 }	t_pipeline;
 
 typedef struct s_env
@@ -137,31 +136,23 @@ typedef struct s_mshell
 //=============================================================================/
 
 // Parser functions
+
 t_ast				*parser(char *input, char **envp, t_mshell *shell);
 int					validate_syntax(t_token *tokens);
 t_ast				*build_ast(t_token *tokens);
 t_command			*create_command_node(t_token *tokens);
 t_ast				*create_pipe_node(t_ast *left, t_ast *right);
+void				free_ast(t_ast *node);
 
 // Tokenizer
 t_token				*ms_tokenize(const char *input);
 void				free_token_list(t_token *head);
 void				print_tokens(t_token *tok);
 
-//void				process_quotes(t_token *tokens);
-//void				handle_word(const char *input, int *i, t_token **head,
-						//t_token **tail);
 void				remove_quote_tokens(t_token **tokens);
 //Variable Expansion
 void				expand_vars(t_token *tokens, t_mshell *shell);
 char				*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid);
-
-// AST functions
-t_ast				*build_simple_ast(t_token *tokens);
-t_ast				*ast_new_node(t_node_type type, char *value);
-void				free_ast(t_ast *node);
-void				print_ast(t_ast *node, int depth);
-
 
 //=============================================================================/
 //								Executor                                       /
@@ -207,9 +198,14 @@ void				print_banner(void);
 int					panic(char *error_msg);
 int					error_msg(char *msg, int exit_code, t_mshell *shell);
 
-char				*ft_strndup(const char *s, size_t n);
 char				*str_append(char *s1, const char *s2);
 char				*get_env_from_list(t_env *env, const char *key);
+void				unset_env_var(t_mshell *shell, const char *key);
+void				sort_vars_list(t_env *env);
+int					is_valid_identifier(char *s);
+int					error_msg_export(char *id);
+
+void				free_ast(t_ast *node);
 
 //=============================================================================/
 //								Signal Handling                                /

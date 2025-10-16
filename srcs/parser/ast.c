@@ -6,69 +6,39 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/07 16:36:30 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:39:10 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	free_ast(t_ast *node)
-{
-	int			i;
-	t_command	*cmd;
-
-	if (node == NULL)
-		return ;
-	if (node->args)
-	{
-		i = 0;
-		while (node->args[i])
-		{
-			free(node->args[i]);
-			i++;
-		}
-		free(node->args);
-	}
-	if (node->type == NODE_CMD)
-	{
-		cmd = (t_command *)node;
-		if (cmd->input_file)
-			free(cmd->input_file);
-		if (cmd->output_file)
-			free(cmd->output_file);
-		if (cmd->heredoc_delimiter)
-			free(cmd->heredoc_delimiter);
-	}
-	free_ast(node->left);
-	free_ast(node->right);
-	free(node);
-}
-
 t_ast	*create_pipe_node(t_ast *left, t_ast *right)
 {
-	t_ast	*pipe;
+	t_pipeline	*pipe;
 
-	pipe = malloc(sizeof(t_ast));
+	pipe = malloc(sizeof(t_pipeline));
 	if (!pipe)
 		return (NULL);
-	pipe->type = NODE_PIPE;
+	pipe->base.type = NODE_PIPE;
 	pipe->left = left;
 	pipe->right = right;
-	pipe->args = NULL;
-	pipe->exit_status = 0;
-	return (pipe);
+	return ((t_ast *)pipe);
 }
 
 static t_token	*split_at_pipe(t_token *tokens, t_token *pipe)
 {
 	t_token	*curr;
+	t_token	*right_tokens;
 
 	curr = tokens;
 	while (curr && curr->next != pipe)
 		curr = curr->next;
 	if (curr)
 		curr->next = NULL;
-	return (pipe->next);
+	right_tokens = pipe->next;
+	free(pipe->value);
+	free(pipe);
+	return (right_tokens);
 }
 
 static t_token	*find_pipe(t_token *tokens)
