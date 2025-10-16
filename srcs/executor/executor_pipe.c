@@ -20,6 +20,71 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 	int			status;
 	t_pipeline	*pipeline;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+    if (pipe(pipe_fds) == -1)
+    {
+        perror("minishell: pipe");
+        return ;
+    }
+
+    // Fork for left side
+    left_pid = fork();
+    if (left_pid == 0)
+    {
+        // Child process: restore default signal behavior
+        restore_default_signals();
+        
+        close(pipe_fds[0]);  // Close read end
+        dup2(pipe_fds[1], STDOUT_FILENO);  // Redirect stdout to pipe
+        close(pipe_fds[1]);
+
+        // RECURSIVE execution of left side!
+        execute_ast(pipe_node->left, shell);
+        exit(shell->exit_status);
+    }
+
+    // Fork for right side
+    right_pid = fork();
+    if (right_pid == 0)
+    {
+        // Child process: restore default signal behavior
+        restore_default_signals();
+        
+        close(pipe_fds[1]);  // Close write end
+        dup2(pipe_fds[0], STDIN_FILENO);  // Redirect stdin from pipe
+        close(pipe_fds[0]);
+
+        // RECURSIVE execution of right side!
+        execute_ast(pipe_node->right, shell);
+        exit(shell->exit_status);
+    }
+
+    // Parent closes both ends and waits
+    close(pipe_fds[0]);
+    close(pipe_fds[1]);
+    
+    // Restore interactive signals in parent
+    setup_interactive_signals();
+    
+    // Check for SIGINT during pipe execution
+    if (g_signal_received == SIGINT)
+    {
+        kill(left_pid, SIGINT);
+        kill(right_pid, SIGINT);
+        g_signal_received = 0;
+    }
+    
+    waitpid(left_pid, &status, 0);
+    waitpid(right_pid, &status, 0);
+
+    if (WIFEXITED(status))
+        shell->exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        shell->exit_status = 128 + WTERMSIG(status);
+=======
+=======
+>>>>>>> b341b797608280da90e86edfb4a1417e8d19f836
 	pipeline = (t_pipeline *)pipe_node;
 	if (pipe(pipe_fds) == -1)
 		return (perror("minishell: pipe"));
@@ -52,4 +117,8 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 	waitpid(right_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
+<<<<<<< HEAD
+>>>>>>> 9711340b0c2e3ea8ba13763d3e6b4807d8b0b999
+=======
+>>>>>>> b341b797608280da90e86edfb4a1417e8d19f836
 }
