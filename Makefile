@@ -27,11 +27,16 @@ SRCS = \
 ./srcs/utils/str_utils.c \
 ./srcs/utils/expand_functions.c \
 <<<<<<< HEAD
+<<<<<<< HEAD
 ./srcs/utils/signal_utils.c \
 =======
 ./srcs/utils/export_utils.c \
 ./srcs/utils/frees.c \
 >>>>>>> 9711340b0c2e3ea8ba13763d3e6b4807d8b0b999
+=======
+./srcs/utils/export_utils.c \
+./srcs/utils/frees.c \
+>>>>>>> b341b797608280da90e86edfb4a1417e8d19f836
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \

@@ -21,6 +21,7 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 	t_pipeline	*pipeline;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (pipe(pipe_fds) == -1)
     {
         perror("minishell: pipe");
@@ -82,6 +83,8 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
     else if (WIFSIGNALED(status))
         shell->exit_status = 128 + WTERMSIG(status);
 =======
+=======
+>>>>>>> b341b797608280da90e86edfb4a1417e8d19f836
 	pipeline = (t_pipeline *)pipe_node;
 	if (pipe(pipe_fds) == -1)
 		return (perror("minishell: pipe"));
@@ -114,5 +117,8 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 	waitpid(right_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
+<<<<<<< HEAD
 >>>>>>> 9711340b0c2e3ea8ba13763d3e6b4807d8b0b999
+=======
+>>>>>>> b341b797608280da90e86edfb4a1417e8d19f836
 }
