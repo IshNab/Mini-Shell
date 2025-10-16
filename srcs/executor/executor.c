@@ -21,7 +21,7 @@ static char	**env_to_array(t_env *env)
 	char	*tmp;
 
 	count = ft_envsize(env);
-	env_array = safe_malloc(sizeof(char *) * (count + 1));
+	env_array = malloc(sizeof(char *) * (count + 1));
 	current = env;
 	i = 0;
 	tmp = NULL;
@@ -118,6 +118,7 @@ static void	run_external_cmd(t_command *cmd, t_mshell *shell)
 	i = 0;
 	if (!path)
 	{
+		perror("minishell");
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd("\n", 2);
