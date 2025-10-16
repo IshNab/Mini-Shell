@@ -62,14 +62,31 @@ int	main(int argc, char **argv, char **envp)
 	//print_banner();
 	using_history();
 	init_shell(&shell, envp);
+	
+	// Setup signals for interactive mode
+	setup_interactive_signals();
+	
 	DEBUG_CHECKPOINT("Shell initialized");
 	debug_print_shell(&shell);
 	debug_print_env(shell.env);
 	while (1)
 	{
 		line = readline("minishell$");
-		if (!line)
-			break ;
+		// If SIGINT was received, refresh prompt like bash and continue
+		if (g_signal_received == SIGINT)
+		{
+			ft_printf("\n");
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+			g_signal_received = 0;
+			continue;
+		}
+		if (!line)  // This handles Ctrl+D (EOF)
+		{
+			ft_printf("exit\n");
+			break;
+		}
 		if (line)
 			add_history(line);
 		DEBUG_CHECKPOINT("About to parse command");

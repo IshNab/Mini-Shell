@@ -172,10 +172,27 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 	cmd = (t_command *)ast;
 	if (try_builtin(cmd, shell))
 		return ;
+	
+	// Setup non-interactive signals for child process
+	setup_non_interactive_signals();
+	
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		if (cmd->input_file)
+		// Child process: restore default signal behavior
+		restore_default_signals();
+		if (cmd->heredoc_delimiter)
+		{
+			fd = create_heredoc_file(cmd->heredoc_delimiter);
+			if (fd == -1)
+			{
+				perror("minishell");
+				exit(1);
+			}
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		else if (cmd->input_file)
 		{
 			fd = open(cmd->input_file, O_RDONLY);
 			if (fd == -1)
@@ -211,6 +228,17 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 		shell->exit_status = 1;
 		return ;
 	}
+	
+	// Restore interactive signals in parent
+	setup_interactive_signals();
+	
+	// Check for SIGINT during command execution
+	if (g_signal_received == SIGINT)
+	{
+		kill(child_pid, SIGINT);
+		g_signal_received = 0;
+	}
+	
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
