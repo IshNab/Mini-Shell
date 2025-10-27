@@ -142,14 +142,23 @@ void	expand_vars(t_token *tokens, t_mshell *shell)
 
 	while (curr)
 	{
-		// Expand all WORD tokens - quote handling is now done in tokenizer
-		if (curr->type == TOKEN_WORD)
+		if (curr->type == TOKEN_DQUOTE)	//expand variables in double-quoted content
 		{
 			expanded = expand_word(curr->value, shell->env, shell->exit_status, shell->shell_pid);
 			free(curr->value);
 			curr->value = expanded;
+			curr->type = TOKEN_WORD;	//convert back to WORD token after expansion
 		}
-
+		else if (curr->type == TOKEN_SQUOTE)	//skip variables in single-quoted content, don't expand
+		{
+			curr->type = TOKEN_WORD;	//convert to WORD, don't expand
+		}
+		else if (curr->type == TOKEN_WORD)	//expand variables in unquoted content
+		{
+			expanded = expanded_word(curr->value, shell->env, shell->exit_status, shell->shell_pid);
+			free(curr->value);
+			curr->value = expanded;
+		}
 		curr = curr->next;
 	}
 }
