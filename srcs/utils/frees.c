@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 20:37:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/14 21:07:23 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/28 16:23:57 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	free_ast(t_ast *node)
 	t_command	*cmd;
 	t_pipeline	*pipe;
 
-	cmd = NULL;
+	cmd = NULL; // can i delete this?
 	if (node == NULL)
 		return ;
 	if (node->type == NODE_PIPE)
