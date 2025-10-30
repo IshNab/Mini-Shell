@@ -32,8 +32,8 @@ t_ast	*parser(char *input, char **envp, t_mshell *shell)
 	}
 	//TODO a way to check if we need to expand or not (flags?)
 	expand_vars(tokens, shell); //step 3. expand the variables
-	remove_quote_tokens(&tokens); //step 4. remove the quote tokens
-	ast = build_ast(tokens); //step 5. build the AST
+	// Quote tokens are now handled in tokenizer, no need to remove them
+	ast = build_ast(tokens); //step 4. build the AST
 	if (!ast)
 	{
 		free_token_list(tokens);

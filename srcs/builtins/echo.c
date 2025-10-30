@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:28:17 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 16:00:08 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/16 21:44:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ int	builtin_echo(char **args)
 	}
 	while (args[i])
 	{
-		ft_putstr_fd(args[i], STDOUT_FILENO);
+		printf("%s", args[i]);
 		if (args[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
+			printf(" ");
 		i++;
 	}
 	if (!no_newline)
-		ft_putchar_fd('\n', STDOUT_FILENO);
+		printf("\n");
 	return (0);
 }

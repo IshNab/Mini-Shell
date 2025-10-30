@@ -27,7 +27,7 @@ static int	syntax_error_redir(t_token *curr)
 {
 	if (!curr->next || curr->next->type != TOKEN_WORD)
 	{
-		printf("Syntax error: redirection without target\n");
+		ft_putstr_fd("Syntax error: redirection without target\n", 2);
 		return (1);
 	}
 	return (0);
@@ -52,7 +52,10 @@ int	validate_syntax(t_token *tokens)
 	expect_word = 1;	//start expecting a word
 	while (curr)
 	{
-		if (curr->type == TOKEN_PIPE)
+		//check for empty commands
+		if (!tokens || (tokens->type == TOKEN_PIPE && !tokens->next))
+		   return (0);
+		else if (curr->type == TOKEN_PIPE)
 		{
 			if (syntax_error_pipe(expect_word))	//check for syntax error in pipe
 				return (0);
@@ -70,7 +73,7 @@ int	validate_syntax(t_token *tokens)
 	}
 	if (expect_word)
 	{
-		printf("Syntax error: incomplete command\n");//needs to print via std_Err
+		ft_putstr_fd("Syntax error: incomplete command\n", 2);
 		return (0);
 	}
 	return (1);
