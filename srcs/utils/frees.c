@@ -53,6 +53,5 @@ void	free_ast(t_ast *node)
 	{
 		cmd = (t_command *)node;
 		free_cmd(cmd);
-		free(cmd);
 	}
 }
