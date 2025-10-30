@@ -52,7 +52,10 @@ int	validate_syntax(t_token *tokens)
 	expect_word = 1;	//start expecting a word
 	while (curr)
 	{
-		if (curr->type == TOKEN_PIPE)
+		//check for empty commands
+		if (!tokens || (tokens->type == TOKEN_PIPE && !tokens->next))
+		   return (0);
+		else if (curr->type == TOKEN_PIPE)
 		{
 			if (syntax_error_pipe(expect_word))	//check for syntax error in pipe
 				return (0);
