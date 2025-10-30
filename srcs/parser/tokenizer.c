@@ -71,13 +71,13 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 			(*i)++;
 		if (input[*i] == '"')
 		{
-			new->type = TOKEN_WORD;
+			new->type = TOKEN_DQUOTE;	//double quoted content, to be expanded
 			new->value = ft_substr(input, start, *i - start);
 			if (!new->value)
 				new->value = ft_strdup(""); // Handle empty quotes
 			(*i)++; // Skip closing quote
 		}
-		else
+		else //for unclosed double quotes
 		{
 			// Unclosed quote - treat as word
 			new->type = TOKEN_WORD;
@@ -95,7 +95,7 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 			(*i)++;
 		if (input[*i] == '\'')
 		{
-			new->type = TOKEN_WORD;
+			new->type = TOKEN_SQUOTE; //single quoted content, not expanded
 			new->value = ft_substr(input, start, *i - start);
 			if (!new->value)
 				new->value = ft_strdup(""); // Handle empty quotes
@@ -103,7 +103,7 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		}
 		else
 		{
-			// Unclosed quote - treat as word
+			// Unclosed single quote - treat as word
 			new->type = TOKEN_WORD;
 			new->value = ft_substr(input, start, *i - start);
 			if (!new->value)
