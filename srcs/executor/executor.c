@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/14 20:50:00 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/29 11:39:38 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,10 +173,10 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 	cmd = (t_command *)ast;
 	if (try_builtin(cmd, shell))
 		return ;
-	
+
 	// Setup non-interactive signals for child process
 	setup_non_interactive_signals();
-	
+
 	child_pid = fork();
 	if (child_pid == 0)
 	{
@@ -229,17 +229,17 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 		shell->exit_status = 1;
 		return ;
 	}
-	
+
 	// Restore interactive signals in parent
 	setup_interactive_signals();
-	
+
 	// Check for SIGINT during command execution
 	if (g_signal_received == SIGINT)
 	{
 		kill(child_pid, SIGINT);
 		g_signal_received = 0;
 	}
-	
+
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
@@ -249,8 +249,6 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 
 void	execute_ast(t_ast *ast, t_mshell *shell)
 {
-	if (!ast)
-		return ;
 	if (ast->type == NODE_PIPE)
 	{
 		execute_pipe(ast, shell);

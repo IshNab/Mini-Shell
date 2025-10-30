@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/28 16:24:06 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/29 19:17:24 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	main(int argc, char **argv, char **envp)
 			rl_replace_line("", 0);
 			rl_redisplay();
 			g_signal_received = 0;
-			continue;
+			continue ;
 		}
 		if (!line)  // This handles Ctrl+D (EOF)
 		{
