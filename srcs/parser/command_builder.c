@@ -58,11 +58,13 @@ t_command	*create_command_node(t_token *tokens)
 			cmd->args[i++] = ft_strdup(tokens->value);	//add argument
 			tokens = tokens->next;
 		}
-		else if (tokens->type == TOKEN_REDIR_IN)	// (<) redirects input from a file
+		else if (tokens->type == TOKEN_REDIR_IN)
 		{
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
 			{
+				if (cmd->input_file)  // Free old value if exists
+					free(cmd->input_file);
 				cmd->input_file = ft_strdup(tokens->value);
 				tokens = tokens->next;
 			}
@@ -72,7 +74,10 @@ t_command	*create_command_node(t_token *tokens)
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
 			{
+				if (cmd->output_file)  // Free old value if exists
+					free(cmd->output_file);
 				cmd->output_file = ft_strdup(tokens->value);
+				cmd->is_append = 0;	//reset append flag for > redirection, redir_out overwrites token_appedend 
 				tokens = tokens->next;
 			}
 		}
@@ -81,6 +86,8 @@ t_command	*create_command_node(t_token *tokens)
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
 			{
+				if (cmd->output_file)  // Free old value if exists
+					free(cmd->output_file);
 				cmd->output_file = ft_strdup(tokens->value);
 				cmd->is_append = 1;
 				tokens = tokens->next;
@@ -91,6 +98,8 @@ t_command	*create_command_node(t_token *tokens)
 			tokens = tokens->next;
 			if (tokens && tokens->type == TOKEN_WORD)
 			{
+				if (cmd->heredoc_delimiter)  // Free old value if exists
+					free(cmd->heredoc_delimiter);
 				cmd->heredoc_delimiter = ft_strdup(tokens->value);
 				tokens = tokens->next;
 			}
