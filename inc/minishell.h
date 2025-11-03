@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 14:07:55 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/03 19:17:49 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,15 @@ typedef struct s_command {
 //t_command			*create_mockup_command(char *input_line);
 void				execute_ast(t_ast *ast, t_mshell *mshell);
 void				execute_pipe(t_ast *pipe_node, t_mshell *shell);
+void				run_external_cmd(t_command *cmd, t_mshell *shell);
+int					try_builtin(t_command *cmd, t_mshell *shell);
+int					is_parent_builtin(char *cmd_name);
+
+//redirections
+int					handle_input_redir(t_command *cmd, int *saved_stdin);
+int					handle_output_redir(t_command *cmd, int *saved_stdout);
+int					setup_redirections(t_command *cmd, int *saved_stdin, int *saved_stdout);
+void				restore_redirections(int saved_stdin, int saved_stdout);
 
 //=============================================================================/
 //								Builtins                                       /

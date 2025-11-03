@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/29 19:17:24 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:52:51 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(int argc, char **argv, char **envp)
 			g_signal_received = 0;
 			continue ;
 		}
-		if (!line)  // This handles Ctrl+D (EOF)
+		if (!line) // This handles Ctrl+D (EOF)
 		{
 			printf("exit\n");
 			break ;
