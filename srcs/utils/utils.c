@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 15:30:37 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:10:03 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	*safe_malloc(size_t size)
 	return (memory);
 }
 
-int	fork_wrapper(void)
+int	fork_wrapper(t_mshell *shell)
 {
 	int	pid;
 
@@ -51,6 +51,7 @@ int	fork_wrapper(void)
 		ft_putstr_fd("fork failed: ", 2);
 		ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
+		shell->exit_status = 1; //should I put the value of errno here?
 	}
 	return (pid);
 }

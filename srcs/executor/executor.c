@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/29 11:39:38 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:13:54 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ static int	try_builtin(t_command *cmd, t_mshell *shell)
 	return (1);
 }
 
-void	execute_simple_command(t_ast *ast, t_mshell *shell)
+int	execute_simple_command(t_ast *ast, t_mshell *shell)
 {
 	t_command	*cmd;
 	int			status;
@@ -172,15 +172,15 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 		return ;
 	cmd = (t_command *)ast;
 	if (try_builtin(cmd, shell))
-		return ;
-
+		return (0);
 	// Setup non-interactive signals for child process
+	//is this necessary?
 	setup_non_interactive_signals();
-
-	child_pid = fork();
+	child_pid = fork_wrapper(shell);
+	if (child_pid == -1)
+		return (1);
 	if (child_pid == 0)
 	{
-		// Child process: restore default signal behavior
 		restore_default_signals();
 		if (cmd->heredoc_delimiter)
 		{
@@ -223,13 +223,6 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 		run_external_cmd(cmd, shell);
 		exit(127);
 	}
-	if (child_pid == -1)
-	{
-		perror("minishell: fork");
-		shell->exit_status = 1;
-		return ;
-	}
-
 	// Restore interactive signals in parent
 	setup_interactive_signals();
 
@@ -249,12 +242,18 @@ void	execute_simple_command(t_ast *ast, t_mshell *shell)
 
 void	execute_ast(t_ast *ast, t_mshell *shell)
 {
+	//this should be recursive!!
 	if (ast->type == NODE_PIPE)
 	{
 		execute_pipe(ast, shell);
 	}
 	else if (ast->type == NODE_CMD)
 	{
-		execute_simple_command(ast, shell);
+		if (execute_simple_command(ast, shell) == -1)
+			return ;
+	}
+	else if (ast->type == NODE_REDIR)
+	{
+		execute_redirection(ast, shell);
 	}
 }

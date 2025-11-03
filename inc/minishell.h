@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/29 19:04:32 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:07:55 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ int					builtin_unset(char **args, t_mshell *shell);
 
 int					ft_envsize(t_env *env);
 void				*safe_malloc(size_t size);
-int					fork_wrapper(void);
+int					fork_wrapper(t_mshell *shell);
 void				print_banner(void);
 
 int					panic(char *error_msg);
