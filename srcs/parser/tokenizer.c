@@ -21,106 +21,139 @@ static void	list_token_append(t_token *new, t_token **head, t_token **tail)
 	*tail = new;
 }
 
-// Check for special characters
-static void	check_special_chars(t_token *new, const char *input, int *i)
-{
-	int	start;
+// // Check for special characters
+// static void	check_special_chars(t_token *new, const char *input, int *i)
+// {
+// 	int	start;
 
-	if (input[*i] == '|')
-	{
-		new->type = TOKEN_PIPE;
-		new->value = ft_strdup("|");
-		(*i)++;
-	}
-	else if (input[*i] == '<' && input[*i + 1] == '<')
+// 	if (input[*i] == '|')
+// 	{
+// 		new->type = TOKEN_PIPE;
+// 		new->value = ft_strdup("|");
+// 		(*i)++;
+// 	}
+// 	else if (input[*i] == '<' && input[*i + 1] == '<')
+// 	{
+// 		new->type = TOKEN_HEREDOC;
+// 		new->value = ft_strdup("<<");
+// 		(*i) += 2;
+// 	}
+// 	else if (input[*i] == '<')
+// 	{
+// 		new->type = TOKEN_REDIR_IN;
+// 		new->value = ft_strdup("<");
+// 		(*i)++;
+// 	}
+// 	else if (input[*i] == '>' && input[*i + 1] == '>')
+// 	{
+// 		new->type = TOKEN_APPEND;
+// 		new->value = ft_strdup(">>");
+// 		(*i) += 2;
+// 	}
+// 	else if (input[*i] == '>')
+// 	{
+// 		new->type = TOKEN_REDIR_OUT;
+// 		new->value = ft_strdup(">");
+// 		(*i)++;
+// 	}
+// 	else if (input[*i] == '=')
+// 	{
+// 		new->type = TOKEN_WORD;
+// 		new->value = ft_strdup("=");
+// 		(*i)++;
+// 	}
+// 	else if (input[*i] == '"')
+// 	{
+// 		// Handle double quoted content
+// 		start = *i + 1; // Skip opening quote
+// 		(*i)++;
+// 		while (input[*i] && input[*i] != '"')
+// 			(*i)++;
+// 		if (input[*i] == '"')
+// 		{
+// 			new->type = TOKEN_DQUOTE;	//double quoted content, to be expanded
+// 			new->value = ft_substr(input, start, *i - start);
+// 			if (!new->value)
+// 				new->value = ft_strdup(""); // Handle empty quotes
+// 			(*i)++; // Skip closing quote
+// 		}
+// 		else //for unclosed double quotes
+// 		{
+// 			// Unclosed quote - treat as word
+// 			new->type = TOKEN_WORD;
+// 			new->value = ft_substr(input, start, *i - start);
+// 			if (!new->value)
+// 				new->value = ft_strdup(""); // Handle empty quotes
+// 		}
+// 	}
+// 	else if (input[*i] == '\'')
+// 	{
+// 		// Handle single quoted content
+// 		start = *i + 1; // Skip opening quote
+// 		(*i)++;
+// 		while (input[*i] && input[*i] != '\'')
+// 			(*i)++;
+// 		if (input[*i] == '\'')
+// 		{
+// 			new->type = TOKEN_SQUOTE; //single quoted content, not expanded
+// 			new->value = ft_substr(input, start, *i - start);
+// 			if (!new->value)
+// 				new->value = ft_strdup(""); // Handle empty quotes
+// 			(*i)++; // Skip closing quote
+// 		}
+// 		else
+// 		{
+// 			// Unclosed single quote - treat as word
+// 			new->type = TOKEN_WORD;
+// 			new->value = ft_substr(input, start, *i - start);
+// 			if (!new->value)
+// 				new->value = ft_strdup(""); // Handle empty quotes
+// 		}
+// 	}
+// 	else
+// 	{
+// 		// Regular word - stop at quote boundaries
+// 		start = *i;
+// 		while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
+// 			&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>'
+// 			&& input[*i] != '"' && input[*i] != '\'' && input[*i] != '=')
+// 			(*i)++;
+// 		new->type = TOKEN_WORD;
+// 		new->value = ft_substr(input, start, *i - start);
+// 	}
+// }
+
+static int	handle_redirections(t_token *new, const char *input, int *i)
+{
+	if (input[*i] == '<' && input[*i + 1] == '<')
 	{
 		new->type = TOKEN_HEREDOC;
 		new->value = ft_strdup("<<");
 		(*i) += 2;
+		return (1);
 	}
 	else if (input[*i] == '<')
 	{
 		new->type = TOKEN_REDIR_IN;
 		new->value = ft_strdup("<");
 		(*i)++;
+		return (1);
 	}
 	else if (input[*i] == '>' && input[*i + 1] == '>')
 	{
 		new->type = TOKEN_APPEND;
 		new->value = ft_strdup(">>");
 		(*i) += 2;
+		return (1);
 	}
 	else if (input[*i] == '>')
 	{
 		new->type = TOKEN_REDIR_OUT;
 		new->value = ft_strdup(">");
 		(*i)++;
+		return (1);
 	}
-	else if (input[*i] == '=')
-	{
-		new->type = TOKEN_WORD;
-		new->value = ft_strdup("=");
-		(*i)++;
-	}
-	else if (input[*i] == '"')
-	{
-		// Handle double quoted content
-		start = *i + 1; // Skip opening quote
-		(*i)++;
-		while (input[*i] && input[*i] != '"')
-			(*i)++;
-		if (input[*i] == '"')
-		{
-			new->type = TOKEN_DQUOTE;	//double quoted content, to be expanded
-			new->value = ft_substr(input, start, *i - start);
-			if (!new->value)
-				new->value = ft_strdup(""); // Handle empty quotes
-			(*i)++; // Skip closing quote
-		}
-		else //for unclosed double quotes
-		{
-			// Unclosed quote - treat as word
-			new->type = TOKEN_WORD;
-			new->value = ft_substr(input, start, *i - start);
-			if (!new->value)
-				new->value = ft_strdup(""); // Handle empty quotes
-		}
-	}
-	else if (input[*i] == '\'')
-	{
-		// Handle single quoted content
-		start = *i + 1; // Skip opening quote
-		(*i)++;
-		while (input[*i] && input[*i] != '\'')
-			(*i)++;
-		if (input[*i] == '\'')
-		{
-			new->type = TOKEN_SQUOTE; //single quoted content, not expanded
-			new->value = ft_substr(input, start, *i - start);
-			if (!new->value)
-				new->value = ft_strdup(""); // Handle empty quotes
-			(*i)++; // Skip closing quote
-		}
-		else
-		{
-			// Unclosed single quote - treat as word
-			new->type = TOKEN_WORD;
-			new->value = ft_substr(input, start, *i - start);
-			if (!new->value)
-				new->value = ft_strdup(""); // Handle empty quotes
-		}
-	}
-	else
-	{
-		// Regular word - stop at quote boundaries
-		start = *i;
-		while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
-			&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>'
-			&& input[*i] != '"' && input[*i] != '\'' && input[*i] != '=')
-			(*i)++;
-		new->type = TOKEN_WORD;
-		new->value = ft_substr(input, start, *i - start);
-	}
+	return (0);
 }
 
 t_token	*ms_tokenize(const char *input)	//convert input string into linked list of tokens
