@@ -206,6 +206,19 @@ static void	handle_single_quote(t_token *new, const char *input, int *i)
 	}
 }
 
+static void	handle_regular_word(t_token *new, const char *input, int *i)
+{
+	int	start;	//regular word stops at qoute boundaries
+
+	start = *i;
+	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
+		&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>'
+		&& input[*i] != '"' && input[*i] != '\'' && input[*i] != '=')
+		(*i)++;
+	new->type = TOKEN_WORD;
+	new->value = ft_substr(input, start, *i - start);
+}
+
 t_token	*ms_tokenize(const char *input)	//convert input string into linked list of tokens
 {
 	t_token	*head;
