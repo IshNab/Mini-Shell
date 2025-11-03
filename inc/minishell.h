@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/14 21:03:23 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/29 19:04:32 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,6 @@ typedef struct s_mshell
 //								Lexer & Parser                                 /
 //=============================================================================/
 
-// Parser functions
-
 t_ast				*parser(char *input, char **envp, t_mshell *shell);
 int					validate_syntax(t_token *tokens);
 t_ast				*build_ast(t_token *tokens);
@@ -211,12 +209,14 @@ void				free_ast(t_ast *node);
 //								Signal Handling                                /
 //=============================================================================/
 
+extern volatile sig_atomic_t g_signal_received;
+
 // Signal handling functions
 void				signal_handler(int sig);
 void				setup_signals(void);
 void				setup_interactive_signals(void);
 void				setup_non_interactive_signals(void);
-void				restore_default_signals(void);
+void				default_child_signals(void);
 void				heredoc_signal_handler(int sig);
 void				setup_heredoc_signals(void);
 int					create_heredoc_file(char *delimiter);

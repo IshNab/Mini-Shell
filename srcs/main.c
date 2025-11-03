@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 15:27:46 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/29 19:17:24 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,15 @@ int	main(int argc, char **argv, char **envp)
 	t_mshell	shell;
 	t_ast		*ast;
 
-	(void)argc;
+	if (argc > 1)
+		return (error_msg("Minishell does not accept arguments", 1, NULL));
 	(void)argv;
 	line = NULL;
-	//print_banner();
+	//print_banner(); UNCOMMENT BEFORE RELEASE
 	using_history();
 	init_shell(&shell, envp);
-
-	// Setup signals for interactive mode
 	setup_interactive_signals();
-
-	DEBUG_CHECKPOINT("Shell initialized");
+	printf("Shell initialized"); // debugger
 	debug_print_shell(&shell);
 	debug_print_env(shell.env);
 	while (1)
@@ -80,20 +78,20 @@ int	main(int argc, char **argv, char **envp)
 			rl_replace_line("", 0);
 			rl_redisplay();
 			g_signal_received = 0;
-			continue;
+			continue ;
 		}
 		if (!line)  // This handles Ctrl+D (EOF)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		if (line)
 			add_history(line);
-		DEBUG_CHECKPOINT("About to parse command");
+		printf("About to parse command");
 		ast = parser(line, envp, &shell);
 		if (ast)
 			execute_ast(ast, &shell);
-		free_ast(ast); //TODO
+		free_ast(ast);
 		free(line);
 	}
 	return (shell.exit_status);

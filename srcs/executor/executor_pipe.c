@@ -6,75 +6,74 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:05:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 15:47:30 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/30 16:57:27 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+//should I take care of dup2 fail?
+
+static void	left_pipe(t_pipeline *pipeline, t_mshell *shell, int *fds)
+{
+	default_child_signals();
+	close(fds[0]);
+	dup2(fds[1], STDOUT_FILENO);
+	close(fds[1]);
+	execute_ast(pipeline->left, shell);
+	exit(shell->exit_status);
+}
+
+static void	right_pipe(t_pipeline *pipeline, t_mshell *shell, int *fds)
+{
+	default_child_signals();
+	close(fds[1]);
+	dup2(fds[0], STDIN_FILENO);
+	close(fds[0]);
+	execute_ast(pipeline->right, shell);
+	exit(shell->exit_status);
+}
+
+static void	pipe_signal_handler(pid_t left_pid, pid_t right_pid)
+{
+	kill(left_pid, SIGINT);
+	kill(right_pid, SIGINT);
+	g_signal_received = 0;
+}
+
+static void	status_handler(int status, t_mshell *shell)
+{
+	if (WIFEXITED(status))
+		shell->exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		shell->exit_status = 128 + WTERMSIG(status);
+}
+
 void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 {
-	int			pipe_fds[2];
+	int			fds[2];
+	// fd[0] - read
+	// fd[1] - write
 	pid_t		left_pid;
 	pid_t		right_pid;
 	int			status;
 	t_pipeline	*pipeline;
 
 	pipeline = (t_pipeline *)pipe_node;
-	if (pipe(pipe_fds) == -1)
+	if (pipe(fds) == -1)
 		return (perror("minishell: pipe"));
-	// Fork for left side
 	left_pid = fork();
-    if (left_pid == 0)
-    {
-        // Child process: restore default signal behavior
-        restore_default_signals();
-
-        close(pipe_fds[0]);  // Close read end
-        dup2(pipe_fds[1], STDOUT_FILENO);  // Redirect stdout to pipe
-        close(pipe_fds[1]);
-
-        // RECURSIVE execution of left side!
-        execute_ast(pipeline->left, shell);
-        exit(shell->exit_status);
-    }
-
-    // Fork for right side
-    right_pid = fork();
-    if (right_pid == 0)
-    {
-        // Child process: restore default signal behavior
-        restore_default_signals();
-
-        close(pipe_fds[1]);  // Close write end
-        dup2(pipe_fds[0], STDIN_FILENO);  // Redirect stdin from pipe
-        close(pipe_fds[0]);
-
-        // RECURSIVE execution of right side!
-        execute_ast(pipeline->right, shell);
-        exit(shell->exit_status);
-    }
-
-	// Parent closes both ends and waits
-	close(pipe_fds[0]);
-	close(pipe_fds[1]);
-
-	// Restore interactive signals in parent
+	if (left_pid == 0)
+		left_pipe(pipeline, shell, fds);
+	right_pid = fork();
+	if (right_pid == 0)
+		right_pipe(pipeline, shell, fds);
+	close(fds[0]);
+	close(fds[1]);
 	setup_interactive_signals();
-
-	// Check for SIGINT during pipe execution
 	if (g_signal_received == SIGINT)
-	{
-		kill(left_pid, SIGINT);
-		kill(right_pid, SIGINT);
-		g_signal_received = 0;
-	}
-
+		pipe_signal_handler(left_pid, right_pid);
 	waitpid(left_pid, &status, 0);
 	waitpid(right_pid, &status, 0);
-
-	if (WIFEXITED(status))
-		shell->exit_status = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		shell->exit_status = 128 + WTERMSIG(status);
+	status_handler(status, shell); // Should I take care of status separately?
 }
