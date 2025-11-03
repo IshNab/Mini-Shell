@@ -156,6 +156,56 @@ static int	handle_redirections(t_token *new, const char *input, int *i)
 	return (0);
 }
 
+static void	handle_double_quote(t_token *new, const char *input, int *i)
+{
+	int	start;
+
+	start = *i + 1;	//skip opening qoute
+	(*i)++;
+	while (input[*i] && input[*i] != '"')
+		(*i)++;
+	if (input[*i] == '"')
+	{
+		new->type = TOKEN_DQUOTE;	//double quoted content, to be expanded
+		new->value = ft_substr(input, start, *i - start);
+		if (!new->value)
+			new->value = ft_strdup("");	//handle empty quotes
+		(*i)++;	//skip closing quote
+	}
+	else	//for unclosed double quotes, unclosed treated as a word
+	{
+		new->type = TOKEN_WORD;
+		new->value = ft_substr(input, start, *i - start);
+		if (!new->value)
+			new->value = ft_strdup("");
+	}
+}
+
+static void	handle_single_quote(t_token *new, const char *input, int *i)
+{
+	int	start;
+
+	start = *i + 1;	//skip opening quote
+	(*i)++;
+	while (input[*i] && input[*i] != '\'')
+		(*i)++;
+	if (input[*i] == '\'')
+	{
+		new->type = TOKEN_SQUOTE;	//single quoted content, not expanded
+		new->value = ft_substr(input, start, *i - start);
+		if (!new->value)
+			new->value = ft_strdup("");	//handle empty quotes
+		(*i)++;	//skip closing quote
+	}
+	else	//for unclosed single quotes, unclosed treated as a word
+	{
+		new->type = TOKEN_WORD;
+		new->value = ft_substr(input, start, *i - start);
+		if (!new->value)
+			new->value = ft_strdup("");
+	}
+}
+
 t_token	*ms_tokenize(const char *input)	//convert input string into linked list of tokens
 {
 	t_token	*head;
