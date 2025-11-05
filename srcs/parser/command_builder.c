@@ -26,6 +26,32 @@ static int	count_word_tokens(t_token *tokens)
 	return (count);
 }
 
+// Helper function to clean up partially allocated command; for ft_strdup functions
+static void	cleanup_command(t_command *cmd)
+{
+	int	i;
+
+	if (!cmd)
+		return ;
+	if (cmd->args)
+	{
+		i = 0;
+		while (cmd->args[i])
+		{
+			free(cmd->args[i]);
+			i++;
+		}
+		free(cmd->args);
+	}
+	if (cmd->input_file)
+		free(cmd->input_file);
+	if (cmd->output_file)
+		free(cmd->output_file);
+	if (cmd->heredoc_delimiter)
+		free(cmd->heredoc_delimiter);
+	free(cmd);
+}
+
 // extract command arguments and redirections from the tokens
 // identify redirections and their target files
 // set flags (liek append node)
@@ -35,6 +61,7 @@ t_command	*create_command_node(t_token *tokens)
 	t_command	*cmd;
 	int			argc;
 	int			i;
+	char		*dup; //error check for ft_strdup
 
 	if (!tokens)
 		return (NULL);
@@ -47,7 +74,7 @@ t_command	*create_command_node(t_token *tokens)
 	cmd->is_append = 0;
 	cmd->heredoc_delimiter = NULL;
 	argc = count_word_tokens(tokens);
-	cmd->args = malloc(sizeof(char *) * (argc + 1));
+	cmd->args = safe_malloc(sizeof(char *) * (argc + 1));	//safe_malloc better bc checks for NULL, if fails- calls panic to exit program
 	if (!cmd->args)
 		return (free(cmd), NULL);
 	i = 0;
