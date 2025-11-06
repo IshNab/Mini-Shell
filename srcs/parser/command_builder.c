@@ -54,8 +54,37 @@ static void	cleanup_command(t_command *cmd)
 
 // extract command arguments and redirections from the tokens
 // identify redirections and their target files
-// set flags (liek append node)
+// set flags (like append node)
 // create command structure that executor can use
+static t_command	*init_command_node(int argc)
+{
+	t_command	*cmd;
+	int			i;
+
+	cmd = safe_malloc(sizeof(t_command));
+	cmd->base.type = NODE_CMD;
+	cmd->input_file = NULL;
+	cmd->output_file = NULL;
+	cmd->is_append = 0;
+	cmd->heredoc_delimiter = NULL;
+	cmd->args = safe_malloc(sizeof(char *) * (argc + 1));
+	i = 0;
+	while (i <= argc)
+		cmd->args[i++] = NULL;
+	return (cmd);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 t_command	*create_command_node(t_token *tokens)
 {
 	t_command	*cmd;
