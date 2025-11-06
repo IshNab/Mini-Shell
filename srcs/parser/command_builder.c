@@ -83,7 +83,7 @@ t_command	*create_command_node(t_token *tokens)
 		{
 			dup = ft_strdup(tokens->value);
 			if (!dup)
-				return (cleanup_command(cmd), NULL)
+				return (cleanup_command(cmd), NULL);
 			cmd->args[i++]	= dup;
 			tokens = tokens->next;
 		}
