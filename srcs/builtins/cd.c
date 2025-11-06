@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:27:31 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 16:02:03 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:30:52 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	builtin_cd(char **args, t_mshell *shell)
 	home = getenv("HOME");
 	if (args[1] && args[2])
 		return (error_msg("cd: too many arguments\n", 1, NULL));
-	else if (!args[1] || (args[1] && (ft_strcmp(args[1], "~") == 0 ||
-				ft_strcmp(args[1], "--") == 0)))
+	else if (!args[1] || (args[1] && (ft_strcmp(args[1], "~") == 0
+				|| ft_strcmp(args[1], "--") == 0)))
 	{
 		if (!home)
 			return (error_msg("cd: HOME not set\n", 1, shell));

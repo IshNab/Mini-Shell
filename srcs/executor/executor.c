@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 19:18:30 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:24:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ static int	execute_builtin_parent(t_command *cmd, t_mshell *shell)
 	return (1);
 }
 
-static void	execute_in_child(t_command *cmd, t_mshell *shell)
+static void	exec_in_child(t_command *cmd, t_mshell *shell)
 {
 	int	saved_stdin;
 	int	saved_stdout;
-	restore_default_signals();
+	default_child_signals();
 	if (has_redirections(cmd))
 	{
 		if (setup_redirections(cmd, &saved_stdin, &saved_stdout) == -1)
@@ -63,12 +63,12 @@ int	execute_simple_command(t_ast *ast, t_mshell *shell)
 	pid_t		child_pid;
 
 	if (!ast)
-		return ;
+		return (1);
 	cmd = (t_command *)ast;
 	if (!cmd->args || !cmd->args[0])
 		return (1);
 	if (is_parent_builtin(cmd->args[0])) //Can be run only in parent
-		return (try_builtin(cmd, shell)); //Change name
+		return (execute_builtin_parent(cmd, shell));
 	child_pid = fork_wrapper(shell);
 	if (child_pid == -1)
 		return (1);
@@ -99,9 +99,5 @@ void	execute_ast(t_ast *ast, t_mshell *shell)
 	{
 		if (execute_simple_command(ast, shell) == -1)
 			return ;
-	}
-	else if (ast->type == NODE_REDIR)
-	{
-		execute_redirection(ast, shell);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 21:42:45 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:27:29 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,20 @@ static void	print_envvars(t_mshell *shell)
 	}
 }
 
-static void	check_value_var(char *arg)
+static void	check_value_var(char *arg, t_mshell *shell)
 {
 	char	*eq;
 
-	eq = ft_strchr(args, '=');
+	eq = ft_strchr(arg, '=');
 	if (eq)
 	{
 		*eq = '\0';
-		set_env_var(shell, args, eq + 1);
+		set_env_var(shell, arg, eq + 1);
 		*eq = '=';
 	}
 	else
-		if (!get_env_from_list(shell->env, args))
-			set_env_var(shell, args, "");
+		if (!get_env_from_list(shell->env, arg))
+			set_env_var(shell, arg, "");
 }
 
 int	builtin_export(char **args, t_mshell *shell)
@@ -78,7 +78,7 @@ int	builtin_export(char **args, t_mshell *shell)
 		if (!is_valid_identifier(args[i]))
 			status = error_msg_export(args[i]);
 		else
-			check_value_var(args[i]);
+			check_value_var(args[i], shell);
 		i++;
 	}
 	return (status);

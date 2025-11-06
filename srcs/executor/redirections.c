@@ -6,13 +6,13 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 13:19:42 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 18:28:51 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:19:05 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static void	when_input_file(t_command *cmd, int *saved_stdin, int fd)
+static int	when_input_file(t_command *cmd, int *saved_stdin, int fd)
 {
 	fd = open(cmd->input_file, O_RDONLY);
 	if (fd == -1)
@@ -48,7 +48,7 @@ int	handle_input_redir(t_command *cmd, int *saved_stdin)
 		close(fd);
 	}
 	else if (cmd->input_file)
-		when_input_file(cmd, saved_stdin, fd);
+		return (when_input_file(cmd, saved_stdin, fd));
 	return (0);
 }
 
@@ -71,13 +71,13 @@ int	handle_output_redir(t_command *cmd, int *saved_stdout)
 		ft_putstr_fd(cmd->output_file, 2);
 		ft_putstr_fd(": ", 2);
 		perror("");
-		return (1);
+		return (-1);
 	}
 	*saved_stdout = dup(STDOUT_FILENO);
 	if (*saved_stdout == -1)
 		return (close(fd), -1);
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		return (close(fd), clode(*saved_stdout), -1);
+		return (close(fd), close(*saved_stdout), -1);
 	return (close(fd), 0);
 }
 
@@ -87,7 +87,7 @@ int	setup_redirections(t_command *cmd, int *saved_stdin, int *saved_stdout)
 	*saved_stdout = -1;
 
 	if (handle_input_redir(cmd, saved_stdin) == -1)
-		return (1);
+		return (-1);
 	if (handle_output_redir(cmd, saved_stdout) == -1)
 	{
 		if (*saved_stdin != -1)
@@ -95,7 +95,7 @@ int	setup_redirections(t_command *cmd, int *saved_stdin, int *saved_stdout)
 			dup2(*saved_stdin, STDIN_FILENO);
 			close(*saved_stdin);
 		}
-		return (1);
+		return (-1);
 	}
 	return (0);
 }
