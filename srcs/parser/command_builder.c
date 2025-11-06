@@ -66,8 +66,6 @@ t_command	*create_command_node(t_token *tokens)
 	if (!tokens)
 		return (NULL);
 	cmd = safe_malloc(sizeof(t_command));
-	if (!cmd)
-		return (NULL);
 	cmd->base.type = NODE_CMD;
 	cmd->input_file = NULL;
 	cmd->output_file = NULL;
@@ -75,8 +73,6 @@ t_command	*create_command_node(t_token *tokens)
 	cmd->heredoc_delimiter = NULL;
 	argc = count_word_tokens(tokens);
 	cmd->args = safe_malloc(sizeof(char *) * (argc + 1));	//safe_malloc better bc checks for NULL, if fails- calls panic to exit program
-	if (!cmd->args)
-		return (free(cmd), NULL);
 	i = 0;
 	while (tokens)	//iterate through the tokens, process each token
 	{
