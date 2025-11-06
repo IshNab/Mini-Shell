@@ -74,11 +74,17 @@ t_command	*create_command_node(t_token *tokens)
 	argc = count_word_tokens(tokens);
 	cmd->args = safe_malloc(sizeof(char *) * (argc + 1));	//safe_malloc better bc checks for NULL, if fails- calls panic to exit program
 	i = 0;
+	while (i <= argc)	//initialize all args in the array with NULL
+		cmd->args[i++] = NULL;
+	i = 0;	//reset i for the next loop
 	while (tokens)	//iterate through the tokens, process each token
 	{
 		if (tokens->type == TOKEN_WORD)
 		{
-			cmd->args[i++] = ft_strdup(tokens->value);	//add argument
+			dup = ft_strdup(tokens->value);
+			if (!dup)
+				return (cleanup_command(cmd), NULL)
+			cmd->args[i++]	= dup;
 			tokens = tokens->next;
 		}
 		else if (tokens->type == TOKEN_REDIR_IN)
@@ -88,7 +94,10 @@ t_command	*create_command_node(t_token *tokens)
 			{
 				if (cmd->input_file)  // Free old value if exists
 					free(cmd->input_file);
-				cmd->input_file = ft_strdup(tokens->value);
+				dup = ft_strdup(tokens->value);
+				if (!dup)
+					return (cleanup_command(cmd), NULL);
+				cmd->input_file = dup;
 				tokens = tokens->next;
 			}
 		}
@@ -99,7 +108,10 @@ t_command	*create_command_node(t_token *tokens)
 			{
 				if (cmd->output_file)  // Free old value if exists
 					free(cmd->output_file);
-				cmd->output_file = ft_strdup(tokens->value);
+				dup = ft_strdup(tokens->value);
+				if (!dup)
+					return (cleanup_command(cmd), NULL);
+				cmd->output_file = dup;
 				cmd->is_append = 0;	//reset append flag for > redirection, redir_out overwrites token_appedend 
 				tokens = tokens->next;
 			}
@@ -111,7 +123,10 @@ t_command	*create_command_node(t_token *tokens)
 			{
 				if (cmd->output_file)  // Free old value if exists
 					free(cmd->output_file);
-				cmd->output_file = ft_strdup(tokens->value);
+				dup = ft_strdup(tokens->value);
+				if (!dup)
+					return (cleanup_command(cmd), NULL);
+				cmd->output_file = dup;
 				cmd->is_append = 1;
 				tokens = tokens->next;
 			}
@@ -123,7 +138,10 @@ t_command	*create_command_node(t_token *tokens)
 			{
 				if (cmd->heredoc_delimiter)  // Free old value if exists
 					free(cmd->heredoc_delimiter);
-				cmd->heredoc_delimiter = ft_strdup(tokens->value);
+				dup = ft_strdup(tokens->value);
+				if (!dup)
+					return (cleanup_command(cmd), NULL);
+				cmd->heredoc_delimiter = dup;
 				tokens = tokens->next;
 			}
 		}
