@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 18:52:51 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 16:22:53 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,22 @@ static void	init_shell(t_mshell *shell, char **envp)
 	shell->shell_pid = 0;
 }
 
+static void	cleanup_shell(t_mshell *shell)
+{
+	t_env	*current;
+	t_env	*next;
+
+	current = shell->env;
+	while (current)
+	{
+		next = current->next;
+		free(current->key);
+		free(current->value);
+		free(current);
+		current = next;
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
@@ -60,13 +76,13 @@ int	main(int argc, char **argv, char **envp)
 		return (error_msg("Minishell does not accept arguments", 1, NULL));
 	(void)argv;
 	line = NULL;
-	//print_banner(); UNCOMMENT BEFORE RELEASE
+	print_banner(); //UNCOMMENT BEFORE RELEASE
 	using_history();
 	init_shell(&shell, envp);
 	setup_interactive_signals();
-	printf("Shell initialized"); // debugger
-	debug_print_shell(&shell);
-	debug_print_env(shell.env);
+	//printf("Shell initialized"); // debugger
+	//debug_print_shell(&shell);
+	//debug_print_env(shell.env);
 	while (1)
 	{
 		line = readline("minishell$");
@@ -87,12 +103,13 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (line)
 			add_history(line);
-		printf("About to parse command");
+		//printf("About to parse command");
 		ast = parser(line, envp, &shell);
 		if (ast)
 			execute_ast(ast, &shell);
 		free_ast(ast);
 		free(line);
 	}
+	cleanup_shell(&shell);
 	return (shell.exit_status);
 }

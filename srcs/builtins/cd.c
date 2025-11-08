@@ -6,78 +6,82 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:27:31 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 15:30:52 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 16:15:08 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static int	update_pwd_vars(const char *oldpwd)
+static int	cd_error(char *path, t_mshell *shell)
 {
-	char	*newpwd;
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": ", 2);
+	perror("");
+	shell->exit_status = 1;
+	return (1);
+}
 
-	newpwd = getcwd(NULL, 0);
-	if (!newpwd)
+static char	*get_target_path(char **args, t_mshell *shell)
+{
+	char	*home;
+	char	*oldpwd;
+
+	if (!args[1] || ft_strcmp(args[1], "~") == 0
+		|| ft_strcmp(args[1], "--") == 0)
 	{
-		perror("cd: getcwd");
-		// Best effort: still try to update OLDPWD if provided
-		if (oldpwd)
-			setenv("OLDPWD", oldpwd, 1);
-		return (1);
+		home = getenv("HOME");
+		if (!home)
+			return (error_msg("minishell: cd: HOME not set", 1, shell), NULL);
+		return (home);
 	}
-	if (oldpwd)
-		setenv("OLDPWD", oldpwd, 1);
-	setenv("PWD", newpwd, 1); //Illegal function
-	free(newpwd);
-	return (0);
+	if (ft_strcmp(args[1], "-") == 0)
+	{
+		oldpwd = getenv("OLDPWD");
+		if (!oldpwd)
+			return (error_msg("cd: OLDPWD not set", 1, shell), NULL);
+		ft_putendl_fd(oldpwd, 1);  // Print where we're going
+		return (oldpwd);
+	}
+	return (args[1]);
+}
+
+static void	update_pwd_vars(t_mshell *shell, char *old_pwd)
+{
+	char	*new_pwd;
+
+	new_pwd = getcwd(NULL, 0);
+	if (new_pwd)
+	{
+		set_env_var(shell, "PWD", new_pwd);
+		free(new_pwd);
+	}
+	if (old_pwd)
+	{
+		set_env_var(shell, "OLDPWD", old_pwd);
+		free(old_pwd);
+	}
 }
 
 int	builtin_cd(char **args, t_mshell *shell)
 {
-	const char	*target;
-	const char	*home;
-	char		*oldpwd;
-	char		*pwd;
-	int			rc;
+	char	*target;
+	char	*old_pwd;
 
-	target = NULL;
-	home = getenv("HOME");
 	if (args[1] && args[2])
-		return (error_msg("cd: too many arguments\n", 1, NULL));
-	else if (!args[1] || (args[1] && (ft_strcmp(args[1], "~") == 0
-				|| ft_strcmp(args[1], "--") == 0)))
-	{
-		if (!home)
-			return (error_msg("cd: HOME not set\n", 1, shell));
-		target = home;
-	}
-	else if (ft_strcmp(args[1], "-") == 0)
-	{
-		oldpwd = getenv("OLDPWD");
-		if (!oldpwd)
-			return (error_msg("cd: OLDPWD not set\n", 1, shell));
-		target = oldpwd;
-	}
-	else
-		target = args[1];
-	oldpwd = getcwd(NULL, 0);
+		return (error_msg("minishell: cd: too many arguments", 1, shell));
+	target = get_target_path(args, shell);
+	if (!target)
+		return (1);
+	old_pwd = getcwd(NULL, 0);
 	if (chdir(target) != 0)
 	{
-		perror("cd");
-		return (free(oldpwd), 1);
+		free(old_pwd);
+		return (cd_error(target, shell));
 	}
-	if (args[1] && strcmp(args[1], "-") == 0)
-	{
-		pwd = getcwd(NULL, 0);
-		if (pwd)
-		{
-			printf("%s\n", pwd);
-			free(pwd);
-		}
-	}
-	rc = update_pwd_vars(oldpwd);
-	free(oldpwd);
-	return (rc);
+	update_pwd_vars(shell, old_pwd);
+	shell->exit_status = 0;
+	return (0);
 }
 
 /* //DEBUG cd()

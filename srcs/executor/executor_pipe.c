@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:05:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/30 16:57:27 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 16:28:41 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 	pipeline = (t_pipeline *)pipe_node;
 	if (pipe(fds) == -1)
 		return (perror("minishell: pipe"));
+	setup_non_interactive_signals();
 	left_pid = fork();
 	if (left_pid == 0)
 		left_pipe(pipeline, shell, fds);
@@ -76,4 +77,5 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 	waitpid(left_pid, &status, 0);
 	waitpid(right_pid, &status, 0);
 	status_handler(status, shell); // Should I take care of status separately?
+	setup_interactive_signals();
 }
