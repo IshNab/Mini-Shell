@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 14:30:10 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/08 18:57:25 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:55:52 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,13 @@ volatile sig_atomic_t	g_signal_received = 0;
 
 void	signal_handler(int sig)
 {
-	// Only record the signal;
 	//actual handling is done in main loop/parent; set a flag
 	g_signal_received = sig;
+	if (sig == SIGINT)
+	{
+		//write(STDOUT_FILENO, "\n", 1);
+		ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	}
 }
 
 void	setup_interactive_signals(void)
@@ -72,7 +76,7 @@ void	default_child_signals(void)
 	//should we also restore SIGPIPE?
 }
 
-// Legacy function for backward compatibility
+// legacy compatibility
 void	setup_signals(void)
 {
 	setup_interactive_signals();

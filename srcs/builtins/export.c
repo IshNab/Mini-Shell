@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 15:27:29 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/08 19:40:30 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int	builtin_export(char **args, t_mshell *shell)
 {
 	int		i;
 	int		status;
-	char	*eq;
 
 	if (!args[1])
 		return (sort_vars_list(shell->env), print_envvars(shell), 0);
@@ -75,6 +74,7 @@ int	builtin_export(char **args, t_mshell *shell)
 	i = 1;
 	while (args[i])
 	{
+		printf("this is the first args after the export call: %s\n", args[i]);
 		if (!is_valid_identifier(args[i]))
 			status = error_msg_export(args[i]);
 		else

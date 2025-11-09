@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 16:22:53 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:57:03 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,23 +86,26 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("minishell$");
-		// If SIGINT was received, refresh prompt like bash and continue
 		if (g_signal_received == SIGINT)
 		{
-			printf("\n");
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
 			g_signal_received = 0;
+			shell.exit_status = 130;
+			if (line)
+				free(line);
+			//rl_on_newline();
 			continue ;
 		}
-		if (!line) // This handles Ctrl+D (EOF)
+		if (!line) //crtl + D
 		{
 			printf("exit\n");
 			break ;
 		}
-		if (line)
-			add_history(line);
+		if (*line == '\0' || !ft_strcmp(line, "\n"))
+		{
+			free(line);
+			continue ;
+		}
+		add_history(line);
 		//printf("About to parse command");
 		ast = parser(line, envp, &shell);
 		if (ast)

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 19:12:06 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 19:14:42 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/09 15:11:16 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void	run_external_cmd(t_command *cmd, t_mshell *shell)
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		exit(127);
+	env_array = env_to_array(shell->env);
 	path = find_cmd_path(cmd->args[0], shell->env);
 	i = 0;
 	if (!path)
@@ -124,7 +125,6 @@ void	run_external_cmd(t_command *cmd, t_mshell *shell)
 		ft_putstr_fd("\n", 2);
 		exit(127);
 	}
-	env_array = env_to_array(shell->env);
 	if (execve(path, cmd->args, env_array) == -1)
 	{
 		perror("minishell");

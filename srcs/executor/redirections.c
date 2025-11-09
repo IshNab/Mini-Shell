@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 13:19:42 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 16:05:48 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/08 19:22:14 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	handle_input_redir(t_command *cmd, int *saved_stdin)
 {
 	int	fd;
 
+	fd = 0;
 	if (cmd->heredoc_delimiter)
 	{
 		fd = create_heredoc_file(cmd->heredoc_delimiter);
