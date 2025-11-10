@@ -18,6 +18,7 @@ static int	handle_redir_in(t_command *cmd, t_token **tokens)
 	return (1);
 }
 
+/*handles token append when is_append = 1, redir_out when is_append = 0*/
 static int	handle_redir_out(t_command *cmd, t_token **tokens, int is_append)
 {
 	char	*dup;

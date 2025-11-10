@@ -75,7 +75,9 @@ static t_command	*init_command_node(int argc)
 	return (cmd);
 }
 
-static int	process_word_token(t_command *cmd, t_token *token, int *i)
+/*this is used by the process_token function in utils folder, but too many functions in that file already*/
+/*handles token_word*/
+int	process_word_token(t_command *cmd, t_token *token, int *i)
 {
 	char	*dup;
 
@@ -93,113 +95,10 @@ t_command	*create_command_node(t_token *tokens)
 
 	if (!tokens)
 		return (NULL);
-	cmd = init_command(count_word_tokens(tokens));
+	cmd = init_command_node(count_word_tokens(tokens));
 	i = 0;
 	if (!process_tokens(cmd, tokens, &i))
 		return (cleanup_command(cmd), NULL);
-	cmd->args[i] = NULL;
-	return (cmd);
-}
-
-
-
-
-
-
-
-
-// t_command	*create_command_node(t_token *tokens)
-// {
-// 	t_command	*cmd;
-// 	int			argc;
-// 	int			i;
-// 	char		*dup; //error check for ft_strdup
-
-// 	if (!tokens)
-// 		return (NULL);
-// 	cmd = safe_malloc(sizeof(t_command));
-// 	cmd->base.type = NODE_CMD;
-// 	cmd->input_file = NULL;
-// 	cmd->output_file = NULL;
-// 	cmd->is_append = 0;
-// 	cmd->heredoc_delimiter = NULL;
-// 	argc = count_word_tokens(tokens);
-// 	cmd->args = safe_malloc(sizeof(char *) * (argc + 1));	
-	i = 0;
-	while (i <= argc)	//initialize all args in the array with NULL
-		cmd->args[i++] = NULL;
-	i = 0;	//reset i for the next loop
-	while (tokens)	//iterate through the tokens, process each token
-	{
-		if (tokens->type == TOKEN_WORD)
-		{
-			dup = ft_strdup(tokens->value);
-			if (!dup)
-				return (cleanup_command(cmd), NULL);
-			cmd->args[i++]	= dup;
-			tokens = tokens->next;
-		}
-		else if (tokens->type == TOKEN_REDIR_IN)
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				if (cmd->input_file)  // Free old value if exists
-					free(cmd->input_file);
-				dup = ft_strdup(tokens->value);
-				if (!dup)
-					return (cleanup_command(cmd), NULL);
-				cmd->input_file = dup;
-				tokens = tokens->next;
-			}
-		}
-		else if (tokens->type == TOKEN_REDIR_OUT)
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				if (cmd->output_file)  // Free old value if exists
-					free(cmd->output_file);
-				dup = ft_strdup(tokens->value);
-				if (!dup)
-					return (cleanup_command(cmd), NULL);
-				cmd->output_file = dup;
-				cmd->is_append = 0;	//reset append flag for > redirection, redir_out overwrites token_appedend 
-				tokens = tokens->next;
-			}
-		}
-		else if (tokens->type == TOKEN_APPEND)	// (>>) appends to the file instead of overwriting
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				if (cmd->output_file)  // Free old value if exists
-					free(cmd->output_file);
-				dup = ft_strdup(tokens->value);
-				if (!dup)
-					return (cleanup_command(cmd), NULL);
-				cmd->output_file = dup;
-				cmd->is_append = 1;
-				tokens = tokens->next;
-			}
-		}
-		else if (tokens->type == TOKEN_HEREDOC)	// (<<) command reads from a file until it finds the delimiter
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				if (cmd->heredoc_delimiter)  // Free old value if exists
-					free(cmd->heredoc_delimiter);
-				dup = ft_strdup(tokens->value);
-				if (!dup)
-					return (cleanup_command(cmd), NULL);
-				cmd->heredoc_delimiter = dup;
-				tokens = tokens->next;
-			}
-		}
-		else
-			tokens = tokens->next;  // Skip unknown tokens
-	}
 	cmd->args[i] = NULL;
 	return (cmd);
 }
