@@ -76,7 +76,7 @@ int	main(int argc, char **argv, char **envp)
 		return (error_msg("Minishell does not accept arguments", 1, NULL));
 	(void)argv;
 	line = NULL;
-	print_banner(); //UNCOMMENT BEFORE RELEASE
+	//print_banner(); //UNCOMMENT BEFORE RELEASE
 	using_history();
 	init_shell(&shell, envp);
 	setup_interactive_signals();
