@@ -140,6 +140,8 @@ t_ast				*parser(char *input, char **envp, t_mshell *shell);
 int					validate_syntax(t_token *tokens);
 t_ast				*build_ast(t_token *tokens);
 t_command			*create_command_node(t_token *tokens);
+int					process_word_token(t_command *cmd, t_token *token, int *i);
+int					process_tokens(t_command *cmd, t_token *tokens, int *i);
 t_ast				*create_pipe_node(t_ast *left, t_ast *right);
 void				free_ast(t_ast *node);
 

@@ -22,6 +22,7 @@ SRCS = \
 ./srcs/parser/parse_helpers.c \
 ./srcs/parser/ast.c \
 ./srcs/parser/command_builder.c \
+./srcs/parser/command_builder_utils.c \
 ./srcs/utils/utils.c \
 ./srcs/utils/debug_functions.c \
 ./srcs/utils/str_utils.c \
