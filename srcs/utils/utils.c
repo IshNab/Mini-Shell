@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 14:10:03 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:33:37 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,17 @@ int	fork_wrapper(t_mshell *shell)
 		shell->exit_status = 1; //should I put the value of errno here?
 	}
 	return (pid);
+}
+
+void	dup2_wrapper(t_mshell *shell, int fd)
+{
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(fd);
+		shell->exit_status = 1;
+		exit(1);
+	}
 }
 
 void	print_banner(void)

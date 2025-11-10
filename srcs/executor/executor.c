@@ -6,158 +6,54 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 14:13:54 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:24:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static char	**env_to_array(t_env *env)
+static int	has_redirections(t_command *cmd)
 {
-	char	**env_array;
-	t_env	*current;
-	int		i;
-	int		count;
-	char	*tmp;
-
-	count = ft_envsize(env);
-	env_array = malloc(sizeof(char *) * (count + 1));
-	current = env;
-	i = 0;
-	tmp = NULL;
-	while (current)
-	{
-		tmp = ft_strjoin(current->key, "=");
-		env_array[i] = ft_strjoin(tmp, current->value);
-		free(tmp);
-		current = current->next;
-		i++;
-	}
-	env_array[i] = NULL;
-	return (env_array);
+	if (cmd->input_file || cmd->output_file || cmd->heredoc_delimiter)
+		return (1);
+	return (0);
 }
 
-static char	*join_path(char *str1, char *str2)
+static int	execute_builtin_parent(t_command *cmd, t_mshell *shell)
 {
-	char	*result_str;
-	int		i;
-	int		j;
+	int	saved_stdin;
+	int	saved_stdout;
 
-	result_str = (char *)malloc(ft_strlen(str1) + ft_strlen(str2) + 2);
-	i = -1;
-	j = -1;
-	while (str1[++i])
+	if (has_redirections(cmd))
 	{
-		result_str[i] = str1[i];
+		if (setup_redirections(cmd, &saved_stdin, &saved_stdout) == -1)
+			return (shell->exit_status = 1, 1);
 	}
-	result_str[i++] = '/';
-	while (str2[++j])
-		result_str[i++] = str2[j];
-	result_str[i] = '\0';
-	return (result_str);
-}
-
-static char	*find_cmd_path(char *cmd, t_env *env)
-{
-	int		i;
-	t_env	*current;
-	char	*path_name;
-	char	**split_path;
-	char	*full_path;
-	char	*ret;
-
-	i = 0;
-	if (!cmd)
-		return (NULL);
-	path_name = NULL;
-	current = env;
-	ret = NULL;
-	if (ft_strchr(cmd, '/'))
-		return (ft_strdup(cmd));
-	while (current)
-	{
-		if (ft_strcmp("PATH", current->key) == 0)
-		{
-			path_name = current->value;
-			break ;
-		}
-		current = current->next;
-	}
-	if (!path_name)
-		return (NULL);
-	split_path = ft_split(path_name, ':');
-	if (!split_path)
-		return (NULL);
-	i = -1;
-	while (split_path[++i])
-	{
-		full_path = join_path(split_path[i], cmd);
-		if (access(full_path, X_OK) == 0)
-		{
-			ret = full_path; // this saves the join_path malloc'd str
-			break ;
-		}
-		free(full_path);
-	}
-	i = -1;
-	while (split_path[++i])
-		free(split_path[i]);
-	free(split_path);
-	return (ret);
-}
-
-static void	run_external_cmd(t_command *cmd, t_mshell *shell)
-{
-	char	*path;
-	char	**env_array;
-	int		i;
-
-	if (!cmd || !cmd->args || !cmd->args[0])
-		exit(127);
-	path = find_cmd_path(cmd->args[0], shell->env);
-	i = 0;
-	if (!path)
-	{
-		perror("minishell");
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd("\n", 2);
-		exit(127);
-	}
-	env_array = env_to_array(shell->env);
-	if (execve(path, cmd->args, env_array) == -1)
-	{
-		perror("minishell");
-		free(path);
-		while (env_array[i])
-			free(env_array[i++]);
-		free(env_array);
-		//shell->exit_status = 126;
-		exit(126);
-	}
-}
-
-static int	try_builtin(t_command *cmd, t_mshell *shell)
-{
-	if (!cmd->args || !cmd->args[0])
-		return (0);
-	if (!ft_strcmp(cmd->args[0], "cd"))
-		shell->exit_status = builtin_cd(cmd->args, shell);
-	else if (!ft_strcmp(cmd->args[0], "pwd"))
-		shell->exit_status = builtin_pwd(cmd->args);
-	else if (!ft_strcmp(cmd->args[0], "echo"))
-		shell->exit_status = builtin_echo(cmd->args);
-	else if (!ft_strcmp(cmd->args[0], "env"))
-		shell->exit_status = builtin_env(cmd->args, shell);
-	else if (!ft_strcmp(cmd->args[0], "exit"))
-		shell->exit_status = builtin_exit(cmd->args, shell);
-	else if (!ft_strcmp(cmd->args[0], "export"))
-		shell->exit_status = builtin_export(cmd->args, shell);
-	else if (!ft_strcmp(cmd->args[0], "unset"))
-		shell->exit_status = builtin_unset(cmd->args, shell);
 	else
-		return (0);
+	{
+		saved_stdin = -1;
+		saved_stdout = -1;
+	}
+	try_builtin(cmd, shell);
+	if (has_redirections(cmd))
+		restore_redirections(saved_stdin, saved_stdout);
 	return (1);
+}
+
+static void	exec_in_child(t_command *cmd, t_mshell *shell)
+{
+	int	saved_stdin;
+	int	saved_stdout;
+	default_child_signals();
+	if (has_redirections(cmd))
+	{
+		if (setup_redirections(cmd, &saved_stdin, &saved_stdout) == -1)
+			exit(1);
+	}
+	if (try_builtin(cmd, shell)) //(echo, pwd, env can run in child)?
+		exit(shell->exit_status);
+	run_external_cmd(cmd, shell);
+	exit(127); //if reaches here something went wrong, ouput error 127
 }
 
 int	execute_simple_command(t_ast *ast, t_mshell *shell)
@@ -165,84 +61,36 @@ int	execute_simple_command(t_ast *ast, t_mshell *shell)
 	t_command	*cmd;
 	int			status;
 	pid_t		child_pid;
-	int			fd;
-	int			flags;
 
 	if (!ast)
-		return ;
+		return (1);
 	cmd = (t_command *)ast;
-	if (try_builtin(cmd, shell))
-		return (0);
-	// Setup non-interactive signals for child process
-	//is this necessary?
-	setup_non_interactive_signals();
+	if (!cmd->args || !cmd->args[0])
+		return (1);
+	if (is_parent_builtin(cmd->args[0])) //Can be run only in parent
+		return (execute_builtin_parent(cmd, shell));
 	child_pid = fork_wrapper(shell);
 	if (child_pid == -1)
 		return (1);
 	if (child_pid == 0)
-	{
-		restore_default_signals();
-		if (cmd->heredoc_delimiter)
-		{
-			fd = create_heredoc_file(cmd->heredoc_delimiter);
-			if (fd == -1)
-			{
-				perror("minishell");
-				exit(1);
-			}
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
-		else if (cmd->input_file)
-		{
-			fd = open(cmd->input_file, O_RDONLY);
-			if (fd == -1)
-			{
-				perror("minishell");
-				exit(1);
-			}
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
-		if (cmd->output_file)
-		{
-			flags = O_WRONLY | O_CREAT;
-			if (cmd->is_append)
-				flags |= O_APPEND;
-			else
-				flags |= O_TRUNC;
-			fd = open(cmd->output_file, flags, 0644);
-			if (fd == -1)
-			{
-				perror("minishell");
-				exit(1);
-			}
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-		}
-		run_external_cmd(cmd, shell);
-		exit(127);
-	}
-	// Restore interactive signals in parent
-	setup_interactive_signals();
-
-	// Check for SIGINT during command execution
-	if (g_signal_received == SIGINT)
+		exec_in_child(cmd, shell);
+	setup_interactive_signals(); //Restore parent signals
+	if (g_signal_received == SIGINT) //Check if found SIGINT
 	{
 		kill(child_pid, SIGINT);
 		g_signal_received = 0;
 	}
-
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		shell->exit_status = 128 + WTERMSIG(status);
+	return (0);
 }
 
 void	execute_ast(t_ast *ast, t_mshell *shell)
 {
-	//this should be recursive!!
+	//this should be recursive!??
 	if (ast->type == NODE_PIPE)
 	{
 		execute_pipe(ast, shell);
@@ -251,9 +99,5 @@ void	execute_ast(t_ast *ast, t_mshell *shell)
 	{
 		if (execute_simple_command(ast, shell) == -1)
 			return ;
-	}
-	else if (ast->type == NODE_REDIR)
-	{
-		execute_redirection(ast, shell);
 	}
 }

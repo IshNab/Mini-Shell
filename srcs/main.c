@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/29 19:17:24 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:57:03 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,22 @@ static void	init_shell(t_mshell *shell, char **envp)
 	shell->shell_pid = 0;
 }
 
+static void	cleanup_shell(t_mshell *shell)
+{
+	t_env	*current;
+	t_env	*next;
+
+	current = shell->env;
+	while (current)
+	{
+		next = current->next;
+		free(current->key);
+		free(current->value);
+		free(current);
+		current = next;
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
@@ -60,39 +76,43 @@ int	main(int argc, char **argv, char **envp)
 		return (error_msg("Minishell does not accept arguments", 1, NULL));
 	(void)argv;
 	line = NULL;
-	//print_banner(); UNCOMMENT BEFORE RELEASE
+	print_banner(); //UNCOMMENT BEFORE RELEASE
 	using_history();
 	init_shell(&shell, envp);
 	setup_interactive_signals();
-	printf("Shell initialized"); // debugger
-	debug_print_shell(&shell);
-	debug_print_env(shell.env);
+	//printf("Shell initialized"); // debugger
+	//debug_print_shell(&shell);
+	//debug_print_env(shell.env);
 	while (1)
 	{
 		line = readline("minishell$");
-		// If SIGINT was received, refresh prompt like bash and continue
 		if (g_signal_received == SIGINT)
 		{
-			printf("\n");
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
 			g_signal_received = 0;
+			shell.exit_status = 130;
+			if (line)
+				free(line);
+			//rl_on_newline();
 			continue ;
 		}
-		if (!line)  // This handles Ctrl+D (EOF)
+		if (!line) //crtl + D
 		{
 			printf("exit\n");
 			break ;
 		}
-		if (line)
-			add_history(line);
-		printf("About to parse command");
+		if (*line == '\0' || !ft_strcmp(line, "\n"))
+		{
+			free(line);
+			continue ;
+		}
+		add_history(line);
+		//printf("About to parse command");
 		ast = parser(line, envp, &shell);
 		if (ast)
 			execute_ast(ast, &shell);
 		free_ast(ast);
 		free(line);
 	}
+	cleanup_shell(&shell);
 	return (shell.exit_status);
 }

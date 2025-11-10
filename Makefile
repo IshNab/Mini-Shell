@@ -37,8 +37,12 @@ SRCS = \
 ./srcs/builtins/export.c \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
-./srcs/executor/executor.c \
+./srcs/executor/builtins_utils.c \
+./srcs/executor/executor_heredoc.c \
 ./srcs/executor/executor_pipe.c \
+./srcs/executor/executor.c \
+./srcs/executor/redirections.c \
+./srcs/executor/run_external_cmd.c \
 ./srcs/error.c
 
 OBJS = $(SRCS:.c=.o)
