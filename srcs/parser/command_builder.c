@@ -26,78 +26,79 @@ static int	count_word_tokens(t_token *tokens)
 	return (count);
 }
 
+// Helper function to clean up partially allocated command; for ft_strdup functions
+static void	cleanup_command(t_command *cmd)
+{
+	int	i;
+
+	if (!cmd)
+		return ;
+	if (cmd->args)
+	{
+		i = 0;
+		while (cmd->args[i])
+		{
+			free(cmd->args[i]);
+			i++;
+		}
+		free(cmd->args);
+	}
+	if (cmd->input_file)
+		free(cmd->input_file);
+	if (cmd->output_file)
+		free(cmd->output_file);
+	if (cmd->heredoc_delimiter)
+		free(cmd->heredoc_delimiter);
+	free(cmd);
+}
+
 // extract command arguments and redirections from the tokens
 // identify redirections and their target files
-// set flags (liek append node)
+// set flags (like append node)
 // create command structure that executor can use
-t_command	*create_command_node(t_token *tokens)
+//safe_malloc better bc checks for NULL, if fails- calls panic to exit program
+static t_command	*init_command_node(int argc)
 {
 	t_command	*cmd;
-	int			argc;
 	int			i;
 
-	if (!tokens)
-		return (NULL);
 	cmd = safe_malloc(sizeof(t_command));
-	if (!cmd)
-		return (NULL);
 	cmd->base.type = NODE_CMD;
 	cmd->input_file = NULL;
 	cmd->output_file = NULL;
 	cmd->is_append = 0;
 	cmd->heredoc_delimiter = NULL;
-	argc = count_word_tokens(tokens);
-	cmd->args = malloc(sizeof(char *) * (argc + 1));
-	if (!cmd->args)
-		return (free(cmd), NULL);
+	cmd->args = safe_malloc(sizeof(char *) * (argc + 1));
 	i = 0;
-	while (tokens)	//iterate through the tokens, process each token
-	{
-		if (tokens->type == TOKEN_WORD)
-		{
-			cmd->args[i++] = ft_strdup(tokens->value);	//add argument
-			tokens = tokens->next;
-		}
-		else if (tokens->type == TOKEN_REDIR_IN)	// (<) redirects input from a file
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				cmd->input_file = ft_strdup(tokens->value);
-				tokens = tokens->next;
-			}
-		}
-		else if (tokens->type == TOKEN_REDIR_OUT)
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				cmd->output_file = ft_strdup(tokens->value);
-				tokens = tokens->next;
-			}
-		}
-		else if (tokens->type == TOKEN_APPEND)	// (>>) appends to the file instead of overwriting
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				cmd->output_file = ft_strdup(tokens->value);
-				cmd->is_append = 1;
-				tokens = tokens->next;
-			}
-		}
-		else if (tokens->type == TOKEN_HEREDOC)	// (<<) command reads from a file until it finds the delimiter
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-			{
-				cmd->heredoc_delimiter = ft_strdup(tokens->value);
-				tokens = tokens->next;
-			}
-		}
-		else
-			tokens = tokens->next;  // Skip unknown tokens
-	}
+	while (i <= argc)
+		cmd->args[i++] = NULL;
+	return (cmd);
+}
+
+/*this is used by the process_token function in utils folder, but too many functions in that file already*/
+/*handles token_word*/
+int	process_word_token(t_command *cmd, t_token *token, int *i)
+{
+	char	*dup;
+
+	dup = ft_strdup(token->value);
+	if (!dup)
+		return (0);
+	cmd->args[(*i)++] = dup;
+	return (1);
+}
+
+t_command	*create_command_node(t_token *tokens)
+{
+	t_command	*cmd;
+	int			i;
+
+	if (!tokens)
+		return (NULL);
+	cmd = init_command_node(count_word_tokens(tokens));
+	i = 0;
+	if (!process_tokens(cmd, tokens, &i))
+		return (cleanup_command(cmd), NULL);
 	cmd->args[i] = NULL;
 	return (cmd);
 }
