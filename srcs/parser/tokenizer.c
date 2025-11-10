@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/09 15:01:10 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/10 15:22:05 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void	handle_regular_word(t_token *new, const char *input, int *i)
 	start = *i;
 	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
 		&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>'
-		&& input[*i] != '"' && input[*i] != '\'' && input[*i] != '=')
+		&& input[*i] != '"' && input[*i] != '\'')
 		(*i)++;
 	new->type = TOKEN_WORD;
 	new->value = ft_substr(input, start, *i - start);
@@ -125,12 +125,12 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		new->value = ft_strdup("|");
 		(*i)++;
 	}
-	else if (input[*i] == '=')
+/* 	else if (input[*i] == '=')
 	{
 		new->type = TOKEN_WORD;
 		new->value = ft_strdup("=");
 		(*i)++;
-	}
+	} */
 	else if (handle_redirections(new, input, i))
 		return ;
 	else if (input[*i] == '"')
