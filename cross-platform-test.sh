@@ -41,7 +41,7 @@ fi
 timeout_fallback() {
     local time=$1
     shift
-    ( "$@" ) & 
+    ( "$@" ) &
     local pid=$!
     ( sleep $time && kill -TERM $pid 2>/dev/null ) &
     local killer=$!
@@ -85,12 +85,19 @@ print_test() {
 
 run_minishell() {
     local cmd="$1"
+
+    # Create a temporary script file
+    local script_file="/tmp/mini_script_$$.sh"
+    echo "$cmd" > "$script_file"
+
     if [ "$TIMEOUT_CMD" == "timeout_fallback" ]; then
-        echo "$cmd" | timeout_fallback 2 $MINISHELL > "$MINISHELL_OUT" 2> "$MINISHELL_ERR"
+        timeout_fallback 2 $MINISHELL < "$script_file" 2>/dev/null | sed '/^minishell\$/d; /^exit$/d' > "$MINISHELL_OUT"
     else
-        echo "$cmd" | $TIMEOUT_CMD 2 $MINISHELL > "$MINISHELL_OUT" 2> "$MINISHELL_ERR"
+        $TIMEOUT_CMD 2 $MINISHELL < "$script_file" 2>/dev/null | sed '/^minishell\$/d; /^exit$/d' > "$MINISHELL_OUT"
     fi
-    return $?
+
+    rm -f "$script_file"
+    return 0
 }
 
 run_bash() {
@@ -115,21 +122,21 @@ normalize_output() {
 compare_output() {
     local test_name="$1"
     local cmd="$2"
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
     print_test "$test_name"
     echo -e "  Command: ${BLUE}$cmd${NC}"
-    
+
     run_minishell "$cmd"
     local mini_exit=$?
-    
+
     run_bash "$cmd"
     local bash_exit=$?
-    
+
     # Normalize outputs for comparison
     normalize_output "$MINISHELL_OUT"
     normalize_output "$BASH_OUT"
-    
+
     # Compare outputs
     if diff -q "$MINISHELL_OUT" "$BASH_OUT" > /dev/null 2>&1; then
         # For commands that should succeed, check exit status
@@ -433,7 +440,7 @@ if ! command -v valgrind &> /dev/null; then
     fi
 else
     echo -e "${YELLOW}Running valgrind tests (this may take a while)...${NC}\n"
-    
+
     print_test "Valgrind: Simple command"
     echo "echo hello" | valgrind --leak-check=full --error-exitcode=1 --quiet $MINISHELL > /dev/null 2> /tmp/valgrind_$$.log
     if [ $? -eq 0 ]; then
@@ -442,7 +449,7 @@ else
         echo -e "  ${RED}✗ LEAKS DETECTED${NC}"
         echo "  See /tmp/valgrind_$$.log for details"
     fi
-    
+
     print_test "Valgrind: Pipes"
     echo "echo hello | cat | cat" | valgrind --leak-check=full --error-exitcode=1 --quiet $MINISHELL > /dev/null 2> /tmp/valgrind2_$$.log
     if [ $? -eq 0 ]; then
