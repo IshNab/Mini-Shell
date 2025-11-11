@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 19:12:06 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/09 15:11:16 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/10 15:57:40 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,12 @@ void	run_external_cmd(t_command *cmd, t_mshell *shell)
 	i = 0;
 	if (!path)
 	{
-		perror("minishell");
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd("\n", 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		while (env_array[i])
+			free(env_array[i++]);
+		free(env_array);
 		exit(127);
 	}
 	if (execve(path, cmd->args, env_array) == -1)
@@ -132,7 +134,6 @@ void	run_external_cmd(t_command *cmd, t_mshell *shell)
 		while (env_array[i])
 			free(env_array[i++]);
 		free(env_array);
-		//shell->exit_status = 126;
 		exit(126);
 	}
 }
