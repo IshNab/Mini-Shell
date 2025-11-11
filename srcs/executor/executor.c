@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 15:24:59 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:52:57 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,12 @@ int	execute_simple_command(t_ast *ast, t_mshell *shell)
 		return (1);
 	if (is_parent_builtin(cmd->args[0])) //Can be run only in parent
 		return (execute_builtin_parent(cmd, shell));
+	setup_non_interactive_signals();
 	child_pid = fork_wrapper(shell);
 	if (child_pid == -1)
 		return (1);
 	if (child_pid == 0)
 		exec_in_child(cmd, shell);
-	setup_interactive_signals(); //Restore parent signals
 	if (g_signal_received == SIGINT) //Check if found SIGINT
 	{
 		kill(child_pid, SIGINT);

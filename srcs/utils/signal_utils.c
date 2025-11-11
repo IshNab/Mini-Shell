@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 14:30:10 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/09 18:55:52 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:40:31 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,22 @@ volatile sig_atomic_t	g_signal_received = 0;
 
 void	signal_handler(int sig)
 {
-	//actual handling is done in main loop/parent; set a flag
-	g_signal_received = sig;
 	if (sig == SIGINT)
 	{
-		//write(STDOUT_FILENO, "\n", 1);
-		ioctl(STDIN_FILENO, TIOCSTI, "\n");
+		g_signal_received = SIGINT;
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
+
+void	exec_signal_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_signal_received = SIGINT;
+		write(1, "\n", 1);
 	}
 }
 
@@ -54,7 +64,7 @@ void	setup_non_interactive_signals(void)
 
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
-	sa_int.sa_handler = signal_handler; // parent tracks SIGINT while launching
+	sa_int.sa_handler = exec_signal_handler; // parent tracks SIGINT while launching
 	sigaction(SIGINT, &sa_int, NULL);
 
 	// In parent, ignore SIGQUIT during command launch; child restores defaults

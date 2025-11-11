@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/09 18:57:03 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:48:10 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,10 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$");
 		if (g_signal_received == SIGINT)
 		{
-			g_signal_received = 0;
 			shell.exit_status = 130;
 			if (line)
 				free(line);
-			//rl_on_newline();
+			g_signal_received = 0;
 			continue ;
 		}
 		if (!line) //crtl + D
@@ -109,7 +108,11 @@ int	main(int argc, char **argv, char **envp)
 		//printf("About to parse command");
 		ast = parser(line, envp, &shell);
 		if (ast)
+		{
 			execute_ast(ast, &shell);
+			setup_interactive_signals();
+			g_signal_received = 0;
+		}
 		free_ast(ast);
 		free(line);
 	}
