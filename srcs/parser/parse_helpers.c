@@ -16,7 +16,6 @@ static int	syntax_error_pipe(int expect_word)
 {
 	if (expect_word)
 	{
-		//find a way to handle error
 		error_msg("Syntax error: unexpected pipe\n", 1, NULL);
 		return (1);
 	}
@@ -49,21 +48,20 @@ int	validate_syntax(t_token *tokens)
 	if (!tokens)
 		return (0);
 	curr = tokens;
-	expect_word = 1;	//start expecting a word
+	expect_word = 1;
 	while (curr)
 	{
-		//check for empty commands
 		if (!tokens || (tokens->type == TOKEN_PIPE && !tokens->next))
 		   return (0);
 		else if (curr->type == TOKEN_PIPE)
 		{
-			if (syntax_error_pipe(expect_word))	//check for syntax error in pipe
+			if (syntax_error_pipe(expect_word))
 				return (0);
-			expect_word = 1;	//after pipe, expect another word
+			expect_word = 1;
 		}
 		else if (is_redir_token(curr->type))
 		{
-			if (syntax_error_redir(curr))	//check redirection had a target
+			if (syntax_error_redir(curr))
 				return (0);
 			expect_word = 0;
 		}
@@ -78,7 +76,3 @@ int	validate_syntax(t_token *tokens)
 	}
 	return (1);
 }
-
-//check if there are pipes at the start or end of the command
-//check if there are redirections without a target
-//check if there are incomplete commands
