@@ -12,28 +12,24 @@
 
 #include "../../inc/minishell.h"
 
-t_ast	*parser(char *input, char **envp, t_mshell *shell)
+t_ast	*parser(char *input, t_mshell *shell)
 {
 	t_token	*tokens;
 	t_ast	*ast;
 
-	(void)envp;
 	if (!input || !*input)
 		return (NULL);
-	//error check? when to free the linked list?
-	tokens = ms_tokenize(input);	//step 1. tokenize the input
+	tokens = ms_tokenize(input);
 	if (!tokens)
 		return (NULL);
-	if (!validate_syntax(tokens)) //step 2. validate the syntax
+	if (!validate_syntax(tokens))
 	{
 		free_token_list(tokens);
 		shell->exit_status = 2;
 		return (NULL);
 	}
-	//TODO a way to check if we need to expand or not (flags?)
-	expand_vars(tokens, shell); //step 3. expand the variables
-	// Quote tokens are now handled in tokenizer, no need to remove them
-	ast = build_ast(tokens); //step 4. build the AST
+	expand_vars(tokens, shell);
+	ast = build_ast(tokens);
 	if (!ast)
 	{
 		free_token_list(tokens);
