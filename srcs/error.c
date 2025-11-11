@@ -21,7 +21,6 @@ int	panic(char *error_msg)
 	exit(1);
 }
 //need to make this error_msg function robust and able to handle more cases
-
 int	error_msg(char *msg, int exit_code, t_mshell *shell)
 {
 	ft_putstr_fd("minishell: ", 2);
