@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:27:31 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 16:15:08 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/12 14:30:44 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char	*get_target_path(char **args, t_mshell *shell)
 		oldpwd = getenv("OLDPWD");
 		if (!oldpwd)
 			return (error_msg("cd: OLDPWD not set", 1, shell), NULL);
-		ft_putendl_fd(oldpwd, 1);  // Print where we're going
+		ft_putendl_fd(oldpwd, 1);
 		return (oldpwd);
 	}
 	return (args[1]);

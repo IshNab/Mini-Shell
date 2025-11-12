@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 19:12:06 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/11 16:10:41 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:30:06 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,21 +57,41 @@ static char	*join_path(char *str1, char *str2)
 	return (result_str);
 }
 
+static char	*search_in_paths(char **split_path, char *cmd)
+{
+	char	*full_path;
+	char	*ret;
+	int		i;
+
+	ret = NULL;
+	i = -1;
+	while (split_path[++i])
+	{
+		full_path = join_path(split_path[i], cmd);
+		if (access(full_path, X_OK) == 0)
+		{
+			ret = full_path;
+			break ;
+		}
+		free(full_path);
+	}
+	i = -1;
+	while (split_path[++i])
+		free(split_path[i]);
+	free(split_path);
+	return (ret);
+}
+
 static char	*find_cmd_path(char *cmd, t_env *env)
 {
-	int		i;
 	t_env	*current;
 	char	*path_name;
 	char	**split_path;
-	char	*full_path;
-	char	*ret;
 
-	i = 0;
 	if (!cmd)
 		return (NULL);
 	path_name = NULL;
 	current = env;
-	ret = NULL;
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	while (current)
@@ -88,22 +108,7 @@ static char	*find_cmd_path(char *cmd, t_env *env)
 	split_path = ft_split(path_name, ':');
 	if (!split_path)
 		return (NULL);
-	i = -1;
-	while (split_path[++i])
-	{
-		full_path = join_path(split_path[i], cmd);
-		if (access(full_path, X_OK) == 0)
-		{
-			ret = full_path; // this saves the join_path malloc'd str
-			break ;
-		}
-		free(full_path);
-	}
-	i = -1;
-	while (split_path[++i])
-		free(split_path[i]);
-	free(split_path);
-	return (ret);
+	return (search_in_paths(split_path, cmd));
 }
 
 void	run_external_cmd(t_command *cmd, t_mshell *shell)
@@ -122,18 +127,14 @@ void	run_external_cmd(t_command *cmd, t_mshell *shell)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
-		while (env_array[i])
-			free(env_array[i++]);
-		free(env_array);
+		free_env_array(env_array);
 		exit(127);
 	}
 	if (execve(path, cmd->args, env_array) == -1)
 	{
 		perror("minishell");
 		free(path);
-		while (env_array[i])
-			free(env_array[i++]);
-		free(env_array);
+		free_env_array(env_array);
 		exit(126);
 	}
 }
