@@ -43,3 +43,50 @@ void	list_token_append(t_token *new, t_token **head, t_token **tail)
 		(*tail)->next = new;
 	*tail = new;
 }
+
+int	handle_redirections(t_token *new, const char *input, int *i)
+{
+	if (handle_input_redir(new, input, i))
+		return (1);
+	if (handle_output_redir(new, input, i))
+		return (1);
+	return (0);
+}
+
+static int	handle_input_redir(t_token *new, const char *input, int *i)
+{
+	if (input[*i] == '<' && input[*i + 1] == '<')
+	{
+		new->type = TOKEN_HEREDOC;
+		new->value = ft_strdup("<<");
+		(*i) += 2;
+		return (1);
+	}
+	else if (input[*i] == '<')
+	{
+		new->type = TOKEN_REDIR_IN;
+		new->value = ft_strdup("<");
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+static int	handle_output_redir(t_token *new, const char *input, int *i)
+{
+	if (input[*i] == '>' && input[*i + 1] == '>')
+	{
+		new->type = TOKEN_APPEND;
+		new->value = ft_strdup(">>");
+		(*i) += 2;
+		return (1);
+	}
+	else if (input[*i] == '>')
+	{
+		new->type = TOKEN_REDIR_OUT;
+		new->value = ft_strdup(">");
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
