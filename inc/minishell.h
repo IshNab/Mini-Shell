@@ -149,7 +149,6 @@ void				free_ast(t_ast *node);
 t_token				*ms_tokenize(const char *input);
 void				free_token_list(t_token *head);
 void				list_token_append(t_token *new, t_token **head, t_token **tail);
-void				print_tokens(t_token *tok);
 int					handle_redirections(t_token *new, const char *input, int *i);
 
 void				remove_quote_tokens(t_token **tokens);

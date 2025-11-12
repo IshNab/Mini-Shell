@@ -25,16 +25,6 @@ void	free_token_list(t_token *head)
 	}
 }
 
-void	print_tokens(t_token *tok)
-{
-	while (tok)
-	{
-		printf("Type: %d, Value: %s\n",
-			tok->type, tok->value);
-		tok = tok->next;
-	}
-}
-
 void	list_token_append(t_token *new, t_token **head, t_token **tail)
 {
 	if (!*head)
