@@ -106,7 +106,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		//printf("About to parse command");
-		ast = parser(line, envp, &shell);
+		ast = parser(line, &shell);
 		if (ast)
 		{
 			execute_ast(ast, &shell);

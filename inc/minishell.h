@@ -136,7 +136,7 @@ typedef struct s_mshell
 //								Lexer & Parser                                 /
 //=============================================================================/
 
-t_ast				*parser(char *input, char **envp, t_mshell *shell);
+t_ast				*parser(char *input, t_mshell *shell);
 int					validate_syntax(t_token *tokens);
 t_ast				*build_ast(t_token *tokens);
 t_command			*create_command_node(t_token *tokens);

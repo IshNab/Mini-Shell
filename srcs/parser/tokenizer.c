@@ -58,19 +58,19 @@ static void	handle_double_quote(t_token *new, const char *input, int *i)
 {
 	int	start;
 
-	start = *i + 1;	//skip opening qoute
+	start = *i + 1;
 	(*i)++;
 	while (input[*i] && input[*i] != '"')
 		(*i)++;
 	if (input[*i] == '"')
 	{
-		new->type = TOKEN_DQUOTE;	//double quoted content, to be expanded
+		new->type = TOKEN_DQUOTE;
 		new->value = ft_substr(input, start, *i - start);
 		if (!new->value)
-			new->value = ft_strdup("");	//handle empty quotes
-		(*i)++;	//skip closing quote
+			new->value = ft_strdup("");
+		(*i)++;
 	}
-	else	//for unclosed double quotes, unclosed treated as a word
+	else
 	{
 		new->type = TOKEN_WORD;
 		new->value = ft_substr(input, start, *i - start);
@@ -83,19 +83,19 @@ static void	handle_single_quote(t_token *new, const char *input, int *i)
 {
 	int	start;
 
-	start = *i + 1;	//skip opening quote
+	start = *i + 1;
 	(*i)++;
 	while (input[*i] && input[*i] != '\'')
 		(*i)++;
 	if (input[*i] == '\'')
 	{
-		new->type = TOKEN_SQUOTE;	//single quoted content, not expanded
+		new->type = TOKEN_SQUOTE;
 		new->value = ft_substr(input, start, *i - start);
 		if (!new->value)
-			new->value = ft_strdup("");	//handle empty quotes
-		(*i)++;	//skip closing quote
+			new->value = ft_strdup("");
+		(*i)++;
 	}
-	else	//for unclosed single quotes, unclosed treated as a word
+	else
 	{
 		new->type = TOKEN_WORD;
 		new->value = ft_substr(input, start, *i - start);
@@ -106,7 +106,7 @@ static void	handle_single_quote(t_token *new, const char *input, int *i)
 
 static void	handle_regular_word(t_token *new, const char *input, int *i)
 {
-	int	start;	//regular word stops at qoute boundaries
+	int	start;
 
 	start = *i;
 	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
@@ -141,7 +141,7 @@ static void	check_special_chars(t_token *new, const char *input, int *i)
 		handle_regular_word(new, input, i);
 }
 
-t_token	*ms_tokenize(const char *input)	//convert input string into linked list of tokens
+t_token	*ms_tokenize(const char *input)
 {
 	t_token	*head;
 	t_token	*tail;
@@ -151,7 +151,7 @@ t_token	*ms_tokenize(const char *input)	//convert input string into linked list 
 	head = NULL;
 	tail = NULL;
 	i = 0;
-	while (input[i])	//initialization
+	while (input[i])
 	{
 		while (input[i] && (input[i] == ' ' || input[i] == '\t'))
 			i++;
@@ -164,7 +164,7 @@ t_token	*ms_tokenize(const char *input)	//convert input string into linked list 
 			return (NULL);
 		}
 		new->next = NULL;
-		check_special_chars(new, input, &i);	//check for special characters; identify tokens
+		check_special_chars(new, input, &i);
 		list_token_append(new, &head, &tail);
 	}
 	return (head);
