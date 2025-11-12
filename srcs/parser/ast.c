@@ -68,6 +68,7 @@ t_ast	*build_ast(t_token *tokens)
 		right_tokens = split_at_pipe(tokens, pipe);
 		left = build_ast(tokens);
 		right = build_ast(right_tokens);
+		free_token_list(right_tokens);
 		pipe_node = create_pipe_node(left, right);
 		if (!pipe_node)
 		{
