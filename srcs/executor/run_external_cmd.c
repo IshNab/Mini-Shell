@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 19:12:06 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/10 15:57:40 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:10:41 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	run_external_cmd(t_command *cmd, t_mshell *shell)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
+		ft_putstr_fd(": command not found\n", 2);
 		while (env_array[i])
 			free(env_array[i++]);
 		free(env_array);
