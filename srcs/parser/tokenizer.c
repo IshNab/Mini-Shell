@@ -12,14 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-static void	list_token_append(t_token *new, t_token **head, t_token **tail)
-{
-	if (!*head)
-		*head = new;
-	else
-		(*tail)->next = new;
-	*tail = new;
-}
+
 
 static int	handle_redirections(t_token *new, const char *input, int *i)
 {

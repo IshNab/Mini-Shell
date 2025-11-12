@@ -83,6 +83,3 @@ t_ast	*build_ast(t_token *tokens)
 		return ((t_ast *)create_command_node(tokens));
 	}
 }
-
-
-

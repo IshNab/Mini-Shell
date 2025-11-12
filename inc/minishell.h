@@ -144,6 +144,7 @@ int					process_word_token(t_command *cmd, t_token *token, int *i);
 int					process_tokens(t_command *cmd, t_token *tokens, int *i);
 t_ast				*create_pipe_node(t_ast *left, t_ast *right);
 void				free_ast(t_ast *node);
+void				list_token_append(t_token *new, t_token **head, t_token **tail);
 
 // Tokenizer
 t_token				*ms_tokenize(const char *input);
