@@ -58,6 +58,7 @@ t_ast	*build_ast(t_token *tokens)
 	t_token		*right_tokens;
 	t_ast		*left;
 	t_ast		*right;
+	t_ast		*pipe_node;
 
 	if (!tokens)
 		return (NULL);
@@ -67,7 +68,14 @@ t_ast	*build_ast(t_token *tokens)
 		right_tokens = split_at_pipe(tokens, pipe);
 		left = build_ast(tokens);
 		right = build_ast(right_tokens);
-		return (create_pipe_node(left, right));
+		pipe_node = create_pipe_node(left, right);
+		if (!pipe_node)
+		{
+			free_ast(left);
+			free_ast(right);
+			return (NULL);
+		}
+		return (pipe_node);
 	}
 	else
 	{
