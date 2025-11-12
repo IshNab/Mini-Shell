@@ -117,10 +117,7 @@ t_token	*ms_tokenize(const char *input)
 			break ;
 		new = malloc(sizeof(t_token));
 		if (!new)
-		{
-			free_token_list(head);
-			return (NULL);
-		}
+			return (free_token_list(head), NULL);
 		new->next = NULL;
 		check_special_chars(new, input, &i);
 		list_token_append(new, &head, &tail);
