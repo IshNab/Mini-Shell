@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_utils_2.c                                  :+:      :+:    :+:   */
+/*   signal_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 15:47:23 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/12 15:55:20 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:48:16 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	setup_heredoc_signals(void)
 	sa_int.sa_flags = 0;
 	sa_int.sa_handler = heredoc_signal_handler;
 	sigaction(SIGINT, &sa_int, NULL);
-
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
 	sa_quit.sa_handler = SIG_IGN;

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/14 16:39:23 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:38:28 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	list_token_append(t_token *new, t_token **head, t_token **tail)
 	*tail = new;
 }
 
-int	handle_redirections(t_token *new, const char *input, int *i)
+int	handle_redirections(t_token *new, char *input, int *i)
 {
 	if (handle_input_redir(new, input, i))
 		return (1);

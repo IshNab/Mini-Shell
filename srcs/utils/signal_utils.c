@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 14:30:10 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/11 15:40:31 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:58:41 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,33 +41,35 @@ void	exec_signal_handler(int sig)
 	}
 }
 
+//sigint interupts signals
+//sigquit ignores/quits signals
+// ctrl-\ does nothing in interactive mode
 void	setup_interactive_signals(void)
 {
-	struct sigaction sa_int;	//sigint interupts signals
-	struct sigaction sa_quit;	//sigquit ignores/quits signals
-
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0; // do not use SA_RESTART so readline can be interrupted
-	sa_int.sa_handler = signal_handler;
-	sigaction(SIGINT, &sa_int, NULL);
-
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
-	sa_quit.sa_handler = SIG_IGN; // ctrl-\ does nothing in interactive mode
-	sigaction(SIGQUIT, &sa_quit, NULL);
-}
-
-void	setup_non_interactive_signals(void)
-{
-	struct sigaction sa_int;
-	struct sigaction sa_quit;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
 
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
-	sa_int.sa_handler = exec_signal_handler; // parent tracks SIGINT while launching
+	sa_int.sa_handler = signal_handler;
 	sigaction(SIGINT, &sa_int, NULL);
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sa_quit.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
 
-	// In parent, ignore SIGQUIT during command launch; child restores defaults
+// parent tracks SIGINT while launching
+// In parent, ignore SIGQUIT during command launch; child restores defaults
+void	setup_non_interactive_signals(void)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sa_int.sa_handler = exec_signal_handler;
+	sigaction(SIGINT, &sa_int, NULL);
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
 	sa_quit.sa_handler = SIG_IGN;
@@ -83,15 +85,7 @@ void	default_child_signals(void)
 	sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
-	//should we also restore SIGPIPE?
 }
-
-// legacy compatibility
-void	setup_signals(void)
-{
-	setup_interactive_signals();
-}
-
 //child process: set up heredoc signals and read input
 // read line until delimiter is found or EOF is reached
 // write line to temporary file
