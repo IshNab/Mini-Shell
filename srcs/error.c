@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/03 18:26:58 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:31:22 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	panic(char *error_msg)
 	ft_putstr_fd(error_msg, 2);
 	exit(1);
 }
+
 //need to make this error_msg function robust and able to handle more cases
 int	error_msg(char *msg, int exit_code, t_mshell *shell)
 {
