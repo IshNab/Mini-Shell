@@ -6,14 +6,14 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/09 18:53:32 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:36:59 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#define DEBUG 0
+# define DEBUG 0
 
 //=============================================================================/
 //								Library Headers                                /
@@ -64,9 +64,9 @@ typedef enum e_token_type
 // Token structure for lexer
 typedef struct s_token
 {
-	t_token_type		type;
-	char				*value;
-	struct s_token		*next;
+	t_token_type	type;
+	char			*value;
+	struct s_token	*next;
 }	t_token;
 
 //Redirecion types
@@ -90,20 +90,20 @@ typedef enum e_redir_type
 }	t_redir_type;
 typedef struct s_redir
 {
-	t_ast			base;
-	char			*filename;
-	t_node_type		type;
+	t_ast				base;
+	char				*filename;
+	t_node_type			type;
 }	t_redir;
 
 //UNCOMMENT BEFORE RELEASE
 typedef struct s_command
 {
-	t_ast			base;
-	char			**args;
-	char			*input_file; //< input
-	char			*output_file; // > or >> output
-	int				is_append; //flag for no=0 yes=1
-	char			*heredoc_delimiter; //<< delimiter
+	t_ast				base;
+	char				**args;
+	char				*input_file; //< input
+	char				*output_file; // > or >> output
+	int					is_append; //flag for no=0 yes=1
+	char				*heredoc_delimiter; //<< delimiter
 }	t_command;
 
 //pipe node
@@ -218,6 +218,7 @@ int					is_valid_identifier(char *s);
 int					error_msg_export(char *id);
 
 void				free_ast(t_ast *node);
+void				free_env_array(t_env *env_array);
 
 //=============================================================================/
 //								Signal Handling                                /
@@ -234,6 +235,7 @@ void				default_child_signals(void);
 void				heredoc_signal_handler(int sig);
 void				setup_heredoc_signals(void);
 int					create_heredoc_file(char *delimiter);
+void				wait_child_process(pid_t child_pid, t_mshell *shell);
 
 // Global signal state
 extern volatile sig_atomic_t			g_signal_received;
@@ -243,11 +245,8 @@ extern volatile sig_atomic_t			g_signal_received;
 //=============================================================================/
 
 // Debug functions
-void debug_print_env(t_env *env);
-void debug_print_command(t_command *cmd);
-void debug_print_shell(t_mshell *shell);
-void debug_checkpoint(const char *function, int line, const char *message);
-
-#define DEBUG_CHECKPOINT(msg) debug_checkpoint(__FUNCTION__, __LINE__, msg)
+void				debug_print_env(t_env *env);
+void				debug_print_command(t_command *cmd);
+void				debug_print_shell(t_mshell *shell);
 
 #endif

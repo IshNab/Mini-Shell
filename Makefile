@@ -28,6 +28,7 @@ SRCS = \
 ./srcs/utils/str_utils.c \
 ./srcs/utils/expand_functions.c \
 ./srcs/utils/signal_utils.c \
+./srcs/utils/signal_utils_2.c \
 ./srcs/utils/export_utils.c \
 ./srcs/utils/frees.c \
 ./srcs/builtins/cd.c \
