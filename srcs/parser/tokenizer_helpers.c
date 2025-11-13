@@ -43,7 +43,7 @@ int	handle_redirections(t_token *new, const char *input, int *i)
 	return (0);
 }
 
-static int	handle_input_redir(t_token *new, const char *input, int *i)
+static int	tok_handle_input_redir(t_token *new, const char *input, int *i)
 {
 	if (input[*i] == '<' && input[*i + 1] == '<')
 	{
@@ -62,7 +62,7 @@ static int	handle_input_redir(t_token *new, const char *input, int *i)
 	return (0);
 }
 
-static int	handle_output_redir(t_token *new, const char *input, int *i)
+static int	tok_handle_output_redir(t_token *new, const char *input, int *i)
 {
 	if (input[*i] == '>' && input[*i + 1] == '>')
 	{
