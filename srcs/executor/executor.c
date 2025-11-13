@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/12 16:13:46 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:44:50 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ void	execute_ast(t_ast *ast, t_mshell *shell)
 	}
 	else if (ast->type == NODE_CMD)
 	{
-
 		if (execute_simple_command(ast, shell) == -1)
 			return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:34:54 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/08 19:27:16 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:59:54 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,7 @@ int	is_valid_identifier(char *s)
 	while (*s && *s != '=')
 	{
 		if ((!ft_isalnum(*s) && *s != '_'))
-		{
-			printf("DEBUG: invaalid char '%c' at position '%ld' in '%s'\n", *s, s - start, start);
 			return (0);
-		}
 		s++;
 	}
 	return (1);

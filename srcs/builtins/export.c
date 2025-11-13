@@ -6,13 +6,13 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/08 19:40:30 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:39:34 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	set_env_var(t_mshell *shell, const char *key, const char *value)
+void	set_env_var(t_mshell *shell, char *key, char *value)
 {
 	t_env	*current;
 	t_env	*new_node;

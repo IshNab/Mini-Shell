@@ -62,7 +62,7 @@ static int	validate_token_loop(t_token *tokens)
 		curr = curr->next;
 	}
 	if (expect_word)
-		return (ft_putstr_fd("Syntax error: incomplete command\n", 2)0);
+		return (ft_putstr_fd("Syntax error: incomplete command\n", 2), 0);
 	return (1);
 }
 

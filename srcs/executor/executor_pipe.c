@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:05:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 16:28:41 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:44:10 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ static void	status_handler(int status, t_mshell *shell)
 	else if (WIFSIGNALED(status))
 		shell->exit_status = 128 + WTERMSIG(status);
 }
+	// fd[0] - read
+	// fd[1] - write
 
 void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 {
 	int			fds[2];
-	// fd[0] - read
-	// fd[1] - write
 	pid_t		left_pid;
 	pid_t		right_pid;
 	int			status;
@@ -76,6 +76,6 @@ void	execute_pipe(t_ast *pipe_node, t_mshell *shell)
 		pipe_signal_handler(left_pid, right_pid);
 	waitpid(left_pid, &status, 0);
 	waitpid(right_pid, &status, 0);
-	status_handler(status, shell); // Should I take care of status separately?
+	status_handler(status, shell);
 	setup_interactive_signals();
 }
