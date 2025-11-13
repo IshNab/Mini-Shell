@@ -40,39 +40,35 @@ static int	is_redir_token(t_token_type type)
 		|| type == TOKEN_HEREDOC);
 }
 
-int	validate_syntax(t_token *tokens)
+static int	validate_token_loop(t_token *tokens)
 {
 	t_token	*curr;
 	int		expect_word;
 
-	if (!tokens)
-		return (0);
 	curr = tokens;
 	expect_word = 1;
 	while (curr)
 	{
-		if (!tokens || (tokens->type == TOKEN_PIPE && !tokens->next))
+		if (curr->type == TOKEN_PIPE && syntax_error_pipe(expect_word))
 			return (0);
-		else if (curr->type == TOKEN_PIPE)
-		{
-			if (syntax_error_pipe(expect_word))
-				return (0);
+		if (curr->type == TOKEN_PIPE)
 			expect_word = 1;
-		}
+		else if (is_redir_token(curr->type) && syntax_error_redir(curr))
+			return (0);
 		else if (is_redir_token(curr->type))
-		{
-			if (syntax_error_redir(curr))
-				return (0);
 			expect_word = 0;
-		}
 		else if (curr->type == TOKEN_WORD)
 			expect_word = 0;
 		curr = curr->next;
 	}
 	if (expect_word)
-	{
-		ft_putstr_fd("Syntax error: incomplete command\n", 2);
-		return (0);
-	}
+		return (ft_putstr_fd("Syntax error: incomplete command\n", 2)0);
 	return (1);
+}
+
+int	validate_syntax(t_token *tokens)
+{
+	if (!tokens || (tokens->type == TOKEN_PIPE && !tokens->next))
+		return (0);
+	return (validate_token_loop(tokens));
 }
