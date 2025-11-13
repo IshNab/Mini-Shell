@@ -71,11 +71,7 @@ t_ast	*build_ast(t_token *tokens)
 		free_token_list(right_tokens);
 		pipe_node = create_pipe_node(left, right);
 		if (!pipe_node)
-		{
-			free_ast(left);
-			free_ast(right);
-			return (NULL);
-		}
+			return (free_ast(left), free_ast(right), NULL);
 		return (pipe_node);
 	}
 	else
