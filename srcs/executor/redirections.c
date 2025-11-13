@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 13:19:42 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/08 19:22:14 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:44:39 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	setup_redirections(t_command *cmd, int *saved_stdin, int *saved_stdout)
 {
 	*saved_stdin = -1;
 	*saved_stdout = -1;
-
 	if (handle_input_redir(cmd, saved_stdin) == -1)
 		return (-1);
 	if (handle_output_redir(cmd, saved_stdout) == -1)
