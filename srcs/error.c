@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 12:31:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 15:31:22 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:49:04 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,3 @@ int	error_msg(char *msg, int exit_code, t_mshell *shell)
 		shell->exit_status = exit_code;
 	return (exit_code);
 }
-
