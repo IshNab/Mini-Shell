@@ -36,9 +36,9 @@ void	list_token_append(t_token *new, t_token **head, t_token **tail)
 
 int	handle_redirections(t_token *new, const char *input, int *i)
 {
-	if (handle_input_redir(new, input, i))
+	if (tok_handle_input_redir(new, input, i))
 		return (1);
-	if (handle_output_redir(new, input, i))
+	if (tok_handle_output_redir(new, input, i))
 		return (1);
 	return (0);
 }
