@@ -12,46 +12,28 @@
 
 #include "../../inc/minishell.h"
 
-static void	list_token_append(t_token *new, t_token **head, t_token **tail)
+static void	check_special_chars(t_token *new, const char *input, int *i)
 {
-	if (!*head)
-		*head = new;
+	if (input[*i] == '|')
+	{
+		new->type = TOKEN_PIPE;
+		new->value = ft_strdup("|");
+		(*i)++;
+	}
+/* 	else if (input[*i] == '=')
+	{
+		new->type = TOKEN_WORD;
+		new->value = ft_strdup("=");
+		(*i)++;
+	} */
+	else if (handle_redirections(new, input, i))
+		return ;
+	else if (input[*i] == '"')
+		handle_double_quote(new, input, i);
+	else if (input[*i] == '\'')
+		handle_single_quote(new, input, i);
 	else
-		(*tail)->next = new;
-	*tail = new;
-}
-
-static int	handle_redirections(t_token *new, const char *input, int *i)
-{
-	if (input[*i] == '<' && input[*i + 1] == '<')
-	{
-		new->type = TOKEN_HEREDOC;
-		new->value = ft_strdup("<<");
-		(*i) += 2;
-		return (1);
-	}
-	else if (input[*i] == '<')
-	{
-		new->type = TOKEN_REDIR_IN;
-		new->value = ft_strdup("<");
-		(*i)++;
-		return (1);
-	}
-	else if (input[*i] == '>' && input[*i + 1] == '>')
-	{
-		new->type = TOKEN_APPEND;
-		new->value = ft_strdup(">>");
-		(*i) += 2;
-		return (1);
-	}
-	else if (input[*i] == '>')
-	{
-		new->type = TOKEN_REDIR_OUT;
-		new->value = ft_strdup(">");
-		(*i)++;
-		return (1);
-	}
-	return (0);
+		handle_regular_word(new, input, i);
 }
 
 static void	handle_double_quote(t_token *new, const char *input, int *i)
@@ -117,30 +99,6 @@ static void	handle_regular_word(t_token *new, const char *input, int *i)
 	new->value = ft_substr(input, start, *i - start);
 }
 
-static void	check_special_chars(t_token *new, const char *input, int *i)
-{
-	if (input[*i] == '|')
-	{
-		new->type = TOKEN_PIPE;
-		new->value = ft_strdup("|");
-		(*i)++;
-	}
-/* 	else if (input[*i] == '=')
-	{
-		new->type = TOKEN_WORD;
-		new->value = ft_strdup("=");
-		(*i)++;
-	} */
-	else if (handle_redirections(new, input, i))
-		return ;
-	else if (input[*i] == '"')
-		handle_double_quote(new, input, i);
-	else if (input[*i] == '\'')
-		handle_single_quote(new, input, i);
-	else
-		handle_regular_word(new, input, i);
-}
-
 t_token	*ms_tokenize(const char *input)
 {
 	t_token	*head;
@@ -159,10 +117,7 @@ t_token	*ms_tokenize(const char *input)
 			break ;
 		new = malloc(sizeof(t_token));
 		if (!new)
-		{
-			free_token_list(head);
-			return (NULL);
-		}
+			return (free_token_list(head), NULL);
 		new->next = NULL;
 		check_special_chars(new, input, &i);
 		list_token_append(new, &head, &tail);

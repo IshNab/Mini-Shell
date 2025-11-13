@@ -31,10 +31,7 @@ t_ast	*parser(char *input, t_mshell *shell)
 	expand_vars(tokens, shell);
 	ast = build_ast(tokens);
 	if (!ast)
-	{
-		free_token_list(tokens);
-		return (NULL);
-	}
+		return (free_token_list(tokens), NULL);
 	free_token_list(tokens);
 	return (ast);
 }
