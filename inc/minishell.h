@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 15:36:04 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:41:28 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ typedef struct s_ast
 }	t_ast;
 typedef enum e_redir_type
 {
-	REDIR_INPUT, // <
-	REDIR_OUTPUT, // >
-	REDIR_APPEND, // >>
-	REDIR_HEREDOC // <<
+	REDIR_INPUT,
+	REDIR_OUTPUT,
+	REDIR_APPEND,
+	REDIR_HEREDOC
 }	t_redir_type;
 typedef struct s_redir
 {
@@ -123,14 +123,13 @@ typedef struct s_env
 
 typedef struct s_mshell
 {
-	t_env			*env; //environment variables
-	t_ast			*ast; //current AST
+	t_env			*env;
+	t_ast			*ast;
 	int				cmd_count;
-	int				exit_status; //last cmd exit status
-	int				must_exit; //flag for when u must exit shell
-	pid_t			shell_pid; //shell pid
+	int				exit_status;
+	int				must_exit;
+	pid_t			shell_pid;
 }	t_mshell;
-
 
 //=============================================================================/
 //								Lexer & Parser                                 /
@@ -148,31 +147,20 @@ void				free_ast(t_ast *node);
 // Tokenizer
 t_token				*ms_tokenize(const char *input);
 void				free_token_list(t_token *head);
-void				list_token_append(t_token *new, t_token **head, t_token **tail);
-int					handle_redirections(t_token *new, const char *input, int *i);
+void				list_token_append(t_token *new, t_token **head,
+						t_token **tail);
+int					handle_redirections(t_token *new, char *input, int *i);
 
 void				remove_quote_tokens(t_token **tokens);
 //Variable Expansion
 void				expand_vars(t_token *tokens, t_mshell *shell);
-char				*expand_word(char *word, t_env *env, int exit_status, pid_t shell_pid);
+char				*exp_word(char *word, t_env *env, int exit_status,
+						pid_t shell_pid);
 
 //=============================================================================/
 //								Executor                                       /
 //=============================================================================/
 
-/* //MOCKUP PARSER (DELETE THIS BEFORE RELEASE)
-// Simple mockup structure for testing
-typedef struct s_command {
-    char **args;        // Array of arguments
-    char *input_file;   // Input redirection
-    char *output_file;  // Output redirection
-    int append;         // Append mode for output
-    struct s_command *next; // For pipe chains
-} t_command; */
-
-//void				free_command(t_command *cmd);
-//t_command			*mockup_parse(char *input, char **envp, int last_status);
-//t_command			*create_mockup_command(char *input_line);
 void				execute_ast(t_ast *ast, t_mshell *mshell);
 void				execute_pipe(t_ast *pipe_node, t_mshell *shell);
 void				run_external_cmd(t_command *cmd, t_mshell *shell);
@@ -182,7 +170,8 @@ int					is_parent_builtin(char *cmd_name);
 //redirections
 int					handle_input_redir(t_command *cmd, int *saved_stdin);
 int					handle_output_redir(t_command *cmd, int *saved_stdout);
-int					setup_redirections(t_command *cmd, int *saved_stdin, int *saved_stdout);
+int					setup_redirections(t_command *cmd, int *saved_stdin,
+						int *saved_stdout);
 void				restore_redirections(int saved_stdin, int saved_stdout);
 
 //=============================================================================/
@@ -212,7 +201,7 @@ int					error_msg(char *msg, int exit_code, t_mshell *shell);
 char				*str_append(char *s1, const char *s2);
 char				*get_env_from_list(t_env *env, const char *key);
 void				unset_env_var(t_mshell *shell, const char *key);
-void				set_env_var(t_mshell *shell, const char *key, const char *value);
+void				set_env_var(t_mshell *shell, char *key, char *value);
 void				sort_vars_list(t_env *env);
 int					is_valid_identifier(char *s);
 int					error_msg_export(char *id);
@@ -224,7 +213,7 @@ void				free_env_array(char **env_array);
 //								Signal Handling                                /
 //=============================================================================/
 
-extern volatile sig_atomic_t g_signal_received;
+extern volatile sig_atomic_t	g_signal_received;
 
 // Signal handling functions
 void				signal_handler(int sig);
@@ -236,9 +225,6 @@ void				heredoc_signal_handler(int sig);
 void				setup_heredoc_signals(void);
 int					create_heredoc_file(char *delimiter);
 void				wait_child_process(pid_t child_pid, t_mshell *shell);
-
-// Global signal state
-extern volatile sig_atomic_t			g_signal_received;
 
 //=============================================================================/
 //								Debug                                          /
