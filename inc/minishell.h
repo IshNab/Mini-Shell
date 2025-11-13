@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/12 16:36:59 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:36:04 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ int					is_valid_identifier(char *s);
 int					error_msg_export(char *id);
 
 void				free_ast(t_ast *node);
-void				free_env_array(t_env *env_array);
+void				free_env_array(char **env_array);
 
 //=============================================================================/
 //								Signal Handling                                /

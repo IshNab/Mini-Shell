@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 19:12:06 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/12 16:30:06 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:38:54 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,11 @@ void	run_external_cmd(t_command *cmd, t_mshell *shell)
 {
 	char	*path;
 	char	**env_array;
-	int		i;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		exit(127);
 	env_array = env_to_array(shell->env);
 	path = find_cmd_path(cmd->args[0], shell->env);
-	i = 0;
 	if (!path)
 	{
 		ft_putstr_fd("minishell: ", 2);
