@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 00:00:00 by maborges          #+#    #+#             */
-/*   Updated: 2025/01/15 00:00:00 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:47:57 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,13 @@ char	*ft_strjoin_free(char *s1, char const *s2)
 	len2 = ft_strlen(s2);
 	result = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
 	if (!result)
-	{
-		free(s1);
-		return (NULL);
-	}
-	i = 0;
-	while (i < len1)
-	{
+		return (free(s1), NULL);
+	i = -1;
+	while (++i < len1)
 		result[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (j < len2)
-	{
+	j = -1;
+	while (++j < len2)
 		result[i + j] = s2[j];
-		j++;
-	}
 	result[i + j] = '\0';
-	free(s1);
-	return (result);
+	return (free(s1), result);
 }
