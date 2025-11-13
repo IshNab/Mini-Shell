@@ -34,15 +34,6 @@ void	list_token_append(t_token *new, t_token **head, t_token **tail)
 	*tail = new;
 }
 
-int	handle_redirections(t_token *new, const char *input, int *i)
-{
-	if (tok_handle_input_redir(new, input, i))
-		return (1);
-	if (tok_handle_output_redir(new, input, i))
-		return (1);
-	return (0);
-}
-
 static int	tok_handle_input_redir(t_token *new, const char *input, int *i)
 {
 	if (input[*i] == '<' && input[*i + 1] == '<')
@@ -78,5 +69,14 @@ static int	tok_handle_output_redir(t_token *new, const char *input, int *i)
 		(*i)++;
 		return (1);
 	}
+	return (0);
+}
+
+int	handle_redirections(t_token *new, const char *input, int *i)
+{
+	if (tok_handle_input_redir(new, input, i))
+		return (1);
+	if (tok_handle_output_redir(new, input, i))
+		return (1);
 	return (0);
 }

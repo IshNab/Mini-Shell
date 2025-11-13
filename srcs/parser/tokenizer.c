@@ -12,30 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-static void	check_special_chars(t_token *new, const char *input, int *i)
-{
-	if (input[*i] == '|')
-	{
-		new->type = TOKEN_PIPE;
-		new->value = ft_strdup("|");
-		(*i)++;
-	}
-/* 	else if (input[*i] == '=')
-	{
-		new->type = TOKEN_WORD;
-		new->value = ft_strdup("=");
-		(*i)++;
-	} */
-	else if (handle_redirections(new, input, i))
-		return ;
-	else if (input[*i] == '"')
-		handle_double_quote(new, input, i);
-	else if (input[*i] == '\'')
-		handle_single_quote(new, input, i);
-	else
-		handle_regular_word(new, input, i);
-}
-
 static void	handle_double_quote(t_token *new, const char *input, int *i)
 {
 	int	start;
@@ -97,6 +73,30 @@ static void	handle_regular_word(t_token *new, const char *input, int *i)
 		(*i)++;
 	new->type = TOKEN_WORD;
 	new->value = ft_substr(input, start, *i - start);
+}
+
+static void	check_special_chars(t_token *new, const char *input, int *i)
+{
+	if (input[*i] == '|')
+	{
+		new->type = TOKEN_PIPE;
+		new->value = ft_strdup("|");
+		(*i)++;
+	}
+/* 	else if (input[*i] == '=')
+	{
+		new->type = TOKEN_WORD;
+		new->value = ft_strdup("=");
+		(*i)++;
+	} */
+	else if (handle_redirections(new, input, i))
+		return ;
+	else if (input[*i] == '"')
+		handle_double_quote(new, input, i);
+	else if (input[*i] == '\'')
+		handle_single_quote(new, input, i);
+	else
+		handle_regular_word(new, input, i);
 }
 
 t_token	*ms_tokenize(const char *input)
