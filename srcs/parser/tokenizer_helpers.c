@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/13 16:38:28 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:43:33 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,7 @@ void	list_token_append(t_token *new, t_token **head, t_token **tail)
 	*tail = new;
 }
 
-int	handle_redirections(t_token *new, char *input, int *i)
-{
-	if (handle_input_redir(new, input, i))
-		return (1);
-	if (handle_output_redir(new, input, i))
-		return (1);
-	return (0);
-}
-
-static int	handle_input_redir(t_token *new, const char *input, int *i)
+static int	tok_handle_input_redir(t_token *new, const char *input, int *i)
 {
 	if (input[*i] == '<' && input[*i + 1] == '<')
 	{
@@ -62,7 +53,7 @@ static int	handle_input_redir(t_token *new, const char *input, int *i)
 	return (0);
 }
 
-static int	handle_output_redir(t_token *new, const char *input, int *i)
+static int	tok_handle_output_redir(t_token *new, const char *input, int *i)
 {
 	if (input[*i] == '>' && input[*i + 1] == '>')
 	{
@@ -78,5 +69,14 @@ static int	handle_output_redir(t_token *new, const char *input, int *i)
 		(*i)++;
 		return (1);
 	}
+	return (0);
+}
+
+int	handle_redirections(t_token *new, const char *input, int *i)
+{
+	if (tok_handle_input_redir(new, input, i))
+		return (1);
+	if (tok_handle_output_redir(new, input, i))
+		return (1);
 	return (0);
 }
