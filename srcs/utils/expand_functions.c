@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/13 16:30:52 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:22:01 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	*handle_dollar_expansion(char *word, char *result,
 	return (append_and_advance(result, ft_substr(word, *i, 1), i, 1));
 }
 
-char	*exp_word(char *word, t_env *env, int exit_status, pid_t shell_pid)
+char	*exp_word(char *word, t_mshell *shell)
 {
 	char	*result;
 	char	*temp;
@@ -61,8 +61,7 @@ char	*exp_word(char *word, t_env *env, int exit_status, pid_t shell_pid)
 	while (word[i])
 	{
 		if (word[i] == '$' && word[i + 1])
-			result = handle_dollar_expansion(word, result, env, &i,
-					exit_status, shell_pid);
+			result = handle_dollar_expansion(word, result, &i, shell);
 		else
 		{
 			temp = ft_substr(word, i, 1);

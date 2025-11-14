@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:32:23 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/06 15:57:12 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:05:32 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ static int	is_valid_number(const char *str)
 		i++;
 	if (!str[i])
 		return (0);
+	while (str[i] && !ft_isspace(str[i]))
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))

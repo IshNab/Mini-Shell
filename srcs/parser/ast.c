@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/14 20:39:10 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 16:05:24 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,3 +78,4 @@ t_ast	*build_ast(t_token *tokens)
 	{
 		return ((t_ast *)create_command_node(tokens));
 	}
+}

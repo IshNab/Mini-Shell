@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:34:54 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 15:59:54 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:25:30 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,10 @@ int	error_msg_export(char *id)
 
 int	is_valid_identifier(char *s)
 {
-	char	*start;
-
-	start = s;
 	if (!s || !*s)
 		return (0);
 	if ((!ft_isalpha(*s) && *s != '_'))
-	{
-		printf("DEBUG: First char '%c' is not alpha/underscore\n", *s);
 		return (0);
-	}
 	s++;
 	while (*s && *s != '=')
 	{

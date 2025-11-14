@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:29:33 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 16:30:48 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:24:30 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,20 +65,18 @@ void	expand_vars(t_token *tokens, t_mshell *shell)
 	{
 		if (curr->type == TOKEN_DQUOTE)
 		{
-			expd = exp_word(curr->value, shell->env,
-					shell->exit_status, shell->shell_pid);
+			expd = exp_word(curr->value, shell);
 			free(curr->value);
-			curr->value = expanded;
+			curr->value = expd;
 			curr->type = TOKEN_WORD;
 		}
 		else if (curr->type == TOKEN_SQUOTE)
 			curr->type = TOKEN_WORD;
 		else if (curr->type == TOKEN_WORD)
 		{
-			expd = exp_word(curr->value, shell->env,
-					shell->exit_status, shell->shell_pid);
+			expd = exp_word(curr->value, shell);
 			free(curr->value);
-			curr->value = expanded;
+			curr->value = expd;
 		}
 		curr = curr->next;
 	}

@@ -6,36 +6,11 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 19:12:06 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 15:38:54 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:47:42 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-static char	**env_to_array(t_env *env)
-{
-	char	**env_array;
-	t_env	*current;
-	int		i;
-	int		count;
-	char	*tmp;
-
-	count = ft_envsize(env);
-	env_array = malloc(sizeof(char *) * (count + 1));
-	current = env;
-	i = 0;
-	tmp = NULL;
-	while (current)
-	{
-		tmp = ft_strjoin(current->key, "=");
-		env_array[i] = ft_strjoin(tmp, current->value);
-		free(tmp);
-		current = current->next;
-		i++;
-	}
-	env_array[i] = NULL;
-	return (env_array);
-}
 
 static char	*join_path(char *str1, char *str2)
 {
@@ -60,18 +35,20 @@ static char	*join_path(char *str1, char *str2)
 static char	*search_in_paths(char **split_path, char *cmd)
 {
 	char	*full_path;
-	char	*ret;
 	int		i;
+	int		j;
 
-	ret = NULL;
 	i = -1;
 	while (split_path[++i])
 	{
 		full_path = join_path(split_path[i], cmd);
 		if (access(full_path, X_OK) == 0)
 		{
-			ret = full_path;
-			break ;
+			j = -1;
+			while (split_path[++j])
+				free(split_path[i]);
+			free(split_path);
+			return (full_path);
 		}
 		free(full_path);
 	}
@@ -79,60 +56,69 @@ static char	*search_in_paths(char **split_path, char *cmd)
 	while (split_path[++i])
 		free(split_path[i]);
 	free(split_path);
-	return (ret);
+	return (NULL);
 }
 
 static char	*find_cmd_path(char *cmd, t_env *env)
 {
 	t_env	*current;
-	char	*path_name;
 	char	**split_path;
+	char	*ret;
 
 	if (!cmd)
 		return (NULL);
-	path_name = NULL;
-	current = env;
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
+	current = env;
 	while (current)
 	{
 		if (ft_strcmp("PATH", current->key) == 0)
 		{
-			path_name = current->value;
-			break ;
+			split_path = ft_split(current->value, ':');
+			if (!split_path)
+				return (NULL);
+			ret = search_in_paths(split_path, cmd);
+			return (ret);
 		}
 		current = current->next;
 	}
-	if (!path_name)
-		return (NULL);
-	split_path = ft_split(path_name, ':');
-	if (!split_path)
-		return (NULL);
-	return (search_in_paths(split_path, cmd));
+	return (NULL);
+}
+
+static void	handle_parent_wait(pid_t pid, t_mshell *shell)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		shell->exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		shell->exit_status = 128 + WTERMSIG(status);
 }
 
 void	run_external_cmd(t_command *cmd, t_mshell *shell)
 {
-	char	*path;
+	char	*cmd_path;
 	char	**env_array;
+	pid_t	pid;
 
-	if (!cmd || !cmd->args || !cmd->args[0])
-		exit(127);
-	env_array = env_to_array(shell->env);
-	path = find_cmd_path(cmd->args[0], shell->env);
-	if (!path)
+	cmd_path = find_cmd_path(cmd->args[0], shell->env);
+	if (!cmd_path)
 	{
-		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
-		free_env_array(env_array);
+		shell->exit_status = 127;
+		return ;
+	}
+	env_array = env_to_array(shell->env);
+	pid = fork();
+	if (pid == 0)
+	{
+		execve(cmd_path, cmd->args, env_array);
+		perror("execve");
 		exit(127);
 	}
-	if (execve(path, cmd->args, env_array) == -1)
-	{
-		perror("minishell");
-		free(path);
-		free_env_array(env_array);
-		exit(126);
-	}
+	handle_parent_wait(pid, shell);
+	free(cmd_path);
+	free_env_array(env_array);
 }

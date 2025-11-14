@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/13 16:43:33 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:13:43 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	tok_handle_output_redir(t_token *new, const char *input, int *i)
 	return (0);
 }
 
-int	handle_redirections(t_token *new, const char *input, int *i)
+int	handle_redirections(t_token *new, char *input, int *i)
 {
 	if (tok_handle_input_redir(new, input, i))
 		return (1);

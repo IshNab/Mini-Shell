@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 16:41:28 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:33:29 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ t_ast				*create_pipe_node(t_ast *left, t_ast *right);
 void				free_ast(t_ast *node);
 
 // Tokenizer
-t_token				*ms_tokenize(const char *input);
+t_token				*ms_tokenize(char *input);
 void				free_token_list(t_token *head);
 void				list_token_append(t_token *new, t_token **head,
 						t_token **tail);
@@ -154,8 +154,7 @@ int					handle_redirections(t_token *new, char *input, int *i);
 void				remove_quote_tokens(t_token **tokens);
 //Variable Expansion
 void				expand_vars(t_token *tokens, t_mshell *shell);
-char				*exp_word(char *word, t_env *env, int exit_status,
-						pid_t shell_pid);
+char				*exp_word(char *word, t_mshell *shell);
 
 //=============================================================================/
 //								Executor                                       /
@@ -199,6 +198,7 @@ int					panic(char *error_msg);
 int					error_msg(char *msg, int exit_code, t_mshell *shell);
 
 char				*str_append(char *s1, const char *s2);
+char				**env_to_array(t_env *env);
 char				*get_env_from_list(t_env *env, const char *key);
 void				unset_env_var(t_mshell *shell, const char *key);
 void				set_env_var(t_mshell *shell, char *key, char *value);
@@ -208,7 +208,13 @@ int					error_msg_export(char *id);
 
 void				free_ast(t_ast *node);
 void				free_env_array(char **env_array);
+void				cleanup_shell(t_mshell *shell);
 
+void				repl_loop(t_mshell *shell);
+void				process_command(t_mshell *shell, char *line);
+void				signal_on_main(t_mshell *shell, char **line);
+void				init_shell(t_mshell *shell, char **envp);
+t_env				*init_env(char **envp);
 //=============================================================================/
 //								Signal Handling                                /
 //=============================================================================/
