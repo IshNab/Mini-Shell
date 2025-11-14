@@ -6,13 +6,13 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 13:17:48 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:19:07 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	set_env_var(t_mshell *shell, const char *key, const char *value)
+void	set_env_var(t_mshell *shell, char *key, char *value)
 {
 	t_env	*current;
 	t_env	*new_node;
@@ -47,12 +47,26 @@ static void	print_envvars(t_mshell *shell)
 	}
 }
 
+static void	check_value_var(char *arg, t_mshell *shell)
+{
+	char	*eq;
+
+	eq = ft_strchr(arg, '=');
+	if (eq)
+	{
+		*eq = '\0';
+		set_env_var(shell, arg, eq + 1);
+		*eq = '=';
+	}
+	else
+		if (!get_env_from_list(shell->env, arg))
+			set_env_var(shell, arg, "");
+}
 
 int	builtin_export(char **args, t_mshell *shell)
 {
 	int		i;
 	int		status;
-	char	*eq;
 
 	if (!args[1])
 		return (sort_vars_list(shell->env), print_envvars(shell), 0);
@@ -63,18 +77,7 @@ int	builtin_export(char **args, t_mshell *shell)
 		if (!is_valid_identifier(args[i]))
 			status = error_msg_export(args[i]);
 		else
-		{
-			eq = ft_strchr(args[i], '=');
-			if (eq)
-			{
-				*eq = '\0';
-				set_env_var(shell, args[i], eq + 1);
-				*eq = '=';
-			}
-			else
-				if (!get_env_from_list(shell->env, args[i]))
-					set_env_var(shell, args[i], "");
-		}
+			check_value_var(args[i], shell);
 		i++;
 	}
 	return (status);

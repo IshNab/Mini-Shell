@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/14 18:01:28 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:33:09 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,29 @@ char	*str_append(char *s1, const char *s2)
 	new_s[i + j] = '\0';
 	free(s1);
 	return (new_s);
+}
+
+char	**env_to_array(t_env *env)
+{
+	char	**env_array;
+	t_env	*current;
+	int		i;
+	int		count;
+	char	*tmp;
+
+	count = ft_envsize(env);
+	env_array = malloc(sizeof(char *) * (count + 1));
+	current = env;
+	i = 0;
+	tmp = NULL;
+	while (current)
+	{
+		tmp = ft_strjoin(current->key, "=");
+		env_array[i] = ft_strjoin(tmp, current->value);
+		free(tmp);
+		current = current->next;
+		i++;
+	}
+	env_array[i] = NULL;
+	return (env_array);
 }

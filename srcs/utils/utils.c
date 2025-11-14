@@ -6,12 +6,11 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:35:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 13:18:26 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:40:17 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
 
 int	ft_envsize(t_env *env)
 {
@@ -41,23 +40,42 @@ void	*safe_malloc(size_t size)
 	return (memory);
 }
 
-int	fork_wrapper(void)
+int	fork_wrapper(t_mshell *shell)
 {
 	int	pid;
 
 	pid = fork();
 	if (pid == -1)
-		perror("fork failed");
+	{
+		ft_putstr_fd("fork failed: ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
+		shell->exit_status = 1;
+	}
 	return (pid);
+}
+
+void	dup2_wrapper(t_mshell *shell, int fd)
+{
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(fd);
+		shell->exit_status = 1;
+		exit(1);
+	}
 }
 
 void	print_banner(void)
 {
 	printf(
-		GREEN"███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗\n"
-		"████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║\n"
-		"██╔████╔██║██║██╔██╗ ██║██║███████╗███████║█████╗  ██║     ██║\n"
-		"██║╚██╔╝██║██║██║╚██╗██║██║╚════██║██╔══██║██╔══╝  ██║     ██║\n"
-		"██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗\n"
-		"╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝╚═╝╚══════╝╚══════╝╚══════╝\n\n"RESET);
+		GREEN"░███     ░███ ░██████  ░██████  ░██     ░██ ░██████\n"
+		"░████   ░████   ░██   ░██   ░██ ░██     ░██   ░██\n"
+		"░██░██ ░██░██   ░██  ░██        ░██     ░██   ░██\n"
+		"░██ ░████ ░██   ░██  ░██        ░██████████   ░██\n"
+		"░██  ░██  ░██   ░██  ░██        ░██     ░██   ░██\n"
+		"░██       ░██   ░██   ░██   ░██ ░██     ░██   ░██\n"
+		"░██       ░██ ░██████  ░██████  ░██     ░██ ░██████\n\n"
+		"A cute bash made with ❤️  by Ishta inabakka and Marina Sarno \n\n"
+		RESET);
 }

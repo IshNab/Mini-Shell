@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 20:37:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/14 21:07:23 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:38:20 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,32 @@ void	free_ast(t_ast *node)
 	{
 		cmd = (t_command *)node;
 		free_cmd(cmd);
+		free(cmd);
 	}
-	free(cmd);
+}
+
+void	free_env_array(char **env_array)
+{
+	int	i;
+
+	i = 0;
+	while (env_array[i])
+		free(env_array[i++]);
+	free(env_array);
+}
+
+void	cleanup_shell(t_mshell *shell)
+{
+	t_env	*current;
+	t_env	*next;
+
+	current = shell->env;
+	while (current)
+	{
+		next = current->next;
+		free(current->key);
+		free(current->value);
+		free(current);
+		current = next;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/14 20:39:10 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 16:05:24 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,22 +58,24 @@ t_ast	*build_ast(t_token *tokens)
 	t_token		*right_tokens;
 	t_ast		*left;
 	t_ast		*right;
+	t_ast		*pipe_node;
 
 	if (!tokens)
 		return (NULL);
-	pipe = find_pipe(tokens);	//look for pipes in the linked list
+	pipe = find_pipe(tokens);
 	if (pipe)
 	{
-		right_tokens = split_at_pipe(tokens, pipe);	//split the linked list at the pipe
-		left = build_ast(tokens);	//recursively build the left side of the pipe
-		right = build_ast(right_tokens);	//recursively build the right side of the pipe
-		return (create_pipe_node(left, right));	//create a pipe node
+		right_tokens = split_at_pipe(tokens, pipe);
+		left = build_ast(tokens);
+		right = build_ast(right_tokens);
+		free_token_list(right_tokens);
+		pipe_node = create_pipe_node(left, right);
+		if (!pipe_node)
+			return (free_ast(left), free_ast(right), NULL);
+		return (pipe_node);
 	}
 	else
 	{
-		return ((t_ast *)create_command_node(tokens));	//create a command node
+		return ((t_ast *)create_command_node(tokens));
 	}
 }
-
-
-

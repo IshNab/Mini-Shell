@@ -6,89 +6,11 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:20:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/14 16:39:23 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:13:43 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-/* char	*ft_strndup(const char *s, size_t n)
-{
-	char	*dup;
-	size_t	len;
-
-	len = ft_strlen(s);
-	if (n < len)
-		len = n;
-	dup = malloc(len + 1);
-	if (!dup)
-		return (NULL);
-	ft_memcpy(dup, s, len);
-	dup[len] = '\0';
-	return (dup);
-}
- */
-/* static t_token_type	get_token_type(const char *s)
-{
-	if (!strncmp(s, "|", 1))
-		return (TOKEN_PIPE);
-	else if (!strncmp(s, "<<", 2))
-		return (TOKEN_REDIRECT_HEREDOC);
-	else if (!strncmp(s, ">>", 2))
-		return (TOKEN_REDIRECT_APPEND);
-	else if (!strncmp(s, "<", 1))
-		return (TOKEN_REDIRECT_IN);
-	else if (!strncmp(s, ">", 1))
-		return (TOKEN_REDIRECT_OUT);
-	else if (!strncmp(s, "'", 1))
-		return (TOKEN_SINGLE_QUOTE);
-	else if (!strncmp(s, "\"", 1))
-		return (TOKEN_DOUBLE_QUOTE);
-	return (TOKEN_WORD);
-} */
-
-/* static void	add_token(t_token **head, t_token **tail, t_token *tok)
-{
-	if (!*head)
-	{
-		*head = tok;
-		*tail = tok;
-	}
-	else
-	{
-		(*tail)->next = tok;
-		*tail = tok;
-	}
-} */
-
-/* void	handle_operator(const char *input, int *i,
-	t_token **head, t_token **tail)
-{
-	int				op_len;
-	t_token_type	type;
-	t_token			*tok;
-
-	op_len = is_operator(&input[*i]);
-	type = get_token_type(&input[*i]);
-	tok = new_token(type,
-			ft_strndup(&input[*i], op_len));
-	add_token(head, tail, tok);
-	*i += op_len;
-} */
-
-/* void	handle_word(const char *input, int *i, t_token **head,
-	t_token **tail)
-{
-	int		start;
-	t_token	*tok;
-
-	start = *i;
-	while (input[*i] && !isspace(input[*i]) && !is_operator(&input[*i]))
-		(*i)++;
-	tok = new_token(TOKEN_WORD,
-			ft_strndup(&input[start], *i - start));
-	add_token(head, tail, tok);
-} */
 
 void	free_token_list(t_token *head)
 {
@@ -103,12 +25,58 @@ void	free_token_list(t_token *head)
 	}
 }
 
-void	print_tokens(t_token *tok)
+void	list_token_append(t_token *new, t_token **head, t_token **tail)
 {
-	while (tok)
+	if (!*head)
+		*head = new;
+	else
+		(*tail)->next = new;
+	*tail = new;
+}
+
+static int	tok_handle_input_redir(t_token *new, const char *input, int *i)
+{
+	if (input[*i] == '<' && input[*i + 1] == '<')
 	{
-		printf("Type: %d, Value: %s\n",
-			tok->type, tok->value);
-		tok = tok->next;
+		new->type = TOKEN_HEREDOC;
+		new->value = ft_strdup("<<");
+		(*i) += 2;
+		return (1);
 	}
+	else if (input[*i] == '<')
+	{
+		new->type = TOKEN_REDIR_IN;
+		new->value = ft_strdup("<");
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+static int	tok_handle_output_redir(t_token *new, const char *input, int *i)
+{
+	if (input[*i] == '>' && input[*i + 1] == '>')
+	{
+		new->type = TOKEN_APPEND;
+		new->value = ft_strdup(">>");
+		(*i) += 2;
+		return (1);
+	}
+	else if (input[*i] == '>')
+	{
+		new->type = TOKEN_REDIR_OUT;
+		new->value = ft_strdup(">");
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_redirections(t_token *new, char *input, int *i)
+{
+	if (tok_handle_input_redir(new, input, i))
+		return (1);
+	if (tok_handle_output_redir(new, input, i))
+		return (1);
+	return (0);
 }
