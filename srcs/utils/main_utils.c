@@ -63,7 +63,8 @@ void	process_command(t_mshell *shell, char *line)
 {
 	t_ast	*ast;
 
-	add_history(line);
+	if (isatty(STDIN_FILENO))
+		add_history(line);
 	ast = parser(line, shell);
 	if (ast)
 	{

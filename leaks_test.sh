@@ -425,7 +425,7 @@ echo -e "echo test1\necho test2\necho test3\necho test4\necho test5" | timeout 5
     $MINISHELL > /dev/null 2>&1
 
 if [ -f "$VALGRIND_LOG" ]; then
-    definitely_lost=$(grep "definitely lost:" "$VALGRIND_LOG" | awk '{print $4}' | tr -d ',')
+    definitely_lost=$(grep "definitely lost:" "$VALGRIND_LOG" | awk '{print $4}' | tr -d ',' | head -1)
     definitely_lost=${definitely_lost:-0}
     echo ""
     print_subtest "Memory Analysis:"
