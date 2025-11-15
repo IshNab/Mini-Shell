@@ -46,7 +46,7 @@ static char	*search_in_paths(char **split_path, char *cmd)
 		{
 			j = -1;
 			while (split_path[++j])
-				free(split_path[i]);
+				free(split_path[j]);
 			free(split_path);
 			return (full_path);
 		}
