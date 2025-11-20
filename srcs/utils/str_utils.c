@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 00:00:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/14 18:33:09 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/20 13:10:02 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,28 @@ char	**env_to_array(t_env *env)
 	int		count;
 	char	*tmp;
 
-	count = ft_envsize(env);
-	env_array = malloc(sizeof(char *) * (count + 1));
+	count = 0;
+	current = env;
+	while (current)
+	{
+		if (current->exported)
+			count++;
+		current = current->next;
+	}
+	env_array = safe_malloc(sizeof(char *) * (count + 1));
 	current = env;
 	i = 0;
 	tmp = NULL;
 	while (current)
 	{
-		tmp = ft_strjoin(current->key, "=");
-		env_array[i] = ft_strjoin(tmp, current->value);
-		free(tmp);
+		if (current->exported)
+		{
+			tmp = ft_strjoin(current->key, "=");
+			env_array[i] = ft_strjoin(tmp, current->value);
+			free(tmp);
+			i++;
+		}
 		current = current->next;
-		i++;
 	}
 	env_array[i] = NULL;
 	return (env_array);

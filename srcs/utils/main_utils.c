@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/14 16:49:21 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/20 12:54:55 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_env	*init_env(char **envp)
 			new_node = safe_malloc(sizeof(t_env));
 			new_node->key = ft_substr(envp[i], 0, equal - envp[i]);
 			new_node->value = ft_strdup(equal + 1);
+			new_node->exported = 1;
 			new_node->next = head;
 			head = new_node;
 		}
@@ -79,6 +80,7 @@ void	repl_loop(t_mshell *shell)
 {
 	char		*line;
 
+	rl_bind_key('\t', rl_insert);
 	while (1)
 	{
 		line = readline("minishell$");

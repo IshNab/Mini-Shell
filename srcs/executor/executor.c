@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 17:53:39 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 15:44:50 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/20 13:19:31 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	exec_in_child(t_command *cmd, t_mshell *shell)
 	if (try_builtin(cmd, shell))
 		exit(shell->exit_status);
 	run_external_cmd(cmd, shell);
-	exit(127);
+	exit(shell->exit_status);
 }
 
 int	execute_simple_command(t_ast *ast, t_mshell *shell)

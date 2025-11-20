@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:32:23 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/14 18:05:32 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/20 12:05:29 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,11 @@ int	builtin_exit(char **args, t_mshell *shell)
 		ft_putendl_fd(": numeric argument required", 2);
 		exit(2);
 	}
+	if (argc == 2)
+		shell->exit_status = ft_atoi(args[1]);
 	if (argc > 2)
 	{
-		error_msg("exit: too many arguments\n", 1, shell);
+		error_msg("exit: too many arguments", 1, shell);
 		return (1);
 	}
 	exit_code = ft_atoi(args[1]);

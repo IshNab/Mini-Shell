@@ -43,6 +43,7 @@ parsertest
 *.su
 *.idb
 *.pdb
+debug_functions.c
 
 # Kernel Module Compile Results
 *.mod*

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:05:22 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/14 18:33:29 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/20 12:53:54 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct s_env
 {
 	char			*key; // variable name
 	char			*value; // variable value
+	int				exported;
 	struct s_env	*next; //Next environment variable
 }	t_env;
 

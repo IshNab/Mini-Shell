@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/14 18:19:07 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/20 12:56:43 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	set_env_var(t_mshell *shell, char *key, char *value)
 		{
 			free(current->value);
 			current->value = ft_strdup(value);
+			current->exported = 1;
 			return ;
 		}
 		current = current->next;
@@ -31,6 +32,7 @@ void	set_env_var(t_mshell *shell, char *key, char *value)
 	new_node = malloc(sizeof(t_env));
 	new_node->key = ft_strdup(key);
 	new_node->value = ft_strdup(value);
+	new_node->exported = 1;
 	new_node->next = shell->env;
 	shell->env = new_node;
 }
