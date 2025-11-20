@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 14:30:10 by inabakka          #+#    #+#             */
-/*   Updated: 2025/11/13 15:58:41 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/20 14:09:53 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ void	exec_signal_handler(int sig)
 	{
 		g_signal_received = SIGINT;
 		write(1, "\n", 1);
+	}
+	else if (sig == SIGQUIT)
+	{
+		g_signal_received = SIGQUIT;
+		write(1, "Quit (core dumped)\n", 19);
 	}
 }
 
@@ -72,7 +77,7 @@ void	setup_non_interactive_signals(void)
 	sigaction(SIGINT, &sa_int, NULL);
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
-	sa_quit.sa_handler = SIG_IGN;
+	sa_quit.sa_handler = exec_signal_handler;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
