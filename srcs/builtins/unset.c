@@ -6,11 +6,30 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 21:43:19 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/11 16:17:20 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:32:15 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+static int	is_unset_valid_id(char *s)
+{
+	int	i;
+
+	if (!s || !s[0])
+		return (1);
+	if (ft_isdigit(s[0]))
+		return (0);
+	i = -1;
+	while (s[++i])
+	{
+		if (!ft_isalnum(s[i]) && s[i] != '_')
+			return (0);
+		if (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
+			return (0);
+	}
+	return (1);
+}
 
 static int	error_msg_unset(char *id)
 {
@@ -53,10 +72,12 @@ int	builtin_unset(char **args, t_mshell *shell)
 	i = 0;
 	status = 0;
 	if (!args[1])
-		return (0);
+		return (status);
 	while (args[++i])
 	{
-		if (!is_valid_identifier(args[i]))
+		if (!args[i][0])
+			continue ;
+		if (!is_unset_valid_id(args[i]))
 		{
 			error_msg_unset(args[i]);
 			status = 1;
