@@ -14,9 +14,9 @@
 
 static void	remove_empty_tokens(t_token **head)
 {
-    t_token	*curr;
-    t_token	*prev;
-    t_token	*tmp;
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*tmp;
 
 	if (!head || !*head)
 		return ;
@@ -24,24 +24,24 @@ static void	remove_empty_tokens(t_token **head)
 	curr = *head;
     while (curr)
     {
-        if (curr->value && curr->value[0] == '\0')
-        {
+		if (curr->value && curr->value[0] == '\0')
+		{
             tmp = curr;
-            if (prev)
-                prev->next = curr->next;
-            else
-                *head = curr->next;
-            curr = curr->next;
-            if (tmp->value)
+			if (prev)
+				prev->next = curr->next;
+			else
+				*head = curr->next;
+			curr = curr->next;
+			if (tmp->value)
 				free(tmp->value);
-            free(tmp);
-        }
-        else
-        {
-            prev = curr;
-            curr = curr->next;
-        }
-    }
+			free(tmp);
+		}
+		else
+		{
+			prev = curr;
+			curr = curr->next;
+		}
+	}
 }
 
 static void normalize_quote_tokens(t_token *tokens)
