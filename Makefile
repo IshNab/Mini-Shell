@@ -79,6 +79,6 @@ fclean: clean
 	@echo "$(YELLOW)Removing executables...$(RESET)"
 	$(REMOVE) $(NAME)
 
-re: fclean all
+re: all clean
 
 .PHONY: all clean fclean re
