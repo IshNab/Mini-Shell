@@ -22,21 +22,16 @@ SRCS = \
 ./srcs/parser/parse_helpers.c \
 ./srcs/parser/ast.c \
 ./srcs/parser/command_builder.c \
+./srcs/parser/command_builder_utils.c \
 ./srcs/utils/utils.c \
-./srcs/utils/debug_functions.c \
 ./srcs/utils/str_utils.c \
 ./srcs/utils/expand_functions.c \
-<<<<<<< HEAD
-<<<<<<< HEAD
+./srcs/utils/expand_functions_2.c \
 ./srcs/utils/signal_utils.c \
-=======
+./srcs/utils/signal_utils_2.c \
 ./srcs/utils/export_utils.c \
 ./srcs/utils/frees.c \
->>>>>>> 9711340b0c2e3ea8ba13763d3e6b4807d8b0b999
-=======
-./srcs/utils/export_utils.c \
-./srcs/utils/frees.c \
->>>>>>> b341b797608280da90e86edfb4a1417e8d19f836
+./srcs/utils/main_utils.c \
 ./srcs/builtins/cd.c \
 ./srcs/builtins/echo.c \
 ./srcs/builtins/env.c \
@@ -44,8 +39,12 @@ SRCS = \
 ./srcs/builtins/export.c \
 ./srcs/builtins/pwd.c \
 ./srcs/builtins/unset.c \
-./srcs/executor/executor.c \
+./srcs/executor/builtins_utils.c \
+./srcs/executor/executor_heredoc.c \
 ./srcs/executor/executor_pipe.c \
+./srcs/executor/executor.c \
+./srcs/executor/redirections.c \
+./srcs/executor/run_external_cmd.c \
 ./srcs/error.c
 
 OBJS = $(SRCS:.c=.o)
@@ -80,6 +79,6 @@ fclean: clean
 	@echo "$(YELLOW)Removing executables...$(RESET)"
 	$(REMOVE) $(NAME)
 
-re: fclean all
+re: all clean
 
 .PHONY: all clean fclean re

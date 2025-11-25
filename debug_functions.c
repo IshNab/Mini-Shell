@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 15:38:19 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/07 14:46:09 by maborges         ###   ########.fr       */
+/*   Updated: 2025/10/28 16:12:10 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,3 @@ void	debug_checkpoint(const char *function, int line, const char *message)
 
 	printf("\n[DEBUG] %s:%d - %s\n", function, line, message);
 }
-
-// Macro for easy checkpoint calls
-#define DEBUG_CHECKPOINT(msg) debug_checkpoint(__FUNCTION__, __LINE__, msg)
