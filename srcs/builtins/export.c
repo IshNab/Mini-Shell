@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: inabakka <inabakka@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/20 12:56:43 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/25 14:08:43 by inabakka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,66 +65,48 @@ static void	check_value_var(char *arg, t_mshell *shell)
 			set_env_var(shell, arg, "");
 }
 
-static int	ends_with_equal(char *str)
+static int	process_export_arg(char **args, int *i, t_mshell *shell)
 {
-	int	len;
+	char	*full_arg;
+	int		status;
 
-	if (!str)
-		return (0);
-	len = ft_strlen(str);
-	return (len > 0 && str[len - 1] == '=');
-}
-
-static char	*merge_split_assignment(char **args, int *idx)
-{
-	char	*result;
-	char	*tmp;
-	int		i;
-
-	result = ft_strdup(args[*idx]);
-	i = *idx + 1;
-	while (args[i] && !ft_strchr(args[i], '='))
+	status = 0;
+	if (ends_with_equal(args[*i]) && args[*i + 1])
 	{
-		tmp = result;
-		result = ft_strjoin(result, " ");
-		free(tmp);
-		tmp = result;
-		result = ft_strjoin(result, args[i]);
-		free(tmp);
-		i++;
+		full_arg = merge_split_assignment(args, i);
+		if (!is_valid_identifier(full_arg))
+			status = error_msg_export(full_arg);
+		else
+			check_value_var(full_arg, shell);
+		free(full_arg);
 	}
-	*idx = i - 1;
-	return (result);
+	else
+	{
+		if (!is_valid_identifier(args[*i]))
+			status = error_msg_export(args[*i]);
+		else
+			check_value_var(args[*i], shell);
+	}
+	return (status);
 }
 
 int	builtin_export(char **args, t_mshell *shell)
 {
-	int		i;
-	int		status;
-	char	*full_arg;
+	int	i;
+	int	status;
 
 	if (!args[1])
-		return (sort_vars_list(shell->env), print_envvars(shell), 0);
+	{
+		sort_vars_list(shell->env);
+		print_envvars(shell);
+		return (0);
+	}
 	status = 0;
 	i = 1;
 	while (args[i])
 	{
-		if (ends_with_equal(args[i]) && args[i + 1])
-		{
-			full_arg = merge_split_assignment(args, &i);
-			if (!is_valid_identifier(full_arg))
-				status = error_msg_export(full_arg);
-			else
-				check_value_var(full_arg, shell);
-			free(full_arg);
-		}
-		else
-		{
-			if (!is_valid_identifier(args[i]))
-				status = error_msg_export(args[i]);
-			else
-				check_value_var(args[i], shell);
-		}
+		if (process_export_arg(args, &i, shell))
+			status = 1;
 		i++;
 	}
 	return (status);
