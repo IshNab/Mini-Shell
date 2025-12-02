@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 16:46:27 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/21 12:23:26 by maborges         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:44:25 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc > 1)
 		return (error_msg("Minishell does not accept arguments", 1, NULL));
 	(void)argv;
-	//print_banner();
+	print_banner();
 	using_history();
 	init_shell(&shell, envp);
 	setup_interactive_signals();
