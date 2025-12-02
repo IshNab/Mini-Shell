@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:32:23 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/20 12:05:29 by maborges         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:38:00 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	builtin_exit(char **args, t_mshell *shell)
 	argc = 0;
 	while (args[argc])
 		argc++;
-	ft_putstr_fd("exit\n", 2);
+	if (isatty(STDOUT_FILENO))
+		ft_putstr_fd("exit\n", 2);
 	if (argc == 1)
 		exit(shell->exit_status);
 	if (!is_valid_number(args[1]))

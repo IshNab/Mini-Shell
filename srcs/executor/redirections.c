@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 13:19:42 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 15:44:39 by maborges         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:22:32 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,10 @@ int	handle_output_redir(t_command *cmd, int *saved_stdout)
 
 	if (!cmd->output_file)
 		return (0);
-	flags = O_WRONLY | O_CREAT;
 	if (cmd->is_append)
-		flags |= O_APPEND;
+		flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
-		flags |= O_TRUNC;
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
 	fd = open(cmd->output_file, flags, 0644);
 	if (fd == -1)
 	{
