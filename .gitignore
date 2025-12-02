@@ -62,5 +62,5 @@ dkms.conf
 
 .vscode
 # testers
-minishell_tester
+minishell-tester/
 minishell_test.log

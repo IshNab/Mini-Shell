@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:29:33 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/14 17:24:30 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/25 13:48:27 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,28 @@ void	remove_quote_tokens(t_token **tokens)
 	}
 }
 
+static int	skip_exp(t_token *tokens, t_token *curr)
+{
+	t_token	*tmp;
+
+	tmp = tokens;
+	while (tmp && tmp != curr)
+	{
+		if (tmp->type == TOKEN_PIPE)
+			tmp = tmp->next;
+		else if (tmp->type == TOKEN_WORD)
+		{
+			if (ft_strcmp(tmp->value, "export") == 0 && curr->value
+				&& !ft_strchr(curr->value, '='))
+				return (1);
+			return (0);
+		}
+		else
+			tmp = tmp->next;
+	}
+	return (0);
+}
+
 //expand variables then convert to WORD token
 void	expand_vars(t_token *tokens, t_mshell *shell)
 {
@@ -72,7 +94,7 @@ void	expand_vars(t_token *tokens, t_mshell *shell)
 		}
 		else if (curr->type == TOKEN_SQUOTE)
 			curr->type = TOKEN_WORD;
-		else if (curr->type == TOKEN_WORD)
+		else if (curr->type == TOKEN_WORD && !skip_exp(tokens, curr))
 		{
 			expd = exp_word(curr->value, shell);
 			free(curr->value);

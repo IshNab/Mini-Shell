@@ -6,13 +6,11 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 16:05:37 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/13 15:44:10 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/27 16:59:40 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-//should I take care of dup2 fail?
 
 static void	left_pipe(t_pipeline *pipeline, t_mshell *shell, int *fds)
 {

@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 21:43:19 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/21 16:32:15 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:32:14 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,13 @@ static int	is_unset_valid_id(char *s)
 	int	i;
 
 	if (!s || !s[0])
-		return (1);
+		return (0);
 	if (ft_isdigit(s[0]))
 		return (0);
 	i = -1;
 	while (s[++i])
 	{
 		if (!ft_isalnum(s[i]) && s[i] != '_')
-			return (0);
-		if (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
 			return (0);
 	}
 	return (1);
@@ -79,9 +77,13 @@ int	builtin_unset(char **args, t_mshell *shell)
 			continue ;
 		if (!is_unset_valid_id(args[i]))
 		{
-			error_msg_unset(args[i]);
-			status = 1;
-			continue ;
+			if (!(ft_strchr(args[i], '/') != NULL
+					|| ft_strchr(args[i], ':') != NULL))
+			{
+				error_msg_unset(args[i]);
+				status = 1;
+				continue ;
+			}
 		}
 		unset_env_var(shell, args[i]);
 	}
