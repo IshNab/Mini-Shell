@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:09:11 by maborges          #+#    #+#             */
-/*   Updated: 2025/11/27 15:48:17 by maborges         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:43:25 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	repl_loop(t_mshell *shell)
 	rl_bind_key('\t', rl_insert);
 	while (1)
 	{
-		line = readline("michi$");
+		line = readline("michi$ ");
 		if (g_signal_received == SIGINT)
 		{
 			signal_on_main(shell, &line);
