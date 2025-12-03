@@ -6,13 +6,13 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:59 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 13:17:48 by maborges         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:28:42 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	set_env_var(t_mshell *shell, const char *key, const char *value)
+void	set_env_var(t_mshell *shell, char *key, char *value)
 {
 	t_env	*current;
 	t_env	*new_node;
@@ -24,6 +24,7 @@ void	set_env_var(t_mshell *shell, const char *key, const char *value)
 		{
 			free(current->value);
 			current->value = ft_strdup(value);
+			current->exported = 1;
 			return ;
 		}
 		current = current->next;
@@ -31,6 +32,7 @@ void	set_env_var(t_mshell *shell, const char *key, const char *value)
 	new_node = malloc(sizeof(t_env));
 	new_node->key = ft_strdup(key);
 	new_node->value = ft_strdup(value);
+	new_node->exported = 1;
 	new_node->next = shell->env;
 	shell->env = new_node;
 }
@@ -47,12 +49,59 @@ static void	print_envvars(t_mshell *shell)
 	}
 }
 
+static void	check_value_var(char *arg, t_mshell *shell)
+{
+	char	*eq;
+
+	eq = ft_strchr(arg, '=');
+	if (eq)
+	{
+		*eq = '\0';
+		set_env_var(shell, arg, eq + 1);
+		*eq = '=';
+	}
+	else
+		if (!get_env_from_list(shell->env, arg))
+			set_env_var(shell, arg, "");
+}
+
+static int	ends_with_equal(char *str)
+{
+	int	len;
+
+	if (!str)
+		return (0);
+	len = ft_strlen(str);
+	return (len > 0 && str[len - 1] == '=');
+}
+
+static char	*merge_split_assignment(char **args, int *idx)
+{
+	char	*result;
+	char	*tmp;
+	int		i;
+
+	result = ft_strdup(args[*idx]);
+	i = *idx + 1;
+	while (args[i] && !ft_strchr(args[i], '='))
+	{
+		tmp = result;
+		result = ft_strjoin(result, " ");
+		free(tmp);
+		tmp = result;
+		result = ft_strjoin(result, args[i]);
+		free(tmp);
+		i++;
+	}
+	*idx = i - 1;
+	return (result);
+}
 
 int	builtin_export(char **args, t_mshell *shell)
 {
 	int		i;
 	int		status;
-	char	*eq;
+	char	*full_arg;
 
 	if (!args[1])
 		return (sort_vars_list(shell->env), print_envvars(shell), 0);
@@ -60,20 +109,21 @@ int	builtin_export(char **args, t_mshell *shell)
 	i = 1;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
-			status = error_msg_export(args[i]);
+		if (ends_with_equal(args[i]) && args[i + 1])
+		{
+			full_arg = merge_split_assignment(args, &i);
+			if (!is_valid_identifier(full_arg))
+				status = error_msg_export(full_arg);
+			else
+				check_value_var(full_arg, shell);
+			free(full_arg);
+		}
 		else
 		{
-			eq = ft_strchr(args[i], '=');
-			if (eq)
-			{
-				*eq = '\0';
-				set_env_var(shell, args[i], eq + 1);
-				*eq = '=';
-			}
+			if (!is_valid_identifier(args[i]))
+				status = error_msg_export(args[i]);
 			else
-				if (!get_env_from_list(shell->env, args[i]))
-					set_env_var(shell, args[i], "");
+				check_value_var(args[i], shell);
 		}
 		i++;
 	}

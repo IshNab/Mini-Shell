@@ -6,48 +6,70 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:32:23 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 12:53:03 by maborges         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:38:00 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static int ft_is_numeric(const char *s)
+static int	ft_isspace(int c)
 {
-    if (!s || !*s) return 0;
-    if (*s == '+' || *s == '-') s++;
-    while (*s)
-    {
-        if (!ft_isdigit((unsigned char)*s)) return 0;
-        s++;
-    }
-    return 1;
+	return (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r');
 }
 
-int builtin_exit(char **args, t_mshell *shell)
+static int	is_valid_number(const char *str)
 {
-	(void)shell; //TODO
-    int argc = 0;
-    while (args[argc]) argc++;
+	int	i;
 
-    fprintf(stderr, "exit\n"); //function not allowed
+	i = 0;
+	while (ft_isspace(str[i]))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (!str[i])
+		return (0);
+	while (str[i] && !ft_isspace(str[i]))
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
-    if (argc == 1)
-        exit(0);
+int	builtin_exit(char **args, t_mshell *shell)
+{
+	int	argc;
+	int	exit_code;
 
-    if (!ft_is_numeric(args[1]))
-    {
-        fprintf(stderr, "exit: %s: numeric argument required\n", args[1]);
-        exit(2);
-    }
-
-    if (argc > 2)
-    {
-        fprintf(stderr, "exit: too many arguments\n");
-        return 1; // do not exit, as bash does
-    }
-
-    // Convert to unsigned char semantics (0-255)
-    long long val = strtoll(args[1], NULL, 10); //function not allowed
-    exit((unsigned char)val);
+	argc = 0;
+	while (args[argc])
+		argc++;
+	if (isatty(STDOUT_FILENO))
+		ft_putstr_fd("exit\n", 2);
+	if (argc == 1)
+		exit(shell->exit_status);
+	if (!is_valid_number(args[1]))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		exit(2);
+	}
+	if (argc == 2)
+		shell->exit_status = ft_atoi(args[1]);
+	if (argc > 2)
+	{
+		error_msg("exit: too many arguments", 1, shell);
+		return (1);
+	}
+	exit_code = ft_atoi(args[1]);
+	exit((unsigned char)exit_code);
 }

@@ -6,11 +6,28 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 21:43:19 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/16 13:20:17 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:32:14 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+static int	is_unset_valid_id(char *s)
+{
+	int	i;
+
+	if (!s || !s[0])
+		return (0);
+	if (ft_isdigit(s[0]))
+		return (0);
+	i = -1;
+	while (s[++i])
+	{
+		if (!ft_isalnum(s[i]) && s[i] != '_')
+			return (0);
+	}
+	return (1);
+}
 
 static int	error_msg_unset(char *id)
 {
@@ -48,19 +65,28 @@ void	unset_env_var(t_mshell *shell, const char *key)
 int	builtin_unset(char **args, t_mshell *shell)
 {
 	int	i;
+	int	status;
 
 	i = 0;
+	status = 0;
 	if (!args[1])
-		return (0);
+		return (status);
 	while (args[++i])
 	{
-		if (!is_valid_identifier(args[i]))
-		{
-			error_msg_unset(args[i]);
-			shell->exit_status = 1;
+		if (!args[i][0])
 			continue ;
+		if (!is_unset_valid_id(args[i]))
+		{
+			if (!(ft_strchr(args[i], '/') != NULL
+					|| ft_strchr(args[i], ':') != NULL))
+			{
+				error_msg_unset(args[i]);
+				status = 1;
+				continue ;
+			}
 		}
 		unset_env_var(shell, args[i]);
 	}
-	return (shell->exit_status);
+	shell->exit_status = status;
+	return (status);
 }

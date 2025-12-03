@@ -6,39 +6,79 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 16:16:33 by maborges          #+#    #+#             */
-/*   Updated: 2025/10/08 12:32:43 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 16:04:23 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-t_ast	*parser(char *input, char **envp, t_mshell *shell)
+static void	remove_empty_tokens(t_token **head)
+{
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*tmp;
+
+	if (!head || !*head)
+		return ;
+    prev = NULL;
+	curr = *head;
+    while (curr)
+    {
+		if (curr->value && curr->value[0] == '\0')
+		{
+            tmp = curr;
+			if (prev)
+				prev->next = curr->next;
+			else
+				*head = curr->next;
+			curr = curr->next;
+			if (tmp->value)
+				free(tmp->value);
+			free(tmp);
+		}
+		else
+		{
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+}
+
+static void normalize_quote_tokens(t_token *tokens)
+{
+	t_token *curr;
+
+	curr = tokens;
+	while (curr)
+	{
+		if (curr->type == TOKEN_DQUOTE || curr->type == TOKEN_SQUOTE)
+			curr->type = TOKEN_WORD;
+		curr = curr->next;
+	}
+}
+
+t_ast	*parser(char *input, t_mshell *shell)
 {
 	t_token	*tokens;
 	t_ast	*ast;
 
-	(void)envp;
 	if (!input || !*input)
 		return (NULL);
-	//error check? when to free the linked list?
-	tokens = ms_tokenize(input);	//step 1. tokenize the input
+	tokens = ms_tokenize(input);
 	if (!tokens)
 		return (NULL);
-	if (!validate_syntax(tokens)) //step 2. validate the syntax
+	expand_vars(tokens, shell);
+	remove_empty_tokens(&tokens);
+	normalize_quote_tokens(tokens);
+	if (!validate_syntax(tokens))
 	{
 		free_token_list(tokens);
 		shell->exit_status = 2;
 		return (NULL);
 	}
-	//TODO a way to check if we need to expand or not (flags?)
-	expand_vars(tokens, shell); //step 3. expand the variables
-	remove_quote_tokens(&tokens); //step 4. remove the quote tokens
-	ast = build_ast(tokens); //step 5. build the AST
+	ast = build_ast(tokens);
 	if (!ast)
-	{
-		free_token_list(tokens);
-		return (NULL);
-	}
+		return (free_token_list(tokens), NULL);
 	free_token_list(tokens);
 	return (ast);
 }

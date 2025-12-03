@@ -6,7 +6,7 @@
 /*   By: maborges <maborges@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 13:40:00 by inabakka          #+#    #+#             */
-/*   Updated: 2025/10/08 13:55:24 by maborges         ###   ########.fr       */
+/*   Updated: 2025/11/14 16:06:26 by maborges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static int	syntax_error_pipe(int expect_word)
 {
 	if (expect_word)
 	{
-		//find a way to handle error
 		error_msg("Syntax error: unexpected pipe\n", 1, NULL);
 		return (1);
 	}
@@ -27,7 +26,7 @@ static int	syntax_error_redir(t_token *curr)
 {
 	if (!curr->next || curr->next->type != TOKEN_WORD)
 	{
-		printf("Syntax error: redirection without target\n");
+		ft_putstr_fd("Syntax error: redirection without target\n", 2);
 		return (1);
 	}
 	return (0);
@@ -41,41 +40,35 @@ static int	is_redir_token(t_token_type type)
 		|| type == TOKEN_HEREDOC);
 }
 
-int	validate_syntax(t_token *tokens)
+static int	validate_token_loop(t_token *tokens)
 {
 	t_token	*curr;
 	int		expect_word;
 
-	if (!tokens)
-		return (0);
 	curr = tokens;
-	expect_word = 1;	//start expecting a word
+	expect_word = 1;
 	while (curr)
 	{
+		if (curr->type == TOKEN_PIPE && syntax_error_pipe(expect_word))
+			return (0);
 		if (curr->type == TOKEN_PIPE)
-		{
-			if (syntax_error_pipe(expect_word))	//check for syntax error in pipe
-				return (0);
-			expect_word = 1;	//after pipe, expect another word
-		}
+			expect_word = 1;
+		else if (is_redir_token(curr->type) && syntax_error_redir(curr))
+			return (0);
 		else if (is_redir_token(curr->type))
-		{
-			if (syntax_error_redir(curr))	//check redirection had a target
-				return (0);
 			expect_word = 0;
-		}
 		else if (curr->type == TOKEN_WORD)
 			expect_word = 0;
 		curr = curr->next;
 	}
 	if (expect_word)
-	{
-		printf("Syntax error: incomplete command\n");//needs to print via std_Err
-		return (0);
-	}
+		return (ft_putstr_fd("Syntax error: incomplete command\n", 2), 0);
 	return (1);
 }
 
-//check if there are pipes at the start or end of the command
-//check if there are redirections without a target
-//check if there are incomplete commands
+int	validate_syntax(t_token *tokens)
+{
+	if (!tokens || (tokens->type == TOKEN_PIPE && !tokens->next))
+		return (0);
+	return (validate_token_loop(tokens));
+}
